@@ -148,7 +148,7 @@ function NS.Elements:Load()
 												--------------------------------
 
 												do -- TEXT
-													TextFrame.Text = addon.C.FrameTemplates:CreateText(TextFrame, addon.CREF:GetSharedColor().RGB_WHITE, 12.5, "CENTER", "MIDDLE", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Text", "GameFontNormal")
+													TextFrame.Text = addon.C.FrameTemplates:CreateText(TextFrame, addon.CS:GetSharedColor().RGB_WHITE, 12.5, "CENTER", "MIDDLE", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Text", "GameFontNormal")
 													TextFrame.Text:SetPoint("CENTER", TextFrame)
 													TextFrame.Text:SetAutoFit(true)
 													TextFrame.Text:SetAutoFit_MaxWidth(10000)
@@ -168,7 +168,7 @@ function NS.Elements:Load()
 												--------------------------------
 
 												do -- TEXT
-													SubtextFrame.Text = addon.C.FrameTemplates:CreateText(SubtextFrame, addon.CREF:GetSharedColor().RGB_WHITE, 12.5, "CENTER", "MIDDLE", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Text", "GameFontNormal")
+													SubtextFrame.Text = addon.C.FrameTemplates:CreateText(SubtextFrame, addon.CS:GetSharedColor().RGB_WHITE, 12.5, "CENTER", "MIDDLE", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Text", "GameFontNormal")
 													SubtextFrame.Text:SetPoint("CENTER", SubtextFrame)
 													SubtextFrame.Text:SetAutoFit(true)
 													SubtextFrame.Text:SetAutoFit_MaxWidth(10000)
@@ -350,7 +350,7 @@ function NS.Elements:Load()
 											--------------------------------
 
 											do -- TEXT
-												TextFrame.Text = addon.C.FrameTemplates:CreateText(TextFrame, addon.CREF:GetSharedColor().RGB_WHITE, 14, "CENTER", "MIDDLE", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Text", "GameFontNormal")
+												TextFrame.Text = addon.C.FrameTemplates:CreateText(TextFrame, addon.CS:GetSharedColor().RGB_WHITE, 14, "CENTER", "MIDDLE", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Text", "GameFontNormal")
 												TextFrame.Text:SetPoint("CENTER", TextFrame)
 												TextFrame.Text:SetAutoFit(true)
 												TextFrame.Text:SetAutoFit_MaxWidth(TEXT_WIDTH_MAX)

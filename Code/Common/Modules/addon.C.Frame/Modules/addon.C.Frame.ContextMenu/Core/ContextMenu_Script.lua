@@ -12,7 +12,7 @@ NS.Script = {}
 --------------------------------
 
 function NS.Script:Load()
-	local Frame = addon.CREF:GetCommonFrame()
+	local Frame = addon.CS:GetCommonFrame()
 
 	--------------------------------
 	-- REFERENCES

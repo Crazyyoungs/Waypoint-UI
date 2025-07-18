@@ -21,19 +21,20 @@ do  -- CONSTANTS
 			local playerMapID = C_Map.GetBestMapForUnit("player")
 			local playerPosition = C_Map.GetPlayerMapPosition(playerMapID, "player")
 
-			DEFAULT_CHAT_FRAME:AddMessage(addon.CREF:GetChatIcon("chat-subdivider", 16) .. " " .. addon.C.AddonInfo.Locales["SlashCommand - /way - Map ID - Prefix"] .. playerMapID .. addon.C.AddonInfo.Locales["SlashCommand - /way - Map ID - Suffix"])
-			DEFAULT_CHAT_FRAME:AddMessage(addon.CREF:GetChatIcon("chat-subdivider", 16) .. " " .. addon.C.AddonInfo.Locales["SlashCommand - /way - Position - Axis (X) - Prefix"] .. math.ceil(playerPosition.x * 100) .. addon.C.AddonInfo.Locales["SlashCommand - /way - Position - Axis (X) - Suffix"] .. addon.C.AddonInfo.Locales["SlashCommand - /way - Position - Axis (Y) - Prefix"] .. math.ceil(playerPosition.y * 100) .. addon.C.AddonInfo.Locales["SlashCommand - /way - Position - Axis (Y) - Suffix"])
+			DEFAULT_CHAT_FRAME:AddMessage(addon.CS:GetChatIcon("chat-subdivider", 16) .. " " .. addon.C.AddonInfo.Locales["SlashCommand - /way - Map ID - Prefix"] .. playerMapID .. addon.C.AddonInfo.Locales["SlashCommand - /way - Map ID - Suffix"])
+			DEFAULT_CHAT_FRAME:AddMessage(addon.CS:GetChatIcon("chat-subdivider", 16) .. " " .. addon.C.AddonInfo.Locales["SlashCommand - /way - Position - Axis (X) - Prefix"] .. math.ceil(playerPosition.x * 100) .. addon.C.AddonInfo.Locales["SlashCommand - /way - Position - Axis (X) - Suffix"] .. addon.C.AddonInfo.Locales["SlashCommand - /way - Position - Axis (Y) - Prefix"] .. math.ceil(playerPosition.y * 100) .. addon.C.AddonInfo.Locales["SlashCommand - /way - Position - Axis (Y) - Suffix"])
 		end
 
 		local function WAYPOINT_UI_WAY_CATCH()
-			DEFAULT_CHAT_FRAME:AddMessage(addon.CREF:GetAddonInlineIcon(16) .. " /way " .. addon.CREF:GetSharedColor().RGB_YELLOW_HEXCODE .. "#<mapID> <x> <y> <name>" .. "|r")
-			DEFAULT_CHAT_FRAME:AddMessage(addon.CREF:GetChatIcon("chat-subdivider", 16) .. " /way " .. addon.CREF:GetSharedColor().RGB_YELLOW_HEXCODE .. "<x> <y> <name>" .. "|r")
-			DEFAULT_CHAT_FRAME:AddMessage(addon.CREF:GetChatIcon("chat-subdivider", 16) .. " /way " .. addon.CREF:GetSharedColor().RGB_YELLOW_HEXCODE .. "reset" .. "|r")
+			DEFAULT_CHAT_FRAME:AddMessage(addon.CS:GetAddonInlineIcon(16) .. " /way " .. addon.CS:GetSharedColor().RGB_YELLOW_HEXCODE .. "#<mapID> <x> <y> <name>" .. "|r")
+			DEFAULT_CHAT_FRAME:AddMessage(addon.CS:GetChatIcon("chat-subdivider", 16) .. " /way " .. addon.CS:GetSharedColor().RGB_YELLOW_HEXCODE .. "<x> <y> <name>" .. "|r")
+			DEFAULT_CHAT_FRAME:AddMessage(addon.CS:GetChatIcon("chat-subdivider", 16) .. " /way " .. addon.CS:GetSharedColor().RGB_YELLOW_HEXCODE .. "reset" .. "|r")
 
 			WAYPOINT_UI_WAY_LOCATION()
 		end
 
 		NS.Variables.SlashCommand.REGISTER = {
+			-- /way
 			[1] = {
 				["name"] = "WAYPOINT_UI_WAY",
 				["hook"] = "TOMTOM_WAY",
@@ -52,8 +53,8 @@ do  -- CONSTANTS
 
 						--------------------------------
 
-						if firstToken == "reset" then
-							WaypointUI_ResetWay()
+						if firstToken == "reset" or firstToken == "clear" then
+							WaypointUI_ClearWay()
 						else
 							-- <#mapID> <x> <y>
 							if token1 and token2 and token3 and (not tonumber(token1) and tonumber(token2) and tonumber(token3)) then
@@ -102,7 +103,27 @@ do  -- CONSTANTS
 						return
 					end
 				end
-			}
+			},
+			-- General
+			[2] = {
+				["name"] = "WAYPOINT_UI",
+				["hook"] = nil,
+				["command"] = { "waypoint", "wp" },
+				["callback"] = function(msg, tokens)
+					if #tokens >= 1 then
+						local firstToken = tokens[1]:lower()
+						local token1 = tokens[1]
+						local token2 = tokens[2]
+						local token3 = tokens[3]
+
+						--------------------------------
+
+						if firstToken == "reset" or firstToken == "clear" or firstToken == "r" or firstToken == "c" then
+							WaypointUI_ClearAll()
+						end
+					end
+				end
+			},
 		}
 	end
 end

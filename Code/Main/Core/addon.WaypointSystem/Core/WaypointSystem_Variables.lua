@@ -30,7 +30,7 @@ function NS.Variables:Load()
 		end
 
 		do -- MAIN
-			NS.Variables.PATH = addon.CREF:GetAddonPathElement() .. "Waypoint/"
+			NS.Variables.PATH = addon.CS:GetAddonPathElement() .. "Waypoint/"
 			NS.Variables.PADDING = 10
 			NS.Variables.DEFAULT_HEIGHT = 125
 			NS.Variables.BLOCKED_HEIGHT = 75

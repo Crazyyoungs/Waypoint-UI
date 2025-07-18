@@ -16,7 +16,7 @@ function NS.Script:Load()
 	-- REFERENCES
 	--------------------------------
 
-	local Frame = addon.CREF:GetCommonFrame()
+	local Frame = addon.CS:GetCommonFrame()
 	local Frame_GameTooltip = Frame.GameTooltip
 	local Frame_ShoppingTooltip1 = Frame.ShoppingTooltip1
 	local Frame_ShoppingTooltip2 = Frame.ShoppingTooltip2

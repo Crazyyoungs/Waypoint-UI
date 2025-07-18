@@ -18,15 +18,15 @@ end
 do -- CONSTANTS
 	NS.Variables.GameTooltip.TOOLTIP_STYLE = {
 		["GameTooltip"] = {
-			["texture"] = addon.CREF:GetCommonPathArt() .. "Tooltip/background-generic.png",
+			["texture"] = addon.CS:GetCommonPathArt() .. "Tooltip/background-generic.png",
 			["modifier"] = .275
 		},
 		["ShoppingTooltip1"] = {
-			["texture"] = addon.CREF:GetCommonPathArt() .. "Tooltip/background-generic.png",
+			["texture"] = addon.CS:GetCommonPathArt() .. "Tooltip/background-generic.png",
 			["modifier"] = .175
 		},
 		["ShoppingTooltip2"] = {
-			["texture"] = addon.CREF:GetCommonPathArt() .. "Tooltip/background-generic.png",
+			["texture"] = addon.CS:GetCommonPathArt() .. "Tooltip/background-generic.png",
 			["modifier"] = .175
 		}
 	}

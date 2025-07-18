@@ -45,7 +45,7 @@ function NS.Prefabs:Load()
 						--------------------------------
 
 						do -- BACKGROUND
-							Content.Background, Content.BackgroundTexture = addon.C.FrameTemplates:CreateNineSlice(Content, frameStrata, addon.CREF:GetCommonPathElement() .. "context-background.png", { left = 75, top = 60, right = 75, bottom = 100 }, .375, "$parent.Background", Enum.UITextureSliceMode.Stretched)
+							Content.Background, Content.BackgroundTexture = addon.C.FrameTemplates:CreateNineSlice(Content, frameStrata, addon.CS:GetCommonPathElement() .. "context-background.png", { left = 75, top = 60, right = 75, bottom = 100 }, .375, "$parent.Background", Enum.UITextureSliceMode.Stretched)
 							Content.Background:SetPoint("CENTER", Content, 0, -5)
 							Content.Background:SetFrameStrata(frameStrata)
 							Content.Background:SetFrameLevel(frameLevel + 2)
@@ -176,7 +176,7 @@ function NS.Prefabs:Load()
 										--------------------------------
 
 										Frame.titlePool[usedTitles]:Show()
-										Frame.titlePool[usedTitles]:SetInfo(var_name, { r = addon.CREF:GetSharedColor().RGB_WHITE.r, g = addon.CREF:GetSharedColor().RGB_WHITE.g, b = addon.CREF:GetSharedColor().RGB_WHITE.b, a = 1 })
+										Frame.titlePool[usedTitles]:SetInfo(var_name, { r = addon.CS:GetSharedColor().RGB_WHITE.r, g = addon.CS:GetSharedColor().RGB_WHITE.g, b = addon.CS:GetSharedColor().RGB_WHITE.b, a = 1 })
 										Frame.REF_MAIN_LAYOUT:AddElement(Frame.titlePool[usedTitles])
 									end
 
@@ -231,11 +231,11 @@ function NS.Prefabs:Load()
 									["CLICKED_BACKGROUND_COLOR"] = { r = 1, g = 1, b = 1, a = .175 },
 									["CLICKED_CONTENT_COLOR"] = { r = 1, g = 1, b = 1, a = 1 },
 									["ACTIVE_DEFAULT_BACKGROUND_COLOR"] = { r = 1, g = 1, b = 1, a = 0 },
-									["ACTIVE_DEFAULT_CONTENT_COLOR"] = { r = addon.CREF:GetSharedColor().RGB_YELLOW.r, g = addon.CREF:GetSharedColor().RGB_YELLOW.g, b = addon.CREF:GetSharedColor().RGB_YELLOW.b, a = 1 },
+									["ACTIVE_DEFAULT_CONTENT_COLOR"] = { r = addon.CS:GetSharedColor().RGB_YELLOW.r, g = addon.CS:GetSharedColor().RGB_YELLOW.g, b = addon.CS:GetSharedColor().RGB_YELLOW.b, a = 1 },
 									["ACTIVE_HIGHLIGHTED_BACKGROUND_COLOR"] = { r = 1, g = 1, b = 1, a = .125 },
-									["ACTIVE_HIGHLIGHTED_CONTENT_COLOR"] = { r = addon.CREF:GetSharedColor().RGB_YELLOW.r, g = addon.CREF:GetSharedColor().RGB_YELLOW.g, b = addon.CREF:GetSharedColor().RGB_YELLOW.b, a = 1 },
+									["ACTIVE_HIGHLIGHTED_CONTENT_COLOR"] = { r = addon.CS:GetSharedColor().RGB_YELLOW.r, g = addon.CS:GetSharedColor().RGB_YELLOW.g, b = addon.CS:GetSharedColor().RGB_YELLOW.b, a = 1 },
 									["ACTIVE_CLICKED_BACKGROUND_COLOR"] = { r = 1, g = 1, b = 1, a = .075 },
-									["ACTIVE_CLICKED_CONTENT_COLOR"] = { r = addon.CREF:GetSharedColor().RGB_YELLOW.r, g = addon.CREF:GetSharedColor().RGB_YELLOW.g, b = addon.CREF:GetSharedColor().RGB_YELLOW.b, a = 1 },
+									["ACTIVE_CLICKED_CONTENT_COLOR"] = { r = addon.CS:GetSharedColor().RGB_YELLOW.r, g = addon.CS:GetSharedColor().RGB_YELLOW.g, b = addon.CS:GetSharedColor().RGB_YELLOW.b, a = 1 },
 								}, "$parent.Button")
 								Button:SetHeight(25)
 								Button:SetFrameStrata(frameStrata)
@@ -306,7 +306,7 @@ function NS.Prefabs:Load()
 						--------------------------------
 
 						do -- TEXT
-							Content.Text = addon.C.FrameTemplates:CreateText(Content, addon.CREF:GetSharedColor().RGB_WHITE, 12.5, "LEFT", "MIDDLE", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Text", "GameFontNormal")
+							Content.Text = addon.C.FrameTemplates:CreateText(Content, addon.CS:GetSharedColor().RGB_WHITE, 12.5, "LEFT", "MIDDLE", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Text", "GameFontNormal")
 							Content.Text:SetPoint("CENTER", Content)
 							addon.C.API.FrameUtil:SetDynamicSize(Content.Text, Content, 0, 0)
 						end
@@ -381,7 +381,7 @@ function NS.Prefabs:Load()
 						--------------------------------
 
 						do -- BACKGROUND
-							Content.Background, Content.BackgroundTexture = addon.C.FrameTemplates:CreateNineSlice(Content, frameStrata, addon.CREF:GetCommonPathArt() .. "Basic/square-bevel.png", 100, .0625, "$parent.Background", Enum.UITextureSliceMode.Stretched)
+							Content.Background, Content.BackgroundTexture = addon.C.FrameTemplates:CreateNineSlice(Content, frameStrata, addon.CS:GetCommonPathArt() .. "Basic/square-bevel.png", 100, .0625, "$parent.Background", Enum.UITextureSliceMode.Stretched)
 							Content.Background:SetPoint("CENTER", Content)
 							Content.Background:SetFrameStrata(frameStrata)
 							Content.Background:SetFrameLevel(frameLevel + 2)
@@ -400,7 +400,7 @@ function NS.Prefabs:Load()
 							--------------------------------
 
 							do -- TEXT
-								Subcontent.Text = addon.C.FrameTemplates:CreateText(Subcontent, addon.CREF:GetSharedColor().RGB_WHITE, 12.5, "LEFT", "MIDDLE", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Text", "GameFontNormal")
+								Subcontent.Text = addon.C.FrameTemplates:CreateText(Subcontent, addon.CS:GetSharedColor().RGB_WHITE, 12.5, "LEFT", "MIDDLE", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Text", "GameFontNormal")
 								Subcontent.Text:SetPoint("LEFT", Subcontent)
 								Subcontent.Text:SetAutoFit(true)
 								Subcontent.Text:SetAutoFit_MaxWidth(INFO_TEXT_WIDTH_MAX)

@@ -12,7 +12,7 @@ NS.Elements = {}
 --------------------------------
 
 function NS.Elements:Load()
-	local Frame = addon.CREF:GetCommonFrame()
+	local Frame = addon.CS:GetCommonFrame()
 
 	--------------------------------
 	-- CREATE ELEMENTS

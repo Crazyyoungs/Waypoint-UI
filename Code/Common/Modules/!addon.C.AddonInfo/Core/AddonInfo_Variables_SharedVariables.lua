@@ -16,5 +16,5 @@ do -- MAIN
 end
 
 do -- CONSTANTS
-	NS.Variables.SharedVariables.PATH_TOOLTIP_DIVIDER = addon.CREF:GetAddonPathElement() .. "background-tooltip-divider.png"
+	NS.Variables.SharedVariables.PATH_TOOLTIP_DIVIDER = addon.CS:GetAddonPathElement() .. "background-tooltip-divider.png"
 end

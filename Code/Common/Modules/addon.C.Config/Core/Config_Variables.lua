@@ -31,7 +31,7 @@ function NS.Variables:Load()
 		end
 
 		do -- MAIN
-			NS.Variables.PATH = addon.CREF:GetCommonPath() .. "Art/Config"
+			NS.Variables.PATH = addon.CS:GetCommonPath() .. "Art/Config"
 
 			NS.Variables.FRAME_STRATA = "HIGH"
 			NS.Variables.FRAME_LEVEL = 1

@@ -662,11 +662,13 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		Callback.Constructor:StartConstruction(addon.C.AddonInfo.Variables.Config.TABLE)
-		Frame:SetAddonIcon()
-		Frame:Hide()
+		C_Timer.After(.1, function()
+			Callback.Constructor:StartConstruction(addon.C.AddonInfo.Variables.Config.TABLE)
+			Frame:SetAddonIcon()
+			Frame:Hide()
 
-		local Category = Settings.RegisterCanvasLayoutCategory(Frame, addon.C.AddonInfo.Variables.General.NAME)
-		Settings.RegisterAddOnCategory(Category)
+			local Category = Settings.RegisterCanvasLayoutCategory(Frame, addon.C.AddonInfo.Variables.General.NAME)
+			Settings.RegisterAddOnCategory(Category)
+		end)
 	end
 end

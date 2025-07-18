@@ -18,7 +18,7 @@ function NS.Variables:Load()
 
 	do -- CONSTANTS
 		do -- MAIN
-			NS.Variables.PATH = addon.CREF:GetAddonPath() .. "Art/ContextIcons/"
+			NS.Variables.PATH = addon.CS:GetAddonPath() .. "Art/ContextIcons/"
 		end
 
 		do -- DATA

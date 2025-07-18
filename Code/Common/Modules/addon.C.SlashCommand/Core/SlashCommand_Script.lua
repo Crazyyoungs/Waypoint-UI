@@ -65,11 +65,35 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
+		local slashCommandIndex = {}
+
 		for k, v in ipairs(addon.C.AddonInfo.Variables.SlashCommand.REGISTER) do
 			if v.hook and Callback:GetSlashCommand(v.hook) then
 				Callback:HookSlashCommand(v.hook, v.callback)
 			else
-				Callback:AddSlashCommand(v.name, v.command, v.callback, k)
+				if type(v.command) == "table" then
+					for i = 1, #v.command do
+						if not slashCommandIndex[v.name] then
+							slashCommandIndex[v.name] = 1
+						else
+							slashCommandIndex[v.name] = slashCommandIndex[v.name] + 1
+						end
+
+						--------------------------------
+
+						Callback:AddSlashCommand(v.name, v.command[i], v.callback, slashCommandIndex[v.name])
+					end
+				else
+					if not slashCommandIndex[v.name] then
+						slashCommandIndex[v.name] = 1
+					else
+						slashCommandIndex[v.name] = slashCommandIndex[v.name] + 1
+					end
+
+					--------------------------------
+
+					Callback:AddSlashCommand(v.name, v.command, v.callback, slashCommandIndex[v.name])
+				end
 			end
 		end
 	end

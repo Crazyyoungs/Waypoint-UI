@@ -172,7 +172,7 @@ function NS.Elements:Load()
 								--------------------------------
 
 								do -- BACKGROUND
-									Divider.Background, Divider.BackgroundTexture = addon.C.FrameTemplates:CreateTexture(Divider, NS.Variables.FRAME_STRATA, addon.CREF:GetCommonPathArt() .. "Basic/square.png", "$parent.Background")
+									Divider.Background, Divider.BackgroundTexture = addon.C.FrameTemplates:CreateTexture(Divider, NS.Variables.FRAME_STRATA, addon.CS:GetCommonPathArt() .. "Basic/square.png", "$parent.Background")
 									Divider.Background:SetPoint("CENTER", Divider)
 									Divider.Background:SetFrameStrata(NS.Variables.FRAME_STRATA)
 									Divider.Background:SetFrameLevel(NS.Variables.FRAME_LEVEL + 4)

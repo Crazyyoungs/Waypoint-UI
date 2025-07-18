@@ -21,19 +21,19 @@ function NS.Prefabs:Load()
 	do -- SIDEBAR
 		do -- NAVIGATION
 			PrefabRegistry:Add("C.Config.Sidebar.Navigation.Button", function(parent, frameStrata, frameLevel, name)
-				local DEFAULT_BACKGROUND_TEXTURE = addon.CREF:GetCommonPathConfig() .. "navbutton-background.png"
-				local DEFAULT_CONTENT_COLOR = addon.CREF:GetSharedColor().RGB_WHITE
-				local HIGHLIGHTED_BACKGROUND_TEXTURE = addon.CREF:GetCommonPathConfig() .. "navbutton-background-highlighted.png"
-				local HIGHLIGHTED_CONTENT_COLOR = addon.CREF:GetSharedColor().RGB_WHITE
-				local CLICKED_BACKGROUND_TEXTURE = addon.CREF:GetCommonPathConfig() .. "navbutton-background-clicked.png"
-				local CLICKED_CONTENT_COLOR = addon.CREF:GetSharedColor().RGB_WHITE
+				local DEFAULT_BACKGROUND_TEXTURE = addon.CS:GetCommonPathConfig() .. "navbutton-background.png"
+				local DEFAULT_CONTENT_COLOR = addon.CS:GetSharedColor().RGB_WHITE
+				local HIGHLIGHTED_BACKGROUND_TEXTURE = addon.CS:GetCommonPathConfig() .. "navbutton-background-highlighted.png"
+				local HIGHLIGHTED_CONTENT_COLOR = addon.CS:GetSharedColor().RGB_WHITE
+				local CLICKED_BACKGROUND_TEXTURE = addon.CS:GetCommonPathConfig() .. "navbutton-background-clicked.png"
+				local CLICKED_CONTENT_COLOR = addon.CS:GetSharedColor().RGB_WHITE
 
-				local ACTIVE_DEFAULT_BACKGROUND_TEXTURE = addon.CREF:GetCommonPathConfig() .. "navbutton-background-active.png"
-				local ACTIVE_DEFAULT_CONTENT_COLOR = addon.CREF:GetSharedColor().RGB_WHITE
-				local ACTIVE_HIGHLIGHTED_BACKGROUND_TEXTURE = addon.CREF:GetCommonPathConfig() .. "navbutton-background-active-highlighted.png"
-				local ACTIVE_HIGHLIGHTED_CONTENT_COLOR = addon.CREF:GetSharedColor().RGB_WHITE
-				local ACTIVE_CLICKED_BACKGROUND_TEXTURE = addon.CREF:GetCommonPathConfig() .. "navbutton-background-active-clicked.png"
-				local ACTIVE_CLICKED_CONTENT_COLOR = addon.CREF:GetSharedColor().RGB_WHITE
+				local ACTIVE_DEFAULT_BACKGROUND_TEXTURE = addon.CS:GetCommonPathConfig() .. "navbutton-background-active.png"
+				local ACTIVE_DEFAULT_CONTENT_COLOR = addon.CS:GetSharedColor().RGB_WHITE
+				local ACTIVE_HIGHLIGHTED_BACKGROUND_TEXTURE = addon.CS:GetCommonPathConfig() .. "navbutton-background-active-highlighted.png"
+				local ACTIVE_HIGHLIGHTED_CONTENT_COLOR = addon.CS:GetSharedColor().RGB_WHITE
+				local ACTIVE_CLICKED_BACKGROUND_TEXTURE = addon.CS:GetCommonPathConfig() .. "navbutton-background-active-clicked.png"
+				local ACTIVE_CLICKED_CONTENT_COLOR = addon.CS:GetSharedColor().RGB_WHITE
 
 				--------------------------------
 
@@ -467,14 +467,14 @@ function NS.Prefabs:Load()
 										--------------------------------
 
 										do -- TITLE
-											Info.Title = addon.C.FrameTemplates:CreateText(Info, addon.CREF:GetSharedColor().RGB_WHITE, 14, "LEFT", "TOP", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Title")
+											Info.Title = addon.C.FrameTemplates:CreateText(Info, addon.CS:GetSharedColor().RGB_WHITE, 14, "LEFT", "TOP", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Title")
 											Info.Title:SetPoint("TOPLEFT", Info)
 											Info.Title:SetAutoFit(true, true)
 											Info.Title:SetAutoFit_MaxWidth(MAX_WIDTH - IMAGE_SIZE)
 										end
 
 										do -- SUBTITLE
-											Info.Subtitle = addon.C.FrameTemplates:CreateText(Info, addon.CREF:GetSharedColor().RGB_WHITE, 12, "LEFT", "TOP", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Subtitle")
+											Info.Subtitle = addon.C.FrameTemplates:CreateText(Info, addon.CS:GetSharedColor().RGB_WHITE, 12, "LEFT", "TOP", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Subtitle")
 											Info.Subtitle:SetPoint("TOPLEFT", Info.Title, "BOTTOMLEFT", 0, -5)
 											Info.Subtitle:SetAutoFit(true, true)
 											Info.Subtitle:SetAutoFit_MaxWidth(MAX_WIDTH - IMAGE_SIZE)
@@ -667,10 +667,10 @@ function NS.Prefabs:Load()
 
 								function Frame:UpdateSubcontainer()
 									if Frame.VAR_SUBCONTAINER then
-										Frame.REF_BACKGROUND_TEXTURE:SetTexture(addon.CREF:GetCommonPathConfig() .. "frame-light.png")
+										Frame.REF_BACKGROUND_TEXTURE:SetTexture(addon.CS:GetCommonPathConfig() .. "frame-light.png")
 										if Frame.VAR_PARENT then addon.C.API.Util:SetFontSize(Frame.VAR_PARENT.REF_HEADER_TITLE_TEXT, 14) end
 									else
-										Frame.REF_BACKGROUND_TEXTURE:SetTexture(addon.CREF:GetCommonPathConfig() .. "frame.png")
+										Frame.REF_BACKGROUND_TEXTURE:SetTexture(addon.CS:GetCommonPathConfig() .. "frame.png")
 									end
 								end
 							end
@@ -762,7 +762,7 @@ function NS.Prefabs:Load()
 											--------------------------------
 
 											do -- TEXT
-												Title.Text = addon.C.FrameTemplates:CreateText(Header.Title, addon.CREF:GetSharedColor().RGB_YELLOW, 15, "LEFT", "MIDDLE", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Text")
+												Title.Text = addon.C.FrameTemplates:CreateText(Header.Title, addon.CS:GetSharedColor().RGB_YELLOW, 15, "LEFT", "MIDDLE", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Text")
 												Title.Text:SetPoint("CENTER", Title)
 												addon.C.API.FrameUtil:SetDynamicSize(Title.Text, Title, 0, 0)
 											end
@@ -884,7 +884,7 @@ function NS.Prefabs:Load()
 								--------------------------------
 
 								do -- BACKGROUND
-									Content.Background, Content.BackgroundTexture = addon.C.FrameTemplates:CreateNineSlice(Content, frameStrata, addon.CREF:GetCommonPathConfig() .. "button-background.png", 70, .125, "$parent.Background", Enum.UITextureSliceMode.Stretched)
+									Content.Background, Content.BackgroundTexture = addon.C.FrameTemplates:CreateNineSlice(Content, frameStrata, addon.CS:GetCommonPathConfig() .. "button-background.png", 70, .125, "$parent.Background", Enum.UITextureSliceMode.Stretched)
 									Content.Background:SetPoint("CENTER", Content)
 									Content.Background:SetFrameStrata(frameStrata)
 									Content.Background:SetFrameLevel(frameLevel + 1)
@@ -961,7 +961,7 @@ function NS.Prefabs:Load()
 
 													do -- ELEMENTS
 														do -- TITLE
-															Info_LayoutGroup.Title = addon.C.FrameTemplates:CreateText(Info_LayoutGroup, addon.CREF:GetSharedColor().RGB_WHITE, 12, "LEFT", "MIDDLE", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Title", "GameFontNormal")
+															Info_LayoutGroup.Title = addon.C.FrameTemplates:CreateText(Info_LayoutGroup, addon.CS:GetSharedColor().RGB_WHITE, 12, "LEFT", "MIDDLE", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Title", "GameFontNormal")
 															Info_LayoutGroup.Title:SetAutoFit(true, true)
 															Info_LayoutGroup.Title:SetAutoFit_MaxWidth(INFO_TEXT_WIDTH_MAX)
 															Info_LayoutGroup:AddElement(Info_LayoutGroup.Title)
@@ -987,7 +987,7 @@ function NS.Prefabs:Load()
 														end
 
 														do -- SUBTITLE
-															Info_LayoutGroup.Subtitle = addon.C.FrameTemplates:CreateText(Info_LayoutGroup, addon.CREF:GetSharedColor().RGB_WHITE, 11, "LEFT", "MIDDLE", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Subtitle", "GameFontNormal")
+															Info_LayoutGroup.Subtitle = addon.C.FrameTemplates:CreateText(Info_LayoutGroup, addon.CS:GetSharedColor().RGB_WHITE, 11, "LEFT", "MIDDLE", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Subtitle", "GameFontNormal")
 															Info_LayoutGroup.Subtitle:SetAutoFit(true, true)
 															Info_LayoutGroup.Subtitle:SetAutoFit_MaxWidth(INFO_TEXT_WIDTH_MAX)
 															Info_LayoutGroup.Subtitle:SetAlpha(.5)
@@ -1245,7 +1245,7 @@ function NS.Prefabs:Load()
 
 					do -- ELEMENTS
 						do -- BACKGROUND
-							Frame.Background, Frame.BackgroundTexture = addon.C.FrameTemplates:CreateTexture(Frame, frameStrata, addon.CREF:GetCommonPathArt() .. "Basic/square.png", "$parent.Background")
+							Frame.Background, Frame.BackgroundTexture = addon.C.FrameTemplates:CreateTexture(Frame, frameStrata, addon.CS:GetCommonPathArt() .. "Basic/square.png", "$parent.Background")
 							Frame.Background:SetPoint("CENTER", Frame)
 							Frame.Background:SetFrameStrata(frameStrata)
 							Frame.Background:SetFrameLevel(frameLevel + 1)

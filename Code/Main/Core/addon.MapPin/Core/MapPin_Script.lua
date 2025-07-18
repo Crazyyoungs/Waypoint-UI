@@ -51,7 +51,7 @@ function NS.Script:Load()
 	--------------------------------
 
 	do
-		function WaypointUI_ResetWay()
+		function WaypointUI_ClearWay()
 			if WaypointUI_IsWay() then
 				C_Map.ClearUserWaypoint()
 			end

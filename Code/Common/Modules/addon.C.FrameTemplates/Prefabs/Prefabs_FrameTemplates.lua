@@ -301,12 +301,12 @@ function NS.Prefabs:Load()
 				local Frame = PrefabRegistry:Create("C.FrameTemplates.Blizzard.Button.Text.Template", parent, frameStrata, frameLevel, {
 					["resize"] = data.resize,
 					["PADDING_CONTENT"] = PADDING,
-					["DEFAULT_BACKGROUND_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "button-background-red.png",
-					["DEFAULT_CONTENT_COLOR"] = addon.CREF:GetSharedColor().RGB_YELLOW,
-					["HIGHLIGHTED_BACKGROUND_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "button-background-red-highlighted.png",
-					["HIGHLIGHTED_CONTENT_COLOR"] = addon.CREF:GetSharedColor().RGB_YELLOW,
-					["CLICKED_BACKGROUND_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "button-background-red-clicked.png",
-					["CLICKED_CONTENT_COLOR"] = addon.CREF:GetSharedColor().RGB_YELLOW,
+					["DEFAULT_BACKGROUND_TEXTURE"] = addon.CS:GetCommonPathElement() .. "button-background-red.png",
+					["DEFAULT_CONTENT_COLOR"] = addon.CS:GetSharedColor().RGB_YELLOW,
+					["HIGHLIGHTED_BACKGROUND_TEXTURE"] = addon.CS:GetCommonPathElement() .. "button-background-red-highlighted.png",
+					["HIGHLIGHTED_CONTENT_COLOR"] = addon.CS:GetSharedColor().RGB_YELLOW,
+					["CLICKED_BACKGROUND_TEXTURE"] = addon.CS:GetCommonPathElement() .. "button-background-red-clicked.png",
+					["CLICKED_CONTENT_COLOR"] = addon.CS:GetSharedColor().RGB_YELLOW,
 				}, name)
 
 				--------------------------------
@@ -318,12 +318,12 @@ function NS.Prefabs:Load()
 				local Frame = PrefabRegistry:Create("C.FrameTemplates.Blizzard.Button.Text.Template", parent, frameStrata, frameLevel, {
 					["resize"] = data.resize,
 					["PADDING_CONTENT"] = PADDING,
-					["DEFAULT_BACKGROUND_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "button-background-grey.png",
-					["DEFAULT_CONTENT_COLOR"] = addon.CREF:GetSharedColor().RGB_WHITE,
-					["HIGHLIGHTED_BACKGROUND_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "button-background-grey-highlighted.png",
-					["HIGHLIGHTED_CONTENT_COLOR"] = addon.CREF:GetSharedColor().RGB_WHITE,
-					["CLICKED_BACKGROUND_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "button-background-grey-clicked.png",
-					["CLICKED_CONTENT_COLOR"] = addon.CREF:GetSharedColor().RGB_WHITE,
+					["DEFAULT_BACKGROUND_TEXTURE"] = addon.CS:GetCommonPathElement() .. "button-background-grey.png",
+					["DEFAULT_CONTENT_COLOR"] = addon.CS:GetSharedColor().RGB_WHITE,
+					["HIGHLIGHTED_BACKGROUND_TEXTURE"] = addon.CS:GetCommonPathElement() .. "button-background-grey-highlighted.png",
+					["HIGHLIGHTED_CONTENT_COLOR"] = addon.CS:GetSharedColor().RGB_WHITE,
+					["CLICKED_BACKGROUND_TEXTURE"] = addon.CS:GetCommonPathElement() .. "button-background-grey-clicked.png",
+					["CLICKED_CONTENT_COLOR"] = addon.CS:GetSharedColor().RGB_WHITE,
 				}, name)
 
 				--------------------------------
@@ -465,11 +465,11 @@ function NS.Prefabs:Load()
 			PrefabRegistry:Add("C.FrameTemplates.Blizzard.Button.Image.Red", function(parent, frameStrata, frameLevel, data, name)
 				local Frame = PrefabRegistry:Create("C.FrameTemplates.Blizzard.Button.Image.Template", parent, frameStrata, frameLevel, {
 					["PADDING_CONTENT"] = data.PADDING_CONTENT,
-					["DEFAULT_BACKGROUND_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "button-background-red.png",
+					["DEFAULT_BACKGROUND_TEXTURE"] = addon.CS:GetCommonPathElement() .. "button-background-red.png",
 					["DEFAULT_IMAGE_TEXTURE"] = data.DEFAULT_IMAGE_TEXTURE,
-					["HIGHLIGHTED_BACKGROUND_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "button-background-red-highlighted.png",
+					["HIGHLIGHTED_BACKGROUND_TEXTURE"] = addon.CS:GetCommonPathElement() .. "button-background-red-highlighted.png",
 					["HIGHLIGHTED_IMAGE_TEXTURE"] = data.HIGHLIGHTED_IMAGE_TEXTURE,
-					["CLICKED_BACKGROUND_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "button-background-red-clicked.png",
+					["CLICKED_BACKGROUND_TEXTURE"] = addon.CS:GetCommonPathElement() .. "button-background-red-clicked.png",
 					["CLICKED_IMAGE_TEXTURE"] = data.CLICKED_IMAGE_TEXTURE,
 				}, name)
 
@@ -481,11 +481,11 @@ function NS.Prefabs:Load()
 			PrefabRegistry:Add("C.FrameTemplates.Blizzard.Button.Image.Grey", function(parent, frameStrata, frameLevel, data, name)
 				local Frame = PrefabRegistry:Create("C.FrameTemplates.Blizzard.Button.Image.Template", parent, frameStrata, frameLevel, {
 					["PADDING_CONTENT"] = data.PADDING_CONTENT,
-					["DEFAULT_BACKGROUND_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "button-background-grey.png",
+					["DEFAULT_BACKGROUND_TEXTURE"] = addon.CS:GetCommonPathElement() .. "button-background-grey.png",
 					["DEFAULT_IMAGE_TEXTURE"] = data.DEFAULT_IMAGE_TEXTURE,
-					["HIGHLIGHTED_BACKGROUND_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "button-background-grey-highlighted.png",
+					["HIGHLIGHTED_BACKGROUND_TEXTURE"] = addon.CS:GetCommonPathElement() .. "button-background-grey-highlighted.png",
 					["HIGHLIGHTED_IMAGE_TEXTURE"] = data.HIGHLIGHTED_IMAGE_TEXTURE,
-					["CLICKED_BACKGROUND_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "button-background-grey-clicked.png",
+					["CLICKED_BACKGROUND_TEXTURE"] = addon.CS:GetCommonPathElement() .. "button-background-grey-clicked.png",
 					["CLICKED_IMAGE_TEXTURE"] = data.CLICKED_IMAGE_TEXTURE,
 				}, name)
 
@@ -635,13 +635,14 @@ function NS.Prefabs:Load()
 							end
 
 							function Frame:SetDropdownInfo(valueTable, startValue)
+								local data = type(valueTable) == "function" and valueTable() or valueTable
 								local layoutInfo = {}
 
 								--------------------------------
 
-								for i = 1, #valueTable do
+								for i = 1, #data do
 									local elementInfo = {
-										["name"] = valueTable[i],
+										["name"] = data[i],
 										["type"] = "Button",
 										["callback"] = function() Frame:ContextMenu_SetValue(i, true) end,
 										["enabled"] = function() return Frame:ContextMenu_ActiveValueCheck(i) end,
@@ -724,15 +725,15 @@ function NS.Prefabs:Load()
 				local Frame = PrefabRegistry:Create("C.FrameTemplates.Blizzard.Button.Dropdown.Template", parent, frameStrata, frameLevel, {
 					["resizeContextMenu"] = data.resizeContextMenu,
 					["PADDING_CONTENT"] = PADDING,
-					["DEFAULT_BACKGROUND_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "button-background-grey.png",
-					["DEFAULT_CONTENT_COLOR"] = addon.CREF:GetSharedColor().RGB_WHITE,
-					["DEFAULT_IMAGE_TEXTURE"] = addon.CREF:NewIcon("arrow-up-down"),
-					["HIGHLIGHTED_BACKGROUND_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "button-background-grey-highlighted.png",
-					["HIGHLIGHTED_CONTENT_COLOR"] = addon.CREF:GetSharedColor().RGB_WHITE,
-					["HIGHLIGHTED_IMAGE_TEXTURE"] = addon.CREF:NewIcon("arrow-up-down"),
-					["CLICKED_BACKGROUND_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "button-background-grey-clicked.png",
-					["CLICKED_CONTENT_COLOR"] = addon.CREF:GetSharedColor().RGB_WHITE,
-					["CLICKED_IMAGE_TEXTURE"] = addon.CREF:NewIcon("arrow-up-down"),
+					["DEFAULT_BACKGROUND_TEXTURE"] = addon.CS:GetCommonPathElement() .. "button-background-grey.png",
+					["DEFAULT_CONTENT_COLOR"] = addon.CS:GetSharedColor().RGB_WHITE,
+					["DEFAULT_IMAGE_TEXTURE"] = addon.CS:NewIcon("arrow-up-down"),
+					["HIGHLIGHTED_BACKGROUND_TEXTURE"] = addon.CS:GetCommonPathElement() .. "button-background-grey-highlighted.png",
+					["HIGHLIGHTED_CONTENT_COLOR"] = addon.CS:GetSharedColor().RGB_WHITE,
+					["HIGHLIGHTED_IMAGE_TEXTURE"] = addon.CS:NewIcon("arrow-up-down"),
+					["CLICKED_BACKGROUND_TEXTURE"] = addon.CS:GetCommonPathElement() .. "button-background-grey-clicked.png",
+					["CLICKED_CONTENT_COLOR"] = addon.CS:GetSharedColor().RGB_WHITE,
+					["CLICKED_IMAGE_TEXTURE"] = addon.CS:NewIcon("arrow-up-down"),
 				}, name)
 				Frame:SetFrameStrata(frameStrata)
 				Frame:SetFrameLevel(frameLevel)
@@ -903,15 +904,15 @@ function NS.Prefabs:Load()
 
 			PrefabRegistry:Add("C.FrameTemplates.Blizzard.Checkbox", function(parent, frameStrata, frameLevel, data, name)
 				local Frame = PrefabRegistry:Create("C.FrameTemplates.Blizzard.Checkbox.Template", parent, frameStrata, frameLevel, {
-					["DEFAULT_BACKGROUND_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "checkbox-background.png",
-					["DEFAULT_CHECK_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "checkbox-tick.png",
-					["DEFAULT_CHECK_COLOR"] = addon.CREF:GetSharedColor().RGB_WHITE,
-					["HIGHLIGHTED_BACKGROUND_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "checkbox-background-highlighted.png",
-					["HIGHLIGHTED_CHECK_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "checkbox-tick.png",
-					["HIGHLIGHTED_CHECK_COLOR"] = addon.CREF:GetSharedColor().RGB_WHITE,
-					["CLICKED_BACKGROUND_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "checkbox-background-highlighted.png",
-					["CLICKED_CHECK_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "checkbox-tick.png",
-					["CLICKED_CHECK_COLOR"] = addon.CREF:GetSharedColor().RGB_WHITE,
+					["DEFAULT_BACKGROUND_TEXTURE"] = addon.CS:GetCommonPathElement() .. "checkbox-background.png",
+					["DEFAULT_CHECK_TEXTURE"] = addon.CS:GetCommonPathElement() .. "checkbox-tick.png",
+					["DEFAULT_CHECK_COLOR"] = addon.CS:GetSharedColor().RGB_WHITE,
+					["HIGHLIGHTED_BACKGROUND_TEXTURE"] = addon.CS:GetCommonPathElement() .. "checkbox-background-highlighted.png",
+					["HIGHLIGHTED_CHECK_TEXTURE"] = addon.CS:GetCommonPathElement() .. "checkbox-tick.png",
+					["HIGHLIGHTED_CHECK_COLOR"] = addon.CS:GetSharedColor().RGB_WHITE,
+					["CLICKED_BACKGROUND_TEXTURE"] = addon.CS:GetCommonPathElement() .. "checkbox-background-highlighted.png",
+					["CLICKED_CHECK_TEXTURE"] = addon.CS:GetCommonPathElement() .. "checkbox-tick.png",
+					["CLICKED_CHECK_COLOR"] = addon.CS:GetSharedColor().RGB_WHITE,
 				}, name)
 
 				--------------------------------
@@ -1094,12 +1095,12 @@ function NS.Prefabs:Load()
 
 			PrefabRegistry:Add("C.FrameTemplates.Blizzard.Range", function(parent, frameStrata, frameLevel, data, name)
 				local Frame = PrefabRegistry:Create("C.FrameTemplates.Blizzard.Range.Template", parent, frameStrata, frameLevel, {
-					["DEFAULT_BACKGROUND_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "range-background.png",
-					["DEFAULT_THUMB_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "range-thumb-flat.png",
-					["HIGHLIGHTED_BACKGROUND_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "range-background.png",
-					["HIGHLIGHTED_THUMB_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "range-thumb-flat-highlighted.png",
-					["CLICKED_BACKGROUND_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "range-background.png",
-					["CLICKED_THUMB_TEXTURE"] = addon.CREF:GetCommonPathElement() .. "range-thumb-flat-clicked.png",
+					["DEFAULT_BACKGROUND_TEXTURE"] = addon.CS:GetCommonPathElement() .. "range-background.png",
+					["DEFAULT_THUMB_TEXTURE"] = addon.CS:GetCommonPathElement() .. "range-thumb-flat.png",
+					["HIGHLIGHTED_BACKGROUND_TEXTURE"] = addon.CS:GetCommonPathElement() .. "range-background.png",
+					["HIGHLIGHTED_THUMB_TEXTURE"] = addon.CS:GetCommonPathElement() .. "range-thumb-flat-highlighted.png",
+					["CLICKED_BACKGROUND_TEXTURE"] = addon.CS:GetCommonPathElement() .. "range-background.png",
+					["CLICKED_THUMB_TEXTURE"] = addon.CS:GetCommonPathElement() .. "range-thumb-flat-clicked.png",
 				}, name)
 
 				--------------------------------
@@ -1203,7 +1204,7 @@ function NS.Prefabs:Load()
 										--------------------------------
 
 										do -- TEXT
-											Info_Content.Text = addon.C.FrameTemplates:CreateText(Info_Content, addon.CREF:GetSharedColor().RGB_YELLOW, 12.5, direction == "LEFT" and "RIGHT" or "LEFT", "MIDDLE", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Text", "GameFontNormal")
+											Info_Content.Text = addon.C.FrameTemplates:CreateText(Info_Content, addon.CS:GetSharedColor().RGB_YELLOW, 12.5, direction == "LEFT" and "RIGHT" or "LEFT", "MIDDLE", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Text", "GameFontNormal")
 											Info_Content.Text:SetPoint("CENTER", Info_Content)
 
 											if resize then
@@ -1275,9 +1276,9 @@ function NS.Prefabs:Load()
 
 		do -- SCROLL BAR
 			PrefabRegistry:Add("C.FrameTemplates.Blizzard.ScrollBar", function(parent, frameStrata, frameLevel, data, name)
-				local DEFAULT_THUMB_TEXTURE = addon.CREF:GetCommonPathElement() .. "scrollbar-thumb.png"
-				local HIGHLIGHTED_THUMB_TEXTURE = addon.CREF:GetCommonPathElement() .. "scrollbar-thumb-highlighted.png"
-				local CLICKED_THUMB_TEXTURE = addon.CREF:GetCommonPathElement() .. "scrollbar-thumb-clicked.png"
+				local DEFAULT_THUMB_TEXTURE = addon.CS:GetCommonPathElement() .. "scrollbar-thumb.png"
+				local HIGHLIGHTED_THUMB_TEXTURE = addon.CS:GetCommonPathElement() .. "scrollbar-thumb-highlighted.png"
+				local CLICKED_THUMB_TEXTURE = addon.CS:GetCommonPathElement() .. "scrollbar-thumb-clicked.png"
 
 				--------------------------------
 
@@ -1293,7 +1294,7 @@ function NS.Prefabs:Load()
 				do -- ELEMENTS
 					do -- TRACK
 						do -- BACKGROUND
-							Track.Background, Track.BackgroundTexture = addon.C.FrameTemplates:CreateNineSlice(Track, frameStrata, addon.CREF:GetCommonPathElement() .. "frame.png", 125, .075, "$parent.Background", Enum.UITextureSliceMode.Stretched)
+							Track.Background, Track.BackgroundTexture = addon.C.FrameTemplates:CreateNineSlice(Track, frameStrata, addon.CS:GetCommonPathElement() .. "frame.png", 125, .075, "$parent.Background", Enum.UITextureSliceMode.Stretched)
 							Track.Background:SetPoint("CENTER", Track)
 							Track.Background:SetFrameStrata(frameStrata)
 							Track.Background:SetFrameLevel(frameLevel + 1)
@@ -1438,12 +1439,12 @@ function NS.Prefabs:Load()
 
 		do -- COLOR INPUT
 			PrefabRegistry:Add("C.FrameTemplates.Blizzard.Color", function(parent, frameStrata, frameLevel, data, name)
-				local DEFAULT_BACKGROUND_TEXTURE = data.DEFAULT_BACKGROUND_TEXTURE or addon.CREF:GetCommonPathArt() .. "Elements/color-background.png"
-				local DEFAULT_IMAGE_TEXTURE = data.DEFAULT_IMAGE_TEXTURE or addon.CREF:GetCommonPathArt() .. "Elements/color-input-background.png"
-				local HIGHLIGHTED_BACKGROUND_TEXTURE = data.HIGHLIGHTED_BACKGROUND_TEXTURE or addon.CREF:GetCommonPathArt() .. "Elements/color-background-highlighted.png"
-				local HIGHLIGHTED_IMAGE_TEXTURE = data.HIGHLIGHTED_IMAGE_TEXTURE or addon.CREF:GetCommonPathArt() .. "Elements/color-input-background-highlighted.png"
-				local CLICKED_BACKGROUND_TEXTURE = data.CLICKED_BACKGROUND_TEXTURE or addon.CREF:GetCommonPathArt() .. "Elements/color-background-highlighted.png"
-				local CLICKED_IMAGE_TEXTURE = data.CLICKED_IMAGE_TEXTURE or addon.CREF:GetCommonPathArt() .. "Elements/color-input-background-clicked.png"
+				local DEFAULT_BACKGROUND_TEXTURE = data.DEFAULT_BACKGROUND_TEXTURE or addon.CS:GetCommonPathArt() .. "Elements/color-background.png"
+				local DEFAULT_IMAGE_TEXTURE = data.DEFAULT_IMAGE_TEXTURE or addon.CS:GetCommonPathArt() .. "Elements/color-input-background.png"
+				local HIGHLIGHTED_BACKGROUND_TEXTURE = data.HIGHLIGHTED_BACKGROUND_TEXTURE or addon.CS:GetCommonPathArt() .. "Elements/color-background-highlighted.png"
+				local HIGHLIGHTED_IMAGE_TEXTURE = data.HIGHLIGHTED_IMAGE_TEXTURE or addon.CS:GetCommonPathArt() .. "Elements/color-input-background-highlighted.png"
+				local CLICKED_BACKGROUND_TEXTURE = data.CLICKED_BACKGROUND_TEXTURE or addon.CS:GetCommonPathArt() .. "Elements/color-background-highlighted.png"
+				local CLICKED_IMAGE_TEXTURE = data.CLICKED_IMAGE_TEXTURE or addon.CS:GetCommonPathArt() .. "Elements/color-input-background-clicked.png"
 
 				--------------------------------
 
@@ -1702,18 +1703,18 @@ function NS.Prefabs:Load()
 
 		do -- TEXT BOX
 			PrefabRegistry:Add("C.FrameTemplates.Blizzard.TextBox", function(parent, frameStrata, frameLevel, data, name)
-				local DEFAULT_BACKGROUND_TEXTURE = data.DEFAULT_BACKGROUND_TEXTURE or addon.CREF:GetCommonPathArt() .. "Elements/textbox-background.png"
+				local DEFAULT_BACKGROUND_TEXTURE = data.DEFAULT_BACKGROUND_TEXTURE or addon.CS:GetCommonPathArt() .. "Elements/textbox-background.png"
 				local DEFAULT_CONTENT_COLOR = data.DEFAULT_CONTENT_COLOR or { r = 1, g = 1, b = 1, a = .75 }
-				local HIGHLIGHTED_BACKGROUND_TEXTURE = data.HIGHLIGHTED_BACKGROUND_TEXTURE or addon.CREF:GetCommonPathArt() .. "Elements/textbox-background.png"
+				local HIGHLIGHTED_BACKGROUND_TEXTURE = data.HIGHLIGHTED_BACKGROUND_TEXTURE or addon.CS:GetCommonPathArt() .. "Elements/textbox-background.png"
 				local HIGHLIGHTED_CONTENT_COLOR = data.DEFAULT_CONTENT_COLOR or { r = 1, g = 1, b = 1, a = .75 }
-				local CLICKED_BACKGROUND_TEXTURE = data.CLICKED_BACKGROUND_TEXTURE or addon.CREF:GetCommonPathArt() .. "Elements/textbox-background.png"
+				local CLICKED_BACKGROUND_TEXTURE = data.CLICKED_BACKGROUND_TEXTURE or addon.CS:GetCommonPathArt() .. "Elements/textbox-background.png"
 				local CLICKED_CONTENT_COLOR = data.DEFAULT_CONTENT_COLOR or { r = 1, g = 1, b = 1, a = .75 }
 
-				local ACTIVE_DEFAULT_BACKGROUND_TEXTURE = data.ACTIVE_DEFAULT_BACKGROUND_TEXTURE or addon.CREF:GetCommonPathArt() .. "Elements/textbox-background-highlighted.png"
+				local ACTIVE_DEFAULT_BACKGROUND_TEXTURE = data.ACTIVE_DEFAULT_BACKGROUND_TEXTURE or addon.CS:GetCommonPathArt() .. "Elements/textbox-background-highlighted.png"
 				local ACTIVE_DEFAULT_CONTENT_COLOR = data.ACTIVE_DEFAULT_CONTENT_COLOR or { r = 1, g = 1, b = 1, a = 1 }
-				local ACTIVE_HIGHLIGHTED_BACKGROUND_TEXTURE = data.ACTIVE_HIGHLIGHTED_BACKGROUND_TEXTURE or addon.CREF:GetCommonPathArt() .. "Elements/textbox-background-highlighted.png"
+				local ACTIVE_HIGHLIGHTED_BACKGROUND_TEXTURE = data.ACTIVE_HIGHLIGHTED_BACKGROUND_TEXTURE or addon.CS:GetCommonPathArt() .. "Elements/textbox-background-highlighted.png"
 				local ACTIVE_HIGHLIGHTED_CONTENT_COLOR = data.ACTIVE_HIGHLIGHTED_CONTENT_COLOR or { r = 1, g = 1, b = 1, a = 1 }
-				local ACTIVE_CLICKED_BACKGROUND_TEXTURE = data.ACTIVE_CLICKED_BACKGROUND_TEXTURE or addon.CREF:GetCommonPathArt() .. "Elements/textbox-background-highlighted.png"
+				local ACTIVE_CLICKED_BACKGROUND_TEXTURE = data.ACTIVE_CLICKED_BACKGROUND_TEXTURE or addon.CS:GetCommonPathArt() .. "Elements/textbox-background-highlighted.png"
 				local ACTIVE_CLICKED_CONTENT_COLOR = data.ACTIVE_CLICKED_CONTENT_COLOR or { r = 1, g = 1, b = 1, a = 1 }
 
 				--------------------------------
@@ -1746,10 +1747,10 @@ function NS.Prefabs:Load()
 
 						do -- TEXT
 							local RawText = Frame.REF_INPUT_RAWTEXT
-							RawText:SetFont(addon.C.Fonts.CONTENT_DEFAULT.font, 12.5, "")
+							RawText:SetFont(addon.C.Fonts.CONTENT_DEFAULT.path, 12.5, "")
 							RawText:Hide()
 
-							Input.Text = addon.C.FrameTemplates:CreateText(Input, addon.CREF:GetSharedColor().RGB_WHITE, 12.5, "LEFT", "MIDDLE", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Text", "GameFontNormal")
+							Input.Text = addon.C.FrameTemplates:CreateText(Input, addon.CS:GetSharedColor().RGB_WHITE, 12.5, "LEFT", "MIDDLE", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Text", "GameFontNormal")
 							Input.Text:SetPoint("CENTER", Input)
 							addon.C.API.FrameUtil:SetDynamicSize(Input.Text, Input, 0, 0)
 						end
@@ -1762,7 +1763,7 @@ function NS.Prefabs:Load()
 						--------------------------------
 
 						do -- TEXT
-							Placeholder.Text = addon.C.FrameTemplates:CreateText(Placeholder, addon.CREF:GetSharedColor().RGB_WHITE, 12.5, "LEFT", "MIDDLE", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Placeholder", "GameFontNormal")
+							Placeholder.Text = addon.C.FrameTemplates:CreateText(Placeholder, addon.CS:GetSharedColor().RGB_WHITE, 12.5, "LEFT", "MIDDLE", addon.C.Fonts.CONTENT_DEFAULT, "$parent.Placeholder", "GameFontNormal")
 							Placeholder.Text:SetPoint("CENTER", Placeholder)
 							addon.C.API.FrameUtil:SetDynamicSize(Placeholder.Text, Placeholder, 0, 0)
 						end

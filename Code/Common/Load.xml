@@ -7,7 +7,7 @@
 	<Include file="Library/Load.xml"/>
 
 	<!-- Core -->
-	<Script file="Core/Common_References.lua"/>
+	<Script file="Core/Common_Shared.lua"/>
 	<Script file="Core/Common_Variables.lua"/>
 
 	<!-- Modules -->

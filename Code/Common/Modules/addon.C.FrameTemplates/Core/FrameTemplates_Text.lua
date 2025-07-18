@@ -31,9 +31,9 @@ do
 	---@param fontFile string
 	---@param name? string
 	function NS:CreateText(parent, textColor, textSize, alignH, alignV, fontFile, name, template)
-		if fontFile and fontFile.size then
-			textSize = math.ceil(textSize * fontFile.size)
-			fontFile = fontFile.font
+		if type(fontFile) == "table" then
+			textSize = addon.CS:NewFontSize(textSize, fontFile.sizeModifier)
+			fontFile = fontFile.path
 		end
 
 		local Frame = CreateFrame("Frame", name, parent)
@@ -223,7 +223,19 @@ do
 				do -- LOGIC
 					function Frame:UpdateFont(newFont)
 						local fontName, fontHeight, fontFlags = Frame.Renderer:GetFont()
-						Frame:SetFont(newFont, fontHeight, fontFlags)
+						local newFontName, newFontPath, newFontSize
+
+						if type(newFont) == "table" then
+							newFontName = newFont.name
+							newFontPath = newFont.path
+							newFontSize = addon.CS:NewFontSize(textSize, newFont.sizeModifier)
+						else
+							newFontName = newFont
+							newFontPath = newFont
+							newFontSize = fontHeight
+						end
+
+						Frame:SetFont(newFontPath, newFontSize, fontFlags)
 
 						--------------------------------
 
@@ -244,7 +256,7 @@ do
 				Frame:RegisterEvent("UI_SCALE_CHANGED")
 				Frame:SetScript("OnEvent", AutoFit)
 				CallbackRegistry:Add("C_TEXT_AUTOFIT", AutoFit)
-				CallbackRegistry:Add("C_FONT_OVERRIDE", function(_, newFont) Frame:UpdateFont(newFont) end)
+				CallbackRegistry:Add("C_FONT_OVERRIDE", function(newFontInfo) Frame:UpdateFont(newFontInfo) end)
 			end
 		end
 

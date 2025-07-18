@@ -19,37 +19,37 @@ do -- CONSTANTS
 	do -- FONTS
 		NS.Variables.Fonts.FONT_TABLE = {
 			["enUS"] = {
-				["CONTENT_DEFAULT"] = { font = GameFontNormal:GetFont(), size = 1 },
+				["CONTENT_DEFAULT"] = addon.CS:NewFontInfo("Default", GameFontNormal:GetFont(), 1),
 			},
 			["deDE"] = {
-				["CONTENT_DEFAULT"] = { font = GameFontNormal:GetFont(), size = 1 },
+				["CONTENT_DEFAULT"] = addon.CS:NewFontInfo("Default", GameFontNormal:GetFont(), 1),
 			},
 			["esES"] = {
-				["CONTENT_DEFAULT"] = { font = GameFontNormal:GetFont(), size = 1 },
+				["CONTENT_DEFAULT"] = addon.CS:NewFontInfo("Default", GameFontNormal:GetFont(), 1),
 			},
 			["esMX"] = {
-				["CONTENT_DEFAULT"] = { font = GameFontNormal:GetFont(), size = 1 },
+				["CONTENT_DEFAULT"] = addon.CS:NewFontInfo("Default", GameFontNormal:GetFont(), 1),
 			},
 			["frFR"] = {
-				["CONTENT_DEFAULT"] = { font = GameFontNormal:GetFont(), size = 1 },
+				["CONTENT_DEFAULT"] = addon.CS:NewFontInfo("Default", GameFontNormal:GetFont(), 1),
 			},
 			["itIT"] = {
-				["CONTENT_DEFAULT"] = { font = GameFontNormal:GetFont(), size = 1 },
+				["CONTENT_DEFAULT"] = addon.CS:NewFontInfo("Default", GameFontNormal:GetFont(), 1),
 			},
 			["koKR"] = {
-				["CONTENT_DEFAULT"] = { font = GameFontNormal:GetFont(), size = 1 },
+				["CONTENT_DEFAULT"] = addon.CS:NewFontInfo("Default", GameFontNormal:GetFont(), 1),
 			},
 			["ptBR"] = {
-				["CONTENT_DEFAULT"] = { font = GameFontNormal:GetFont(), size = 1 },
+				["CONTENT_DEFAULT"] = addon.CS:NewFontInfo("Default", GameFontNormal:GetFont(), 1),
 			},
 			["ruRU"] = {
-				["CONTENT_DEFAULT"] = { font = GameFontNormal:GetFont(), size = 1 },
+				["CONTENT_DEFAULT"] = addon.CS:NewFontInfo("Default", GameFontNormal:GetFont(), 1),
 			},
 			["zhCN"] = {
-				["CONTENT_DEFAULT"] = { font = GameFontNormal:GetFont(), size = 1.25 },
+				["CONTENT_DEFAULT"] = addon.CS:NewFontInfo("Default", GameFontNormal:GetFont(), 1.25),
 			},
 			["zhTW"] = {
-				["CONTENT_DEFAULT"] = { font = GameFontNormal:GetFont(), size = 1.25 },
+				["CONTENT_DEFAULT"] = addon.CS:NewFontInfo("Default", GameFontNormal:GetFont(), 1.25),
 			},
 		}
 	end

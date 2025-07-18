@@ -67,7 +67,7 @@ do  -- CONSTANTS
 		-- 				{
 		-- 					["name"] = "Placeholder",
 		--  				["type"] = NS.Variables.Config.TYPE_TITLE,
-		-- 					["var_title_imageTexture"] = addon.CREF:NewIcon("brush"),
+		-- 					["var_title_imageTexture"] = addon.CS:NewIcon("brush"),
 		-- 					["var_title_text"] = "Placeholder",
 		-- 					["var_title_subtext"] = "Placeholder",
 		-- 				},
@@ -157,7 +157,7 @@ do  -- CONSTANTS
 		-- 	}
 
 		C_Timer.After(0, function()
-			local NEW_PREFIX = addon.CREF:GetInlineIcon("star", 16) .. " "
+			local NEW_PREFIX = addon.CS:GetInlineIcon("star", 16) .. " "
 
 			local function GetDatabase(name)
 				if addon.C.Database and addon.C.Database.Variables then
@@ -205,7 +205,7 @@ do  -- CONSTANTS
 						{
 							["name"] = L["Config - General - Title"],
 							["type"] = NS.Variables.Config.TYPE_TITLE,
-							["var_title_imageTexture"] = addon.CREF:NewIcon("cog"),
+							["var_title_imageTexture"] = addon.CS:NewIcon("cog"),
 							["var_title_text"] = L["Config - General - Title"],
 							["var_title_subtext"] = L["Config - General - Title - Subtext"],
 						},
@@ -257,7 +257,7 @@ do  -- CONSTANTS
 						{
 							["name"] = L["Config - WaypointSystem - Title"],
 							["type"] = NS.Variables.Config.TYPE_TITLE,
-							["var_title_imageTexture"] = addon.CREF:NewIcon("waypoint"),
+							["var_title_imageTexture"] = addon.CS:NewIcon("waypoint"),
 							["var_title_text"] = L["Config - WaypointSystem - Title"],
 							["var_title_subtext"] = L["Config - WaypointSystem - Title - Subtext"],
 						},
@@ -386,7 +386,9 @@ do  -- CONSTANTS
 									["descriptor"] = NS.Variables.Config:NewDescriptor(nil, nil, L["Config - WaypointSystem - Navigator - Enable - Description"]),
 									["indent"] = 0,
 									["var_get"] = function() return GetDatabase("DB_GLOBAL").WS_NAVIGATOR end,
-									["var_set"] = function(value) GetDatabase("DB_GLOBAL").WS_NAVIGATOR = value; CallbackRegistry:Trigger("C_CONFIG_WS_NAVIGATOR") end,
+									["var_set"] = function(value)
+										GetDatabase("DB_GLOBAL").WS_NAVIGATOR = value; CallbackRegistry:Trigger("C_CONFIG_WS_NAVIGATOR")
+									end,
 									["var_disabled"] = function() return false end,
 									["var_hidden"] = function() return false end,
 								}
@@ -402,7 +404,7 @@ do  -- CONSTANTS
 						{
 							["name"] = L["Config - Appearance - Title"],
 							["type"] = NS.Variables.Config.TYPE_TITLE,
-							["var_title_imageTexture"] = addon.CREF:NewIcon("brush"),
+							["var_title_imageTexture"] = addon.CS:NewIcon("brush"),
 							["var_title_text"] = L["Config - Appearance - Title"],
 							["var_title_subtext"] = L["Config - Appearance - Title - Subtext"],
 						},
@@ -424,7 +426,9 @@ do  -- CONSTANTS
 									["var_range_text"] = function(value) return string.format("%.0f", value * 100) .. "%" end,
 									["var_range_set_lazy"] = function(value) end,
 									["var_get"] = function() return GetDatabase("DB_GLOBAL").APP_WAYPOINT_SCALE end,
-									["var_set"] = function(value) GetDatabase("DB_GLOBAL").APP_WAYPOINT_SCALE = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+									["var_set"] = function(value)
+										GetDatabase("DB_GLOBAL").APP_WAYPOINT_SCALE = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+									end,
 									["var_disabled"] = function() return false end,
 									["var_hidden"] = function() return false end,
 								},
@@ -439,7 +443,9 @@ do  -- CONSTANTS
 									["var_range_text"] = function(value) return string.format("%.0f", value * 100) .. "%" end,
 									["var_range_set_lazy"] = function(value) end,
 									["var_get"] = function() return GetDatabase("DB_GLOBAL").APP_WAYPOINT_SCALE_MIN end,
-									["var_set"] = function(value) GetDatabase("DB_GLOBAL").APP_WAYPOINT_SCALE_MIN = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+									["var_set"] = function(value)
+										GetDatabase("DB_GLOBAL").APP_WAYPOINT_SCALE_MIN = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+									end,
 									["var_disabled"] = function() return false end,
 									["var_hidden"] = function() return false end,
 								},
@@ -454,7 +460,9 @@ do  -- CONSTANTS
 									["var_range_text"] = function(value) return string.format("%.0f", value * 100) .. "%" end,
 									["var_range_set_lazy"] = function(value) end,
 									["var_get"] = function() return GetDatabase("DB_GLOBAL").APP_WAYPOINT_SCALE_MAX end,
-									["var_set"] = function(value) GetDatabase("DB_GLOBAL").APP_WAYPOINT_SCALE_MAX = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+									["var_set"] = function(value)
+										GetDatabase("DB_GLOBAL").APP_WAYPOINT_SCALE_MAX = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+									end,
 									["var_disabled"] = function() return false end,
 									["var_hidden"] = function() return false end,
 								},
@@ -464,7 +472,9 @@ do  -- CONSTANTS
 									["descriptor"] = nil,
 									["indent"] = 0,
 									["var_get"] = function() return GetDatabase("DB_GLOBAL").APP_WAYPOINT_BEAM end,
-									["var_set"] = function(value) GetDatabase("DB_GLOBAL").APP_WAYPOINT_BEAM = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+									["var_set"] = function(value)
+										GetDatabase("DB_GLOBAL").APP_WAYPOINT_BEAM = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+									end,
 									["var_disabled"] = function() return false end,
 									["var_hidden"] = function() return false end,
 								},
@@ -479,7 +489,9 @@ do  -- CONSTANTS
 									["var_range_text"] = function(value) return string.format("%.0f", value * 100) .. "%" end,
 									["var_range_set_lazy"] = function(value) end,
 									["var_get"] = function() return GetDatabase("DB_GLOBAL").APP_WAYPOINT_BEAM_ALPHA end,
-									["var_set"] = function(value) GetDatabase("DB_GLOBAL").APP_WAYPOINT_BEAM_ALPHA = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+									["var_set"] = function(value)
+										GetDatabase("DB_GLOBAL").APP_WAYPOINT_BEAM_ALPHA = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+									end,
 									["var_disabled"] = function() return false end,
 									["var_hidden"] = function() return not GetDatabase("DB_GLOBAL").APP_WAYPOINT_BEAM end,
 								},
@@ -489,7 +501,9 @@ do  -- CONSTANTS
 									["descriptor"] = nil,
 									["indent"] = 0,
 									["var_get"] = function() return GetDatabase("DB_GLOBAL").APP_WAYPOINT_DISTANCE_TEXT end,
-									["var_set"] = function(value) GetDatabase("DB_GLOBAL").APP_WAYPOINT_DISTANCE_TEXT = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+									["var_set"] = function(value)
+										GetDatabase("DB_GLOBAL").APP_WAYPOINT_DISTANCE_TEXT = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+									end,
 									["var_disabled"] = function() return false end,
 									["var_hidden"] = function() return GetDatabase("DB_GLOBAL").WS_DISTANCE_TEXT_TYPE == 4 end,
 								},
@@ -504,7 +518,9 @@ do  -- CONSTANTS
 									["var_range_text"] = function(value) return string.format("%.0f", value * 100) .. "%" end,
 									["var_range_set_lazy"] = function(value) end,
 									["var_get"] = function() return GetDatabase("DB_GLOBAL").APP_WAYPOINT_DISTANCE_TEXT_SCALE end,
-									["var_set"] = function(value) GetDatabase("DB_GLOBAL").APP_WAYPOINT_DISTANCE_TEXT_SCALE = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+									["var_set"] = function(value)
+										GetDatabase("DB_GLOBAL").APP_WAYPOINT_DISTANCE_TEXT_SCALE = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+									end,
 									["var_disabled"] = function() return false end,
 									["var_hidden"] = function() return not GetDatabase("DB_GLOBAL").APP_WAYPOINT_DISTANCE_TEXT or GetDatabase("DB_GLOBAL").WS_DISTANCE_TEXT_TYPE == 4 end,
 								},
@@ -519,7 +535,9 @@ do  -- CONSTANTS
 									["var_range_text"] = function(value) return string.format("%.0f", value * 100) .. "%" end,
 									["var_range_set_lazy"] = function(value) end,
 									["var_get"] = function() return GetDatabase("DB_GLOBAL").APP_WAYPOINT_DISTANCE_TEXT_ALPHA end,
-									["var_set"] = function(value) GetDatabase("DB_GLOBAL").APP_WAYPOINT_DISTANCE_TEXT_ALPHA = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+									["var_set"] = function(value)
+										GetDatabase("DB_GLOBAL").APP_WAYPOINT_DISTANCE_TEXT_ALPHA = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+									end,
 									["var_disabled"] = function() return false end,
 									["var_hidden"] = function() return not GetDatabase("DB_GLOBAL").APP_WAYPOINT_DISTANCE_TEXT or GetDatabase("DB_GLOBAL").WS_DISTANCE_TEXT_TYPE == 4 end,
 								}
@@ -543,7 +561,9 @@ do  -- CONSTANTS
 									["var_range_text"] = function(value) return string.format("%.0f", value * 100) .. "%" end,
 									["var_range_set_lazy"] = function(value) end,
 									["var_get"] = function() return GetDatabase("DB_GLOBAL").APP_PINPOINT_SCALE end,
-									["var_set"] = function(value) GetDatabase("DB_GLOBAL").APP_PINPOINT_SCALE = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+									["var_set"] = function(value)
+										GetDatabase("DB_GLOBAL").APP_PINPOINT_SCALE = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+									end,
 									["var_disabled"] = function() return false end,
 									["var_hidden"] = function() return false end,
 								}
@@ -567,7 +587,9 @@ do  -- CONSTANTS
 									["var_range_text"] = function(value) return string.format("%.0f", value * 100) .. "%" end,
 									["var_range_set_lazy"] = function(value) end,
 									["var_get"] = function() return GetDatabase("DB_GLOBAL").APP_NAVIGATOR_SCALE end,
-									["var_set"] = function(value) GetDatabase("DB_GLOBAL").APP_NAVIGATOR_SCALE = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+									["var_set"] = function(value)
+										GetDatabase("DB_GLOBAL").APP_NAVIGATOR_SCALE = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+									end,
 									["var_disabled"] = function() return false end,
 									["var_hidden"] = function() return false end
 								},
@@ -582,7 +604,9 @@ do  -- CONSTANTS
 									["var_range_text"] = function(value) return string.format("%.0f", value * 100) .. "%" end,
 									["var_range_set_lazy"] = function(value) end,
 									["var_get"] = function() return GetDatabase("DB_GLOBAL").APP_NAVIGATOR_ALPHA end,
-									["var_set"] = function(value) GetDatabase("DB_GLOBAL").APP_NAVIGATOR_ALPHA = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+									["var_set"] = function(value)
+										GetDatabase("DB_GLOBAL").APP_NAVIGATOR_ALPHA = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+									end,
 									["var_disabled"] = function() return false end,
 									["var_hidden"] = function() return false end
 								}
@@ -601,7 +625,9 @@ do  -- CONSTANTS
 									["descriptor"] = nil,
 									["indent"] = 0,
 									["var_get"] = function() return GetDatabase("DB_GLOBAL").APP_COLOR end,
-									["var_set"] = function(value) GetDatabase("DB_GLOBAL").APP_COLOR = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+									["var_set"] = function(value)
+										GetDatabase("DB_GLOBAL").APP_COLOR = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+									end,
 									["var_disabled"] = function() return false end,
 									["var_hidden"] = function() return false end,
 								},
@@ -618,7 +644,9 @@ do  -- CONSTANTS
 											["descriptor"] = nil,
 											["indent"] = 0,
 											["var_get"] = function() return GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_COMPLETE end,
-											["var_set"] = function(value) GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_COMPLETE = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+											["var_set"] = function(value)
+												GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_COMPLETE = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+											end,
 											["var_disabled"] = function() return false end,
 											["var_hidden"] = function() return false end,
 										},
@@ -628,9 +656,11 @@ do  -- CONSTANTS
 											["descriptor"] = nil,
 											["indent"] = 1,
 											["var_get"] = function() return GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_COMPLETE_TINT end,
-											["var_set"] = function(value) GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_COMPLETE_TINT = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+											["var_set"] = function(value)
+												GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_COMPLETE_TINT = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+											end,
 											["var_disabled"] = function() return false end,
-											["var_hidden"] = function() return not GetDatabase("DB_GLOBAL").APP_COLOR end,
+											["var_hidden"] = function() return false end,
 										},
 										{
 											["name"] = "",
@@ -638,9 +668,11 @@ do  -- CONSTANTS
 											["descriptor"] = nil,
 											["indent"] = 0,
 											["var_button_text"] = L["Config - Appearance - Visual - UseCustomColor - Reset"],
-											["var_set"] = function() ResetEntry("DB_GLOBAL", "GLOBAL_DEFAULT", "APP_COLOR_QUEST_COMPLETE"); ResetEntry("DB_GLOBAL", "GLOBAL_DEFAULT", "APP_COLOR_QUEST_COMPLETE_TINT"); CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+											["var_set"] = function()
+												ResetEntry("DB_GLOBAL", "GLOBAL_DEFAULT", "APP_COLOR_QUEST_COMPLETE"); ResetEntry("DB_GLOBAL", "GLOBAL_DEFAULT", "APP_COLOR_QUEST_COMPLETE_TINT"); CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+											end,
 											["var_disabled"] = function() return false end,
-											["var_hidden"] = function() return not GetDatabase("DB_GLOBAL").APP_COLOR end,
+											["var_hidden"] = function() return false end,
 										}
 									}
 								},
@@ -657,7 +689,9 @@ do  -- CONSTANTS
 											["descriptor"] = nil,
 											["indent"] = 0,
 											["var_get"] = function() return GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_COMPLETE_REPEATABLE end,
-											["var_set"] = function(value) GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_COMPLETE_REPEATABLE = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+											["var_set"] = function(value)
+												GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_COMPLETE_REPEATABLE = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+											end,
 											["var_disabled"] = function() return false end,
 											["var_hidden"] = function() return false end,
 										},
@@ -667,9 +701,11 @@ do  -- CONSTANTS
 											["descriptor"] = nil,
 											["indent"] = 1,
 											["var_get"] = function() return GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_COMPLETE_REPEATABLE_TINT end,
-											["var_set"] = function(value) GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_COMPLETE_REPEATABLE_TINT = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+											["var_set"] = function(value)
+												GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_COMPLETE_REPEATABLE_TINT = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+											end,
 											["var_disabled"] = function() return false end,
-											["var_hidden"] = function() return not GetDatabase("DB_GLOBAL").APP_COLOR end,
+											["var_hidden"] = function() return false end,
 										},
 										{
 											["name"] = "",
@@ -677,9 +713,11 @@ do  -- CONSTANTS
 											["descriptor"] = nil,
 											["indent"] = 0,
 											["var_button_text"] = L["Config - Appearance - Visual - UseCustomColor - Reset"],
-											["var_set"] = function() ResetEntry("DB_GLOBAL", "GLOBAL_DEFAULT", "APP_COLOR_QUEST_COMPLETE_REPEATABLE"); ResetEntry("DB_GLOBAL", "GLOBAL_DEFAULT", "APP_COLOR_QUEST_COMPLETE_REPEATABLE_TINT"); CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+											["var_set"] = function()
+												ResetEntry("DB_GLOBAL", "GLOBAL_DEFAULT", "APP_COLOR_QUEST_COMPLETE_REPEATABLE"); ResetEntry("DB_GLOBAL", "GLOBAL_DEFAULT", "APP_COLOR_QUEST_COMPLETE_REPEATABLE_TINT"); CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+											end,
 											["var_disabled"] = function() return false end,
-											["var_hidden"] = function() return not GetDatabase("DB_GLOBAL").APP_COLOR end,
+											["var_hidden"] = function() return false end,
 										}
 									}
 								},
@@ -696,7 +734,9 @@ do  -- CONSTANTS
 											["descriptor"] = nil,
 											["indent"] = 0,
 											["var_get"] = function() return GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_COMPLETE_IMPORTANT end,
-											["var_set"] = function(value) GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_COMPLETE_IMPORTANT = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+											["var_set"] = function(value)
+												GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_COMPLETE_IMPORTANT = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+											end,
 											["var_disabled"] = function() return false end,
 											["var_hidden"] = function() return false end,
 										},
@@ -706,9 +746,11 @@ do  -- CONSTANTS
 											["descriptor"] = nil,
 											["indent"] = 1,
 											["var_get"] = function() return GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_COMPLETE_IMPORTANT_TINT end,
-											["var_set"] = function(value) GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_COMPLETE_IMPORTANT_TINT = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+											["var_set"] = function(value)
+												GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_COMPLETE_IMPORTANT_TINT = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+											end,
 											["var_disabled"] = function() return false end,
-											["var_hidden"] = function() return not GetDatabase("DB_GLOBAL").APP_COLOR end,
+											["var_hidden"] = function() return false end,
 										},
 										{
 											["name"] = "",
@@ -716,9 +758,11 @@ do  -- CONSTANTS
 											["descriptor"] = nil,
 											["indent"] = 0,
 											["var_button_text"] = L["Config - Appearance - Visual - UseCustomColor - Reset"],
-											["var_set"] = function() ResetEntry("DB_GLOBAL", "GLOBAL_DEFAULT", "APP_COLOR_QUEST_COMPLETE_IMPORTANT"); ResetEntry("DB_GLOBAL", "GLOBAL_DEFAULT", "APP_COLOR_QUEST_COMPLETE_IMPORTANT_TINT"); CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+											["var_set"] = function()
+												ResetEntry("DB_GLOBAL", "GLOBAL_DEFAULT", "APP_COLOR_QUEST_COMPLETE_IMPORTANT"); ResetEntry("DB_GLOBAL", "GLOBAL_DEFAULT", "APP_COLOR_QUEST_COMPLETE_IMPORTANT_TINT"); CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+											end,
 											["var_disabled"] = function() return false end,
-											["var_hidden"] = function() return not GetDatabase("DB_GLOBAL").APP_COLOR end,
+											["var_hidden"] = function() return false end,
 										}
 									}
 								},
@@ -735,7 +779,9 @@ do  -- CONSTANTS
 											["descriptor"] = nil,
 											["indent"] = 0,
 											["var_get"] = function() return GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_INCOMPLETE end,
-											["var_set"] = function(value) GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_INCOMPLETE = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+											["var_set"] = function(value)
+												GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_INCOMPLETE = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+											end,
 											["var_disabled"] = function() return false end,
 											["var_hidden"] = function() return false end,
 										},
@@ -745,9 +791,11 @@ do  -- CONSTANTS
 											["descriptor"] = nil,
 											["indent"] = 1,
 											["var_get"] = function() return GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_INCOMPLETE_TINT end,
-											["var_set"] = function(value) GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_INCOMPLETE_TINT = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+											["var_set"] = function(value)
+												GetDatabase("DB_GLOBAL").APP_COLOR_QUEST_INCOMPLETE_TINT = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+											end,
 											["var_disabled"] = function() return false end,
-											["var_hidden"] = function() return not GetDatabase("DB_GLOBAL").APP_COLOR end,
+											["var_hidden"] = function() return false end,
 										},
 										{
 											["name"] = "",
@@ -755,9 +803,11 @@ do  -- CONSTANTS
 											["descriptor"] = nil,
 											["indent"] = 0,
 											["var_button_text"] = L["Config - Appearance - Visual - UseCustomColor - Reset"],
-											["var_set"] = function() ResetEntry("DB_GLOBAL", "GLOBAL_DEFAULT", "APP_COLOR_QUEST_INCOMPLETE"); ResetEntry("DB_GLOBAL", "GLOBAL_DEFAULT", "APP_COLOR_QUEST_INCOMPLETE_TINT"); CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+											["var_set"] = function()
+												ResetEntry("DB_GLOBAL", "GLOBAL_DEFAULT", "APP_COLOR_QUEST_INCOMPLETE"); ResetEntry("DB_GLOBAL", "GLOBAL_DEFAULT", "APP_COLOR_QUEST_INCOMPLETE_TINT"); CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+											end,
 											["var_disabled"] = function() return false end,
-											["var_hidden"] = function() return not GetDatabase("DB_GLOBAL").APP_COLOR end,
+											["var_hidden"] = function() return false end,
 										}
 									}
 								},
@@ -774,7 +824,9 @@ do  -- CONSTANTS
 											["descriptor"] = nil,
 											["indent"] = 0,
 											["var_get"] = function() return GetDatabase("DB_GLOBAL").APP_COLOR_NEUTRAL end,
-											["var_set"] = function(value) GetDatabase("DB_GLOBAL").APP_COLOR_NEUTRAL = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+											["var_set"] = function(value)
+												GetDatabase("DB_GLOBAL").APP_COLOR_NEUTRAL = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+											end,
 											["var_disabled"] = function() return false end,
 											["var_hidden"] = function() return false end,
 										},
@@ -784,9 +836,11 @@ do  -- CONSTANTS
 											["descriptor"] = nil,
 											["indent"] = 1,
 											["var_get"] = function() return GetDatabase("DB_GLOBAL").APP_COLOR_NEUTRAL_TINT end,
-											["var_set"] = function(value) GetDatabase("DB_GLOBAL").APP_COLOR_NEUTRAL_TINT = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+											["var_set"] = function(value)
+												GetDatabase("DB_GLOBAL").APP_COLOR_NEUTRAL_TINT = value; CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+											end,
 											["var_disabled"] = function() return false end,
-											["var_hidden"] = function() return not GetDatabase("DB_GLOBAL").APP_COLOR end,
+											["var_hidden"] = function() return false end,
 										},
 										{
 											["name"] = "",
@@ -794,9 +848,11 @@ do  -- CONSTANTS
 											["descriptor"] = nil,
 											["indent"] = 0,
 											["var_button_text"] = L["Config - Appearance - Visual - UseCustomColor - Reset"],
-											["var_set"] = function() ResetEntry("DB_GLOBAL", "GLOBAL_DEFAULT", "APP_COLOR_NEUTRAL"); ResetEntry("DB_GLOBAL", "GLOBAL_DEFAULT", "APP_COLOR_NEUTRAL_TINT"); CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE") end,
+											["var_set"] = function()
+												ResetEntry("DB_GLOBAL", "GLOBAL_DEFAULT", "APP_COLOR_NEUTRAL"); ResetEntry("DB_GLOBAL", "GLOBAL_DEFAULT", "APP_COLOR_NEUTRAL_TINT"); CallbackRegistry:Trigger("C_CONFIG_APPEARANCE_UPDATE")
+											end,
 											["var_disabled"] = function() return false end,
-											["var_hidden"] = function() return not GetDatabase("DB_GLOBAL").APP_COLOR end,
+											["var_hidden"] = function() return false end,
 										}
 									}
 								}
@@ -812,7 +868,7 @@ do  -- CONSTANTS
 						{
 							["name"] = L["Config - Audio - Title"],
 							["type"] = NS.Variables.Config.TYPE_TITLE,
-							["var_title_imageTexture"] = addon.CREF:NewIcon("speaker-on"),
+							["var_title_imageTexture"] = addon.CS:NewIcon("speaker-on"),
 							["var_title_text"] = L["Config - Audio - Title"],
 							["var_title_subtext"] = L["Config - Audio - Title - Subtext"],
 						},
@@ -834,6 +890,109 @@ do  -- CONSTANTS
 									["var_hidden"] = function() return false end,
 								}
 							}
+						},
+						{
+							["name"] = L["Config - Audio - Customize"],
+							["type"] = NS.Variables.Config.TYPE_CONTAINER,
+							["var_subcontainer"] = false,
+							["var_transparent"] = false,
+							["var_hidden"] = function() return false end,
+							["elements"] = {
+								{
+									["name"] = L["Config - Audio - Customize - UseCustomAudio"],
+									["type"] = NS.Variables.Config.TYPE_CHECKBOX,
+									["descriptor"] = nil,
+									["indent"] = 0,
+									["var_get"] = function() return GetDatabase("DB_GLOBAL").AUDIO_CUSTOM end,
+									["var_set"] = function(value) GetDatabase("DB_GLOBAL").AUDIO_CUSTOM = value end,
+									["var_disabled"] = function() return false end,
+									["var_hidden"] = function() return false end,
+								},
+								{
+									["name"] = L["Config - Audio - Customize - UseCustomAudio - WaypointShow"],
+									["type"] = NS.Variables.Config.TYPE_CONTAINER,
+									["var_subcontainer"] = true,
+									["var_transparent"] = false,
+									["var_hidden"] = function() return not GetDatabase("DB_GLOBAL").AUDIO_CUSTOM end,
+									["elements"] = {
+										{
+											["name"] = L["Config - Audio - Customize - UseCustomAudio - Sound ID"],
+											["type"] = NS.Variables.Config.TYPE_TEXTBOX,
+											["descriptor"] = nil,
+											["indent"] = 0,
+											["var_textbox_placeholder"] = L["Config - Audio - Customize - UseCustomAudio - Sound ID - Placeholder"],
+											["var_get"] = function() return GetDatabase("DB_GLOBAL").AUDIO_CUSTOM_WAYPOINT_SHOW end,
+											["var_set"] = function(value)
+												if tonumber(value) then GetDatabase("DB_GLOBAL").AUDIO_CUSTOM_WAYPOINT_SHOW = tonumber(value) else GetDatabase("DB_GLOBAL").AUDIO_CUSTOM_WAYPOINT_SHOW = "" end; CallbackRegistry:Trigger("C_CONFIG_AUDIO_UPDATE")
+											end,
+											["var_disabled"] = function() return false end,
+											["var_hidden"] = function() return false end,
+										},
+										{
+											["name"] = "",
+											["type"] = NS.Variables.Config.TYPE_BUTTON,
+											["descriptor"] = nil,
+											["indent"] = 0,
+											["var_button_text"] = L["Config - Audio - Customize - UseCustomAudio - Preview"],
+											["var_set"] = function() addon.C.Sound.Script:PlaySound(GetDatabase("DB_GLOBAL").AUDIO_CUSTOM_WAYPOINT_SHOW, true) end,
+											["var_disabled"] = function() return false end,
+											["var_hidden"] = function() return false end,
+										},
+										{
+											["name"] = "",
+											["type"] = NS.Variables.Config.TYPE_BUTTON,
+											["descriptor"] = nil,
+											["indent"] = 0,
+											["var_button_text"] = L["Config - Audio - Customize - UseCustomAudio - Reset"],
+											["var_set"] = function() ResetEntry("DB_GLOBAL", "GLOBAL_DEFAULT", "AUDIO_CUSTOM_WAYPOINT_SHOW") end,
+											["var_disabled"] = function() return false end,
+											["var_hidden"] = function() return false end,
+										}
+									}
+								},
+								{
+									["name"] = L["Config - Audio - Customize - UseCustomAudio - PinpointShow"],
+									["type"] = NS.Variables.Config.TYPE_CONTAINER,
+									["var_subcontainer"] = true,
+									["var_transparent"] = false,
+									["var_hidden"] = function() return not GetDatabase("DB_GLOBAL").AUDIO_CUSTOM end,
+									["elements"] = {
+										{
+											["name"] = L["Config - Audio - Customize - UseCustomAudio - Sound ID"],
+											["type"] = NS.Variables.Config.TYPE_TEXTBOX,
+											["descriptor"] = nil,
+											["indent"] = 0,
+											["var_textbox_placeholder"] = L["Config - Audio - Customize - UseCustomAudio - Sound ID - Placeholder"],
+											["var_get"] = function() return GetDatabase("DB_GLOBAL").AUDIO_CUSTOM_PINPOINT_SHOW end,
+											["var_set"] = function(value)
+												if tonumber(value) then GetDatabase("DB_GLOBAL").AUDIO_CUSTOM_PINPOINT_SHOW = tonumber(value) else GetDatabase("DB_GLOBAL").AUDIO_CUSTOM_PINPOINT_SHOW = "" end; CallbackRegistry:Trigger("C_CONFIG_AUDIO_UPDATE")
+											end,
+											["var_disabled"] = function() return false end,
+											["var_hidden"] = function() return false end,
+										},
+										{
+											["name"] = "",
+											["type"] = NS.Variables.Config.TYPE_BUTTON,
+											["descriptor"] = nil,
+											["indent"] = 0,
+											["var_button_text"] = L["Config - Audio - Customize - UseCustomAudio - Preview"],
+											["var_set"] = function() addon.C.Sound.Script:PlaySound(GetDatabase("DB_GLOBAL").AUDIO_CUSTOM_PINPOINT_SHOW, true) end,
+											["var_disabled"] = function() return false end,
+											["var_hidden"] = function() return false end,
+										},
+										{
+											["name"] = "",
+											["type"] = NS.Variables.Config.TYPE_BUTTON,
+											["descriptor"] = nil,
+											["indent"] = 0,
+											["var_button_text"] = L["Config - Audio - Customize - UseCustomAudio - Reset"],
+											["var_set"] = function() ResetEntry("DB_GLOBAL", "GLOBAL_DEFAULT", "AUDIO_CUSTOM_PINPOINT_SHOW") end,
+											["var_disabled"] = function() return false end,
+											["var_hidden"] = function() return false end,
+										}
+									}
+								}
+							}
 						}
 					}
 				},
@@ -846,8 +1005,8 @@ do  -- CONSTANTS
 							["name"] = L["Config - About"],
 							["type"] = NS.Variables.Config.TYPE_TITLE,
 							["var_title_imageTexture"] = addon.C.AddonInfo.Variables.General.ADDON_ICON_ALT,
-							["var_title_text"] = addon.CREF:GetAddonName(),
-							["var_title_subtext"] = addon.CREF:GetAddonVersionString(),
+							["var_title_text"] = addon.CS:GetAddonName(),
+							["var_title_subtext"] = addon.CS:GetAddonVersionString(),
 						},
 						{
 							["name"] = L["Config - About - Contributors"],
