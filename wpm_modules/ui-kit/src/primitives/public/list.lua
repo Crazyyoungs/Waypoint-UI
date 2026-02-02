@@ -100,6 +100,11 @@ function ListMixin:GetElement(index, typeKey)
     return element
 end
 
+function ListMixin:GetAllElementsInPoolByType(typeKey)
+    if not typeKey then return end
+    return self.__elementPool[typeKey]
+end
+
 function ListMixin:RenderElements()
     self:HideElements()
     self:WipeElementTypeIndex()

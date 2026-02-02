@@ -207,6 +207,10 @@ function LazyScrollViewPoolingMixin:GetElement(index)
     return element
 end
 
+function LazyScrollViewPoolingMixin:GetAllElementsInPool()
+    return self.__elementPool
+end
+
 function LazyScrollViewPoolingMixin:RenderElements()
     self:HideElements()
     if not self.__data then
