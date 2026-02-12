@@ -1,16 +1,16 @@
-local env            = select(2, ...)
-local L              = env.L
-local Config         = env.Config
-local LazyTimer      = env.WPM:Import("wpm_modules\\lazy-timer")
-local MapPin         = env.WPM:Import("@\\MapPin")
-local Support        = env.WPM:Import("@\\Support")
+local env = select(2, ...)
+local L = env.L
+local Config = env.Config
+local LazyTimer = env.WPM:Import("wpm_modules\\lazy-timer")
+local MapPin = env.WPM:Import("@\\MapPin")
+local Support = env.WPM:Import("@\\Support")
 local Support_TomTom = env.WPM:New("@\\Support\\TomTom")
 local function IsModuleEnabled() return Config.DBGlobal:GetVariable("TomTomSupportEnabled") == true end
 
-local lastClickTime         = nil
+local lastClickTime = nil
 local lastSetCrazyArrowTime = nil
-local lastQuestInfo         = { time = nil, questID = nil }
-local TomTomWaypointInfo    = { name = nil, mapID = nil, x = nil, y = nil }
+local lastQuestInfo = { time = nil, questID = nil }
+local TomTomWaypointInfo = { name = nil, mapID = nil, x = nil, y = nil }
 
 local function HandleAccept()
     Support_TomTom.PlaceWaypointAtSession()
@@ -53,11 +53,7 @@ function Support_TomTom.IsQuestConflictWithTomTomWaypoint()
 end
 
 function Support_TomTom.UpdateSuperTrackPinVisibility()
-    if MapPin.IsUserNavigation() and MapPin.IsUserNavigationFlagged("TomTom_Waypoint") then
-        MapPin.ToggleSuperTrackedPinDisplay(false)
-    else
-        MapPin.ToggleSuperTrackedPinDisplay(true)
-    end
+    MapPin.ToggleSuperTrackedPinDisplay(not MapPin.IsUserNavigationFlagged("TomTom_Waypoint"))
 end
 
 local HandleCrazyArrowTimer = LazyTimer.New()
@@ -77,6 +73,7 @@ end)
 
 local function OnSetCrazyArrow(_, uid, _, title)
     if not IsModuleEnabled() then return end
+    if uid and uid.corpse then return end
 
     lastSetCrazyArrowTime = GetTime()
 
@@ -90,7 +87,6 @@ end
 
 local function OnClearCrazyArrow()
     if not IsModuleEnabled() then return end
-
     if MapPin.IsUserNavigationFlagged("TomTom_Waypoint") then
         MapPin.ClearUserNavigation()
     end
@@ -102,7 +98,7 @@ local function OnAddonLoad()
     f:RegisterEvent("SUPER_TRACKING_CHANGED")
     f:RegisterEvent("GLOBAL_MOUSE_UP")
     f:SetScript("OnEvent", function(self, event, ...)
-        if event == "USER_WAYPOINT_UPDATED" then
+        if event == "USER_WAYPOINT_UPDATED" or event == "SUPER_TRACKING_CHANGED" then
             Support_TomTom.UpdateSuperTrackPinVisibility()
         end
 

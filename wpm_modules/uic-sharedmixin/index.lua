@@ -79,7 +79,7 @@ do -- Button
         TriggerHooks(self.onMouseUpHooks, self)
 
         if self:IsMouseOver() then
-            self:Click()
+            self:OnClick()
         end
     end
 
@@ -87,7 +87,7 @@ do -- Button
         self.clickFunc = func
     end
 
-    function ButtonMixin:Click()
+    function ButtonMixin:OnClick()
         if not self:IsEnabled() then return end
         TriggerHooks(self.onClickHooks, self)
         if self.clickFunc then self.clickFunc(self) end

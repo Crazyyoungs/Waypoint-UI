@@ -6,7 +6,7 @@
         `ClearUserNavigation()`                         -- Clears the current user-placed waypoint marker
         `GetUserNavigation()`                           -- Returns the current waypoint session info (name, mapID, x, y, flags) or nil
         `NewUserNavigation(name, mapID, x, y, flags)`   -- Creates and tracks a new user waypoint at the specified coordinates
-        `IsUserNavigation()`                            -- Returns true if a user waypoint is currently being tracked
+        `IsUserNavigationTracked()`                     -- Returns true if a user waypoint is currently being tracked
 
     `WaypointUIAPI.OpenSettingUI()`
 ]]
@@ -17,11 +17,11 @@ WaypointUIAPI = WaypointUIAPI or {}
 do -- @\\MapPin
     local MapPin = env.WPM:Await("@\\MapPin")
     WaypointUIAPI.Navigation = {
-        ClearDestination    = MapPin.ClearDestination,
-        ClearUserNavigation = MapPin.ClearUserNavigation,
-        GetUserNavigation   = MapPin.GetUserNavigation,
-        NewUserNavigation   = MapPin.NewUserNavigation,
-        IsUserNavigation    = MapPin.IsUserNavigation
+        ClearDestination        = MapPin.ClearDestination,
+        ClearUserNavigation     = MapPin.ClearUserNavigation,
+        GetUserNavigation       = MapPin.GetUserNavigation,
+        NewUserNavigation       = MapPin.NewUserNavigation,
+        IsUserNavigationTracked = MapPin.IsUserNavigationTracked
     }
 end
 

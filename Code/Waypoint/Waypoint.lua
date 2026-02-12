@@ -188,13 +188,11 @@ function WaypointMixin:SetBeam(shown, opacity)
     if shown then self.Beam.Background:SetAlpha(opacity) end
 end
 
-function WaypointMixin:SetFooterTextAppearance(alpha, scale)
-    self.Footer.InfoText:SetAlpha(alpha)
-    self.Footer.InfoText:SetScale(scale)
-    self.Footer.DistanceText:SetAlpha(alpha)
-    self.Footer.DistanceText:SetScale(scale)
-    self.Footer.ArrivalTimeText:SetAlpha(alpha)
-    self.Footer.ArrivalTimeText:SetScale(scale)
+function WaypointMixin:SetFooterTextAppearance()
+    local alpha = Config.DBGlobal:GetVariable("WaypointDistanceTextAlpha")
+    local scale = Config.DBGlobal:GetVariable("WaypointDistanceTextScale")
+    self.Footer:SetAlpha(alpha)
+    self.Footer:SetScale(scale)
 end
 
 WaypointMixin.AnimGroup = UIAnim.New()
@@ -259,6 +257,7 @@ do
             :to(50)
 
         WaypointMixin.AnimGroup:State("INTRO", function(frame)
+            frame:SetAlpha(0)
             frame.Beam.Mask:SetScale(1)
 
             IntroFade:Play(frame)
@@ -989,7 +988,7 @@ do --Animation
     local Frames = {
         Waypoint  = WUIWaypointFrame,
         Pinpoint  = WUIPinpointFrame,
-        Navigator = WUINavigatorFrame,
+        Navigator = WUINavigatorFrame
     }
 
     local function HideWaypoint() Frames.Waypoint:Hide() end
@@ -1218,13 +1217,13 @@ end
 
 do -- Re-render on UI scale change
     local frames = { WUIWaypointFrame, WUIPinpointFrame, WUINavigatorFrame }
-    local function OnUIScaleChanged()
-        for _, f in ipairs(frames) do if f:IsVisible() then f:_Render() end end
-    end
-
-    local f = CreateFrame("Frame")
-    f:RegisterEvent("UI_SCALE_CHANGED")
-    f:SetScript("OnEvent", OnUIScaleChanged)
+    CallbackRegistry.Add("WoWClient.OnUIScaleChanged", function()
+        for _, f in ipairs(frames) do
+            if f:IsVisible() then
+                f:_Render()
+            end
+        end
+    end)
 end
 
 do -- Re-render on font change

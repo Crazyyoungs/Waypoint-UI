@@ -14,11 +14,7 @@ function Support_DugisGuideViewerZ.PlaceWaypointAtSession()
 end
 
 function Support_DugisGuideViewerZ.UpdateSuperTrackPinVisibility()
-    if MapPin.IsUserNavigation() and MapPin.IsUserNavigationFlagged("Dugis_Waypoint") then
-        MapPin.ToggleSuperTrackedPinDisplay(false)
-    else
-        MapPin.ToggleSuperTrackedPinDisplay(true)
-    end
+    MapPin.ToggleSuperTrackedPinDisplay(not MapPin.IsUserNavigationFlagged("Dugis_Waypoint"))
 end
 
 local function OnWaypointsChanged()

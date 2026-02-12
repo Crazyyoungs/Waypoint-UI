@@ -1,20 +1,47 @@
-local env                     = select(2, ...)
-local Config                  = env.Config
-local SavedVariables          = env.WPM:Import("wpm_modules\\saved-variables")
-local CallbackRegistry        = env.WPM:Import("wpm_modules\\callback-registry")
-local Waypoint_Cache          = env.WPM:Import("@\\Waypoint\\Cache")
-local Waypoint_DataProvider   = env.WPM:Import("@\\Waypoint\\DataProvider")
-local Waypoint_Enum           = env.WPM:Import("@\\Waypoint\\Enum")
-local Waypoint_Director       = env.WPM:New("@\\Waypoint\\Director")
+local env = select(2, ...)
+local Config = env.Config
+local SavedVariables = env.WPM:Import("wpm_modules\\saved-variables")
+local CallbackRegistry = env.WPM:Import("wpm_modules\\callback-registry")
+local Waypoint_Cache = env.WPM:Import("@\\Waypoint\\Cache")
+local Waypoint_DataProvider = env.WPM:Import("@\\Waypoint\\DataProvider")
+local Waypoint_Enum = env.WPM:Import("@\\Waypoint\\Enum")
+local Waypoint_Director = env.WPM:New("@\\Waypoint\\Director")
 
 local IsSuperTrackingAnything = C_SuperTrack.IsSuperTrackingAnything
-local IsInInstance            = IsInInstance
-local CreateFrame             = CreateFrame
-local IsPlayerMoving          = IsPlayerMoving
-local ipairs                  = ipairs
+local IsInInstance = IsInInstance
+local CreateFrame = CreateFrame
+local IsPlayerMoving = IsPlayerMoving
+local ipairs = ipairs
 
-Waypoint_Director.isActive       = false
+Waypoint_Director.isActive = false
 Waypoint_Director.navigationMode = Waypoint_Enum.NavigationMode.Hidden
+
+local lastName, lastDescription, lastType, lastQuestID, lastTrackableType, lastTrackableID, lastUserWaypoint
+
+local function GetSuperTrackedState()
+    local name, description = C_SuperTrack.GetSuperTrackedItemName()
+    local type = C_SuperTrack.GetHighestPrioritySuperTrackingType()
+    local questID = C_SuperTrack.GetSuperTrackedQuestID()
+    local contentType, contentID = C_SuperTrack.GetSuperTrackedContent()
+    local userWaypoint = C_SuperTrack.IsSuperTrackingUserWaypoint()
+    return name, description, type, questID, contentType, contentID, userWaypoint
+end
+
+local function SaveSuperTrackedState()
+    lastName, lastDescription, lastType, lastQuestID, lastTrackableType, lastTrackableID, lastUserWaypoint = GetSuperTrackedState()
+end
+
+local function IsNewSuperTrackedTarget()
+    local newName, newDescription, newType, newQuestID, newContentType, newContentID, newUserWaypoint = GetSuperTrackedState()
+    local different = (newName ~= lastName)
+        or (newDescription ~= lastDescription)
+        or (newType ~= lastType)
+        or (newQuestID ~= lastQuestID)
+        or (newContentType ~= lastTrackableType)
+        or (newContentID ~= lastTrackableID)
+        or (newUserWaypoint ~= lastUserWaypoint)
+    return different
+end
 
 --[[
     Callback Events:
@@ -29,7 +56,6 @@ Waypoint_Director.navigationMode = Waypoint_Enum.NavigationMode.Hidden
 ]]
 
 local EventListener = CreateFrame("Frame")
-
 do
     local EVENTS_TO_REGISTER = {
         "QUEST_POI_UPDATE",
@@ -188,27 +214,31 @@ do
     local function HandleEvent(event)
         if not Waypoint_Director.isActive then return end
 
-        -- Context
-        if event == "QUEST_POI_UPDATE" or
-            event == "QUEST_LOG_UPDATE" or
-            event == "ZONE_CHANGED_NEW_AREA" or
-            event == "ZONE_CHANGED" or
-            event == "QUEST_ACCEPTED" or
-            event == "QUEST_COMPLETE" or
-            event == "QUEST_DETAIL" or
-            event == "QUEST_FINISHED" then
-            Waypoint_Director.AwaitDistance()
+        if IsNewSuperTrackedTarget() then
+            -- Context
+            if event == "QUEST_POI_UPDATE" or
+                event == "QUEST_LOG_UPDATE" or
+                event == "ZONE_CHANGED_NEW_AREA" or
+                event == "ZONE_CHANGED" or
+                event == "QUEST_ACCEPTED" or
+                event == "QUEST_COMPLETE" or
+                event == "QUEST_DETAIL" or
+                event == "QUEST_FINISHED" then
+                Waypoint_Director.AwaitDistance()
+            end
+
+            -- Movement
+            if event == "PLAYER_STARTED_MOVING" or event == "PLAYER_STOPPED_MOVING" or event == "PLAYER_IS_GLIDING_CHANGED" then
+                OnPlayerMove(IsPlayerMoving())
+            end
+
+            -- Super Tracking
+            if event == "SUPER_TRACKING_CHANGED" then
+                OnSuperTrackingChange()
+            end
         end
 
-        -- Movement
-        if event == "PLAYER_STARTED_MOVING" or event == "PLAYER_STOPPED_MOVING" or event == "PLAYER_IS_GLIDING_CHANGED" then
-            OnPlayerMove(IsPlayerMoving())
-        end
-
-        -- Super Tracking
-        if event == "SUPER_TRACKING_CHANGED" then
-            OnSuperTrackingChange()
-        end
+        SaveSuperTrackedState()
     end
 
     for i = 1, #EVENTS_TO_REGISTER do
@@ -256,7 +286,6 @@ do
         valueChecklistBeforeUpdating.hasClampInfo = false
 
         Waypoint_Cache.Clear()
-        -- Waypoint_Director.CancelDistanceAwait()
     end
 
     CallbackRegistry.Add("Waypoint.SuperTrackingChanged", Reset)
@@ -354,8 +383,8 @@ local INSTANCE_ALLOW_LIST = {
 }
 
 local function ShouldSetActive()
-    local mapID                      = C_Map.GetBestMapForUnit("player")
-    local force                      = false
+    local mapID = C_Map.GetBestMapForUnit("player")
+    local force = false
     local isInInstance, instanceType = IsInInstance()
 
     if mapID and INSTANCE_ALLOW_LIST[mapID] then
@@ -398,6 +427,7 @@ end
 local function OnAddonLoad()
     Waypoint_Director.UpdateActive()
     Waypoint_Director.AwaitDistance()
+    SaveSuperTrackedState()
 
     local f = CreateFrame("Frame")
     f:SetScript("OnEvent", function(self, event, ...)

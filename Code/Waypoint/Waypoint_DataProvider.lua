@@ -116,7 +116,7 @@ do
                 return Waypoint_Define.ContextIconTexture{ type = "ATLAS", path = "Crosshair_Taxi_128" }
             elseif poiInfo and poiInfo.atlasName then
                 return Waypoint_Define.ContextIconTexture{ type = "ATLAS", path = poiInfo.atlasName }
-            elseif MapPin.IsUserNavigation() then
+            elseif MapPin.IsUserNavigationTracked() then
                 if MapPin.IsUserNavigationFlagged("TomTom_Waypoint") then
                     return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "TomTomArrow.png", requestRecolor = true }
                 else
@@ -172,7 +172,7 @@ function Waypoint_DataProvider.CacheSuperTrackingInfo()
     local redirectInfo = DataProviderUtil.GetRedirectInfo()
     local redirectContextIcon = Waypoint_DataProvider.GetContextIconTextureForRedirect()
 
-    if MapPin.IsUserNavigation() then
+    if MapPin.IsUserNavigationTracked() then
         local info = MapPin.GetUserNavigation()
         pinName = info.name
         pinDescription = string.format("X: %0.1f, Y: %0.1f", info.x * 100, info.y * 100)
