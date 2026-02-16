@@ -10,11 +10,6 @@ local DugisWaypointInfo = { name = nil, mapID = nil, x = nil, y = nil }
 
 function Support_DugisGuideViewerZ.PlaceWaypointAtSession()
     MapPin.NewUserNavigation(DugisWaypointInfo.name, DugisWaypointInfo.mapID, DugisWaypointInfo.x, DugisWaypointInfo.y, "Dugis_Waypoint")
-    Support_DugisGuideViewerZ.UpdateSuperTrackPinVisibility()
-end
-
-function Support_DugisGuideViewerZ.UpdateSuperTrackPinVisibility()
-    MapPin.ToggleSuperTrackedPinDisplay(not MapPin.IsUserNavigationFlagged("Dugis_Waypoint"))
 end
 
 local function OnWaypointsChanged()
@@ -40,12 +35,6 @@ local function OnWaypointsChanged()
 end
 
 local function OnAddonLoad()
-    local f = CreateFrame("Frame")
-    f:RegisterEvent("USER_WAYPOINT_UPDATED")
-    f:SetScript("OnEvent", function()
-        Support_DugisGuideViewerZ.UpdateSuperTrackPinVisibility()
-    end)
-
     local scanner = nil
     scanner = C_Timer.NewTicker(0.1, function()
         if DugisArrowGlobal and DugisArrowGlobal.WaypointsChanged and type(DugisArrowGlobal.WaypointsChanged) == "function" then

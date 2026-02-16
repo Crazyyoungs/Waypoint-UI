@@ -109,6 +109,7 @@ do
 
             local poiType = Waypoint_Cache.Get("poiType")
             local poiInfo = Waypoint_Cache.Get("poiInfo")
+            local isVignette = Waypoint_Cache.Get("vignetteID") ~= nil
 
             if pinType == Enum.SuperTrackingType.Corpse then
                 return Waypoint_Define.ContextIconTexture{ type = "ATLAS", path = "poi-torghast" }
@@ -116,8 +117,10 @@ do
                 return Waypoint_Define.ContextIconTexture{ type = "ATLAS", path = "Crosshair_Taxi_128" }
             elseif poiInfo and poiInfo.atlasName then
                 return Waypoint_Define.ContextIconTexture{ type = "ATLAS", path = poiInfo.atlasName }
-            elseif MapPin.IsUserNavigationTracked() then
-                if MapPin.IsUserNavigationFlagged("TomTom_Waypoint") then
+            elseif MapPin.IsUserNavigationTracked() or MapPin.IsUserNavigationFlagged("RareScanner_Waypoint") then
+                if MapPin.IsUserNavigationFlagged("RareScanner_Waypoint") then
+                    return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "VignetteElite.png", requestRecolor = true }
+                elseif MapPin.IsUserNavigationFlagged("TomTom_Waypoint") then
                     return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "TomTomArrow.png", requestRecolor = true }
                 else
                     return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "Navigation.png", requestRecolor = true }
@@ -128,6 +131,8 @@ do
                 return Waypoint_Define.ContextIconTexture{ type = "ATLAS", path = "ArchBlob" }
             elseif poiType == Enum.SuperTrackingMapPinType.QuestOffer then
                 return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "QuestAvailable.png" }
+            elseif isVignette then
+                return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "VignetteElite.png", requestRecolor = true }
             end
             return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "MapPin.png", requestRecolor = true }
         end
@@ -171,8 +176,9 @@ function Waypoint_DataProvider.CacheSuperTrackingInfo()
     local pinName, pinDescription = C_SuperTrack.GetSuperTrackedItemName()
     local redirectInfo = DataProviderUtil.GetRedirectInfo()
     local redirectContextIcon = Waypoint_DataProvider.GetContextIconTextureForRedirect()
+    local vignetteID = C_SuperTrack.GetSuperTrackedVignette()
 
-    if MapPin.IsUserNavigationTracked() then
+    if MapPin.IsUserNavigationTracked() or MapPin.IsUserNavigationFlagged("RareScanner_Waypoint") then
         local info = MapPin.GetUserNavigation()
         pinName = info.name
         pinDescription = string.format("X: %0.1f, Y: %0.1f", info.x * 100, info.y * 100)
@@ -191,6 +197,7 @@ function Waypoint_DataProvider.CacheSuperTrackingInfo()
     Waypoint_Cache.Set("redirectInfo", redirectInfo)
     Waypoint_Cache.Set("redirectContextIcon", redirectContextIcon)
     Waypoint_Cache.Set("pinContextIcon", Waypoint_DataProvider.GetContextIconTextureForOtherPinType())
+    Waypoint_Cache.Set("vignetteID", vignetteID)
 
     CallbackRegistry.Trigger("Waypoint_DataProvider.CacheSuperTrackingInfo")
 end

@@ -50,10 +50,10 @@ do -- Row
 
         self:RegisterMouseEvents()
         self:HookButtonStateChange(self.UpdateAnimation)
-        self:HookMouseUp(self.OnClick)
+        self:HookMouseUp(self.Row_OnClick)
     end
 
-    function RowMixin:OnClick()
+    function RowMixin:Row_OnClick()
         if not self.__parentRef then return end
         self.__parentRef:SetSelectedIndex(self.__index)
         self:UpdateAnimation()
@@ -156,7 +156,7 @@ do -- Content Arrow
 
         self:RegisterMouseEvents()
         self:HookButtonStateChange(self.UpdateAnimation)
-        self:HookMouseUp(self.OnClick)
+        self:HookMouseUp(self.ContextArrow_OnClick)
         self:UpdateAnimation()
 
         if isTop then
@@ -180,7 +180,7 @@ do -- Content Arrow
         end
     end
 
-    function ContentArrowMixin:OnClick()
+    function ContentArrowMixin:ContextArrow_OnClick()
         if not self.scrollView then return end
 
         if self.isTop then

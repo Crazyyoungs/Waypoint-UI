@@ -8,10 +8,8 @@ local function IsModuleEnabled() return Config.DBGlobal:GetVariable("GuidePinAss
 
 local GetBestMapForUnit = C_Map.GetBestMapForUnit
 local IsSuperTrackingAnything = C_SuperTrack.IsSuperTrackingAnything
-local SetCVar = SetCVar
-local GetCVar = GetCVar
 
-local cachedSFXVolume = nil
+
 local cachedGuidePin = nil
 
 local function ShowGuidePin()
@@ -30,25 +28,9 @@ local function PlaceUserNavigationAtGuidePin()
     HideGuidePin()
 end
 
-local function MuteSFXChannel()
-    SetCVar("Sound_SFXVolume", 0)
-end
-
-local function UnmuteSFXChannel()
-    SetCVar("Sound_SFXVolume", cachedSFXVolume or 1)
-end
-
 local function LocateGuidePin()
     -- Force pin refresh by toggling WorldMapFrame
-    local isWorldMapVisible = WorldMapFrame:IsVisible()
-    cachedSFXVolume = GetCVar("Sound_SFXVolume")
-
-    if not isWorldMapVisible then
-        MuteSFXChannel()
-        WorldMapFrame:Show()
-        WorldMapFrame:Hide()
-        C_Timer.After(0.5, UnmuteSFXChannel)
-    end
+    MapPin.ForceWorldMapRefresh()
 
     -- Find guide pin (GossipPinTemplate)
     for pin in WorldMapFrame:EnumeratePinsByTemplate("GossipPinTemplate") do

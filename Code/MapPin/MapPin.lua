@@ -9,11 +9,39 @@ local IsSuperTrackingAnything = C_SuperTrack.IsSuperTrackingAnything
 local ClearAllSuperTracked = C_SuperTrack.ClearAllSuperTracked
 local GetHighestPrioritySuperTrackingType = C_SuperTrack.GetHighestPrioritySuperTrackingType
 local CanSetUserWaypointOnMap = C_Map.CanSetUserWaypointOnMap
+local GetUserWaypoint = C_Map.GetUserWaypoint
 local SetUserWaypoint = C_Map.SetUserWaypoint
 local ClearUserWaypoint = C_Map.ClearUserWaypoint
 local HasUserWaypoint = C_Map.HasUserWaypoint
+local SetCVar = SetCVar
+local GetCVar = GetCVar
 local CreateFrame = CreateFrame
 local tostring = tostring
+
+
+do --World Map Util
+    local cachedSFXVolume = nil
+
+    local function MuteSFXChannel()
+        SetCVar("Sound_SFXVolume", 0)
+    end
+
+    local function UnmuteSFXChannel()
+        SetCVar("Sound_SFXVolume", cachedSFXVolume or 1)
+    end
+
+    function MapPin.ForceWorldMapRefresh()
+        local isWorldMapVisible = WorldMapFrame:IsVisible()
+        cachedSFXVolume = GetCVar("Sound_SFXVolume")
+
+        if not isWorldMapVisible then
+            MuteSFXChannel()
+            WorldMapFrame:Show()
+            WorldMapFrame:Hide()
+            C_Timer.After(0.5, UnmuteSFXChannel)
+        end
+    end
+end
 
 local SessionData = {
     name  = nil,
@@ -23,12 +51,11 @@ local SessionData = {
     flags = nil
 }
 
-local function GetUserWaypointPosition()
-    local userWaypoint = C_Map.GetUserWaypoint()
-    if not userWaypoint then return nil end
-
-    return userWaypoint.uiMapID, userWaypoint.position
-end
+local MUTED_FLAG_MAP = {
+    ["TomTom_Waypoint"]      = true,
+    ["Dugis_Waypoint"]       = true,
+    ["RareScanner_Waypoint"] = true
+}
 
 local function ApplySavedNavigation(saved)
     if not saved then return SessionData end
@@ -55,8 +82,10 @@ local function PlayUserNavigationAudio()
     Sound.PlaySound("Main", soundID)
 end
 
-function MapPin.ClearUserNavigation()
-    if MapPin.GetUserNavigation() then ClearUserWaypoint() end
+function MapPin.ClearUserNavigation(preserveWaypoint)
+    if MapPin.GetUserNavigation() and not preserveWaypoint then
+        ClearUserWaypoint()
+    end
     MapPin.SetUserNavigation(nil, nil, nil, nil, nil)
 end
 
@@ -135,20 +164,18 @@ function MapPin.NewUserNavigation(name, mapID, x, y, flags)
 end
 
 function MapPin.IsUserNavigationTracked()
-    if not HasUserWaypoint() then return false end
-
-    local pinTracked = GetHighestPrioritySuperTrackingType() == Enum.SuperTrackingType.UserWaypoint
-    local waypointMapID, waypointPos = GetUserWaypointPosition()
-    local currentUserNavigationInfo = MapPin.GetUserNavigation()
-
-    if not waypointMapID or not waypointPos then return false end
-    if not currentUserNavigationInfo or not currentUserNavigationInfo.mapID or not currentUserNavigationInfo.x or not currentUserNavigationInfo.y then return false end
-
-    local mapIDMatch = tostring(waypointMapID) == tostring(currentUserNavigationInfo.mapID)
-    local xMatch = string.format("%0.1f", waypointPos.x * 100) == string.format("%0.1f", currentUserNavigationInfo.x * 100)
-    local yMatch = string.format("%0.1f", waypointPos.y * 100) == string.format("%0.1f", currentUserNavigationInfo.y * 100)
-
-    return (pinTracked and mapIDMatch and xMatch and yMatch)
+    if HasUserWaypoint() then
+        local wp = GetUserWaypoint()
+        local pinTracked = GetHighestPrioritySuperTrackingType() == Enum.SuperTrackingType.UserWaypoint
+        local userNavigationInfo = MapPin.GetUserNavigation()
+        if pinTracked and userNavigationInfo then
+            local mapIDMatch = tostring(wp.uiMapID) == tostring(userNavigationInfo.mapID)
+            local xMatch = string.format("%0.1f", wp.position.x * 100) == string.format("%0.1f", userNavigationInfo.x * 100)
+            local yMatch = string.format("%0.1f", wp.position.y * 100) == string.format("%0.1f", userNavigationInfo.y * 100)
+            return mapIDMatch and xMatch and yMatch
+        end
+    end
+    return false
 end
 
 function MapPin.IsUserNavigationFlagged(flag)
@@ -159,22 +186,44 @@ function MapPin.IsUserNavigationFlagged(flag)
     return false
 end
 
+local worldMapLoaded = false
+
 function MapPin.ToggleSuperTrackedPinDisplay(shown)
+    if not worldMapLoaded then
+        MapPin.ForceWorldMapRefresh()
+        worldMapLoaded = true
+    end
     for pin in WorldMapFrame:EnumeratePinsByTemplate("WaypointLocationPinTemplate") do
         pin:SetAlpha(shown and 1 or 0)
         pin:EnableMouse(shown)
     end
 end
 
+function MapPin.ValidateSuperTrackedPinDisplay()
+    for flag, _ in pairs(MUTED_FLAG_MAP) do
+        if MapPin.IsUserNavigationTracked() and MapPin.IsUserNavigationFlagged(flag) then
+            MapPin.ToggleSuperTrackedPinDisplay(false)
+            return
+        end
+    end
+    MapPin.ToggleSuperTrackedPinDisplay(true)
+end
+
 do --Automatically clear supertracking when the user waypoint is removed
     local f = CreateFrame("Frame")
     f:RegisterEvent("USER_WAYPOINT_UPDATED")
-    f:SetScript("OnEvent", function(self, event, ...)
+    f:SetScript("OnEvent", function()
         if not C_Map.HasUserWaypoint() and C_SuperTrack.IsSuperTrackingMapPin() then
             C_SuperTrack.ClearAllSuperTracked()
         end
     end)
 end
+
+local f = CreateFrame("Frame")
+f:RegisterEvent("USER_WAYPOINT_UPDATED")
+f:RegisterEvent("SUPER_TRACKING_CHANGED")
+f:SetScript("OnEvent", MapPin.ValidateSuperTrackedPinDisplay)
+CallbackRegistry.Add("MapPin.NewUserNavigation", MapPin.ValidateSuperTrackedPinDisplay)
 
 local function OnAddonLoad()
     MapPin.GetUserNavigation()

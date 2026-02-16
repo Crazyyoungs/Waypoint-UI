@@ -12,6 +12,9 @@ local lastSetCrazyArrowTime = nil
 local lastQuestInfo = { time = nil, questID = nil }
 local TomTomWaypointInfo = { name = nil, mapID = nil, x = nil, y = nil }
 
+Support_TomTom.ignoredWaypoint = { mapID = nil, x = nil, y = nil }
+
+
 local function HandleAccept()
     Support_TomTom.PlaceWaypointAtSession()
 end
@@ -34,8 +37,9 @@ local REPLACE_PROMPT_INFO = {
 
 
 function Support_TomTom.PlaceWaypointAtSession()
-    MapPin.NewUserNavigation(TomTomWaypointInfo.name, TomTomWaypointInfo.mapID, TomTomWaypointInfo.x, TomTomWaypointInfo.y, "TomTom_Waypoint")
-    Support_TomTom.UpdateSuperTrackPinVisibility()
+    if not Support_TomTom.IsWaypointIgnored(TomTomWaypointInfo.mapID, TomTomWaypointInfo.x, TomTomWaypointInfo.y) then
+        MapPin.NewUserNavigation(TomTomWaypointInfo.name, TomTomWaypointInfo.mapID, TomTomWaypointInfo.x, TomTomWaypointInfo.y, "TomTom_Waypoint")
+    end
 end
 
 function Support_TomTom.IsUserSetCrazyArrow()
@@ -52,8 +56,19 @@ function Support_TomTom.IsQuestConflictWithTomTomWaypoint()
     return false
 end
 
-function Support_TomTom.UpdateSuperTrackPinVisibility()
-    MapPin.ToggleSuperTrackedPinDisplay(not MapPin.IsUserNavigationFlagged("TomTom_Waypoint"))
+function Support_TomTom.IgnoreWaypoint(mapID, x, y)
+    Support_TomTom.ignoredWaypoint.mapID = mapID
+    Support_TomTom.ignoredWaypoint.x = x
+    Support_TomTom.ignoredWaypoint.y = y
+end
+
+function Support_TomTom.IsWaypointIgnored(mapID, x, y)
+    if Support_TomTom.ignoredWaypoint.mapID == mapID and
+        math.floor(Support_TomTom.ignoredWaypoint.x) == math.floor(x) and
+        math.floor(Support_TomTom.ignoredWaypoint.y) == math.floor(y) then
+        return true
+    end
+    return false
 end
 
 local HandleCrazyArrowTimer = LazyTimer.New()
@@ -75,13 +90,12 @@ local function OnSetCrazyArrow(_, uid, _, title)
     if not IsModuleEnabled() then return end
     if uid and uid.corpse then return end
 
-    lastSetCrazyArrowTime = GetTime()
-
     TomTomWaypointInfo.name = title
     TomTomWaypointInfo.mapID = uid[1]
     TomTomWaypointInfo.x = uid[2] * 100
     TomTomWaypointInfo.y = uid[3] * 100
 
+    lastSetCrazyArrowTime = GetTime()
     HandleCrazyArrowTimer:Start(0.016)
 end
 
@@ -98,10 +112,6 @@ local function OnAddonLoad()
     f:RegisterEvent("SUPER_TRACKING_CHANGED")
     f:RegisterEvent("GLOBAL_MOUSE_UP")
     f:SetScript("OnEvent", function(self, event, ...)
-        if event == "USER_WAYPOINT_UPDATED" or event == "SUPER_TRACKING_CHANGED" then
-            Support_TomTom.UpdateSuperTrackPinVisibility()
-        end
-
         if event == "SUPER_TRACKING_CHANGED" then
             local questID = C_SuperTrack.GetSuperTrackedQuestID()
             if questID then

@@ -83,14 +83,14 @@ do -- Button
         end
     end
 
-    function ButtonMixin:SetClick(func)
-        self.clickFunc = func
-    end
-
     function ButtonMixin:OnClick()
         if not self:IsEnabled() then return end
         TriggerHooks(self.onClickHooks, self)
         if self.clickFunc then self.clickFunc(self) end
+    end
+
+    function ButtonMixin:SetOnClick(func)
+        self.clickFunc = func
     end
 
     function ButtonMixin:HookEnableChange(func, replace)
@@ -196,10 +196,10 @@ do -- Selection Menu Remote
         self.data = nil
         self.value = 1
         self.onValueChangedHooks = {}
-        self:HookMouseUp(self.OnClick)
+        self:HookMouseUp(self.Remote_OnClick)
     end
 
-    function SelectionMenuRemoteMixin:OnClick()
+    function SelectionMenuRemoteMixin:Remote_OnClick()
         local selectionMenu = self.selectionMenu
         local data = self.data
         local value = self.value

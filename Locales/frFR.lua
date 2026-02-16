@@ -134,6 +134,11 @@ L["Config - ExtraFeature - DugisSupport - Enable"] = "Suivre les points de passa
 L["Config - ExtraFeature - DugisSupport - Enable - Description"] = "Waypoint UI prend en charge le suivi des repères Dugi Questing Essential."
 L["Config - ExtraFeature - DugisSupport - AutoReplaceWaypoint"] = "Remplacer automatiquement le point de passage"
 L["Config - ExtraFeature - DugisSupport - AutoReplaceWaypoint - Description"] = "Suivi automatique des repères Dugi à travers Waypoint UI."
+L["Config - ExtraFeature - RareScannerSupport"] = "RareScanner"
+L["Config - ExtraFeature - RareScannerSupport - Enable"] = "Track RareScanner Found Entity"
+L["Config - ExtraFeature - RareScannerSupport - Enable - Description"] = "Track RareScanner's found entity alerts with Waypoint UI. When enabled, RareScanner's in-game waypoint option will be temporarily disabled."
+L["Config - ExtraFeature - RareScannerSupport - AutoReplaceWaypoint"] = "Auto-Replace Waypoint"
+L["Config - ExtraFeature - RareScannerSupport - AutoReplaceWaypoint - Description"] = "Automatically track the latest found entity alert."
 
 L["Config - About"] = "À propos"
 L["Config - About - Contributors"] = "Contributeurs"
