@@ -16,8 +16,8 @@ local IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 env.NAME = "Waypoint UI"
 env.ICON = Path.Root .. "\\Art\\Icon\\Icon.png"
 env.ICON_ALT = Path.Root .. "\\Art\\Icon\\IconAltLight.png"
-env.VERSION_STRING = "1.3.3"
-env.VERSION_NUMBER = 010303
+env.VERSION_STRING = "1.3.4"
+env.VERSION_NUMBER = 010304
 env.DEBUG_MODE = false
 
 
@@ -117,7 +117,9 @@ do
         DugisSupportEnabled                    = true,
         DugisAutoReplaceWaypoint               = true,
         RSSupportEnabled                       = true,
-        RSAutoReplaceWaypoint                  = true
+        RSAutoReplaceWaypoint                  = true,
+        SilverDragonSupportEnabled             = true,
+        SilverDragonAutoReplaceWaypoint        = true
     }
     local DB_GLOBAL_PERSISTENT_DEFAULTS = {}
     local DB_LOCAL_DEFAULTS = {

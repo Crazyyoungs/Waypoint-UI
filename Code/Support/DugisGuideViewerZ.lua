@@ -1,4 +1,5 @@
 local env = select(2, ...)
+local L = env.L
 local Config = env.Config
 local MapPin = env.WPM:Import("@\\MapPin")
 local Support = env.WPM:Import("@\\Support")
@@ -6,6 +7,27 @@ local Support_DugisGuideViewerZ = env.WPM:New("@\\Support\\DugisGuideViewerZ")
 local function IsModuleEnabled() return Config.DBGlobal:GetVariable("DugisSupportEnabled") == true end
 
 local DugisWaypointInfo = { name = nil, mapID = nil, x = nil, y = nil }
+
+
+local function HandleAccept()
+    Support_DugisGuideViewerZ.PlaceWaypointAtSession()
+end
+
+local REPLACE_PROMPT_INFO = {
+    text         = L["DugisGuideViewerZ - ReplacePrompt"],
+    options      = {
+        {
+            text     = L["DugisGuideViewerZ - ReplacePrompt - Yes"],
+            callback = HandleAccept
+        },
+        {
+            text     = L["DugisGuideViewerZ - ReplacePrompt - No"],
+            callback = nil
+        }
+    },
+    hideOnEscape = true,
+    timeout      = 10
+}
 
 
 function Support_DugisGuideViewerZ.PlaceWaypointAtSession()
@@ -31,6 +53,8 @@ local function OnWaypointsChanged()
 
     if Config.DBGlobal:GetVariable("DugisAutoReplaceWaypoint") == true or not C_SuperTrack.IsSuperTrackingAnything() or MapPin.IsUserNavigationFlagged("Dugis_Waypoint") then
         Support_DugisGuideViewerZ.PlaceWaypointAtSession()
+    else
+        WUISharedPrompt:Open(REPLACE_PROMPT_INFO, DugisWaypointInfo.name)
     end
 end
 

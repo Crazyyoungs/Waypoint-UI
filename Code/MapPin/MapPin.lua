@@ -54,7 +54,8 @@ local SessionData = {
 local MUTED_FLAG_MAP = {
     ["TomTom_Waypoint"]      = true,
     ["Dugis_Waypoint"]       = true,
-    ["RareScanner_Waypoint"] = true
+    ["RareScanner_Waypoint"] = true,
+    ["SilverDragon_Waypoint"] = true
 }
 
 local function ApplySavedNavigation(saved)
@@ -168,7 +169,7 @@ function MapPin.IsUserNavigationTracked()
         local wp = GetUserWaypoint()
         local pinTracked = GetHighestPrioritySuperTrackingType() == Enum.SuperTrackingType.UserWaypoint
         local userNavigationInfo = MapPin.GetUserNavigation()
-        if pinTracked and userNavigationInfo then
+        if pinTracked and userNavigationInfo and userNavigationInfo.mapID and userNavigationInfo.x and userNavigationInfo.y then
             local mapIDMatch = tostring(wp.uiMapID) == tostring(userNavigationInfo.mapID)
             local xMatch = string.format("%0.1f", wp.position.x * 100) == string.format("%0.1f", userNavigationInfo.x * 100)
             local yMatch = string.format("%0.1f", wp.position.y * 100) == string.format("%0.1f", userNavigationInfo.y * 100)
@@ -199,7 +200,13 @@ function MapPin.ToggleSuperTrackedPinDisplay(shown)
     end
 end
 
-function MapPin.ValidateSuperTrackedPinDisplay()
+function MapPin.ValidateSuperTrackedPinDisplay(_, event)
+    if event == "USER_WAYPOINT_UPDATED" then
+        if not MapPin.IsUserNavigationTracked() then
+            MapPin.ClearUserNavigation(true)
+        end
+    end
+    
     for flag, _ in pairs(MUTED_FLAG_MAP) do
         if MapPin.IsUserNavigationTracked() and MapPin.IsUserNavigationFlagged(flag) then
             MapPin.ToggleSuperTrackedPinDisplay(false)

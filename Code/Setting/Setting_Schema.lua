@@ -825,6 +825,19 @@ do -- Schema
                             indent            = 1
                         }
                     }
+                },
+                {
+                    widgetName = L["Config - ExtraFeature - SilverDragonSupport"],
+                    widgetType = Setting_Enum.WidgetType.Container,
+                    showWhen   = function() return IsAddOnLoaded("SilverDragon") end,
+
+                    children   = {
+                        {
+                            widgetName        = L["Config - ExtraFeature - SilverDragonSupport - Enable"],
+                            widgetType        = Setting_Enum.WidgetType.CheckButton,
+                            key               = "SilverDragonSupportEnabled"
+                        },
+                    }
                 }
             }
         },

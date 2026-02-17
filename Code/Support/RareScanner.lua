@@ -1,6 +1,6 @@
 local env = select(2, ...)
+local L = env.L
 local Config = env.Config
-local CallbackRegistry = env.WPM:Import("wpm_modules\\callback-registry")
 local MapPin = env.WPM:Import("@\\MapPin")
 local Support = env.WPM:Import("@\\Support")
 local Support_TomTom = env.WPM:Import("@\\Support\\TomTom")
@@ -10,6 +10,28 @@ local function IsModuleEnabled() return Config.DBGlobal:GetVariable("RSSupportEn
 
 local SessionWaypointInfo = { name = nil, mapID = nil, x = nil, y = nil }
 local RareScannerWaypointSupportOverride = { active = false, mode = nil, original = nil, node = nil }
+
+
+local function HandleAccept()
+    Support_RareScanner.PlaceWaypointAtSession()
+end
+
+local REPLACE_PROMPT_INFO = {
+    text         = L["RareScanner - ReplacePrompt"],
+    options      = {
+        {
+            text     = L["RareScanner - ReplacePrompt - Yes"],
+            callback = HandleAccept
+        },
+        {
+            text     = L["RareScanner - ReplacePrompt - No"],
+            callback = nil
+        }
+    },
+    hideOnEscape = true,
+    timeout      = 10
+}
+
 
 local function NormalizeCoordinate(coord)
     coord = tonumber(coord)
@@ -119,7 +141,13 @@ local function TryPlaceWaypoint(scannerButton, manuallyFired)
     if not CaptureWaypointInfo(scannerButton) then return end
 
     if manuallyFired or Config.DBGlobal:GetVariable("RSAutoReplaceWaypoint") == true then
-        Support_RareScanner.PlaceWaypointAtSession()
+        -- Skip prompt if auto-replace is enabled or already tracking a Rare Scanner waypoint
+        if Config.DBGlobal:GetVariable("RSAutoReplaceWaypoint") == true or (not C_SuperTrack.IsSuperTrackingAnything() or (MapPin.IsUserNavigationFlagged("RareScanner_Waypoint"))) then
+            Support_RareScanner.PlaceWaypointAtSession()
+            return
+        else
+            WUISharedPrompt:Open(REPLACE_PROMPT_INFO, SessionWaypointInfo.name)
+        end
     end
 end
 

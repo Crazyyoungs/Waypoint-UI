@@ -117,8 +117,8 @@ do
                 return Waypoint_Define.ContextIconTexture{ type = "ATLAS", path = "Crosshair_Taxi_128" }
             elseif poiInfo and poiInfo.atlasName then
                 return Waypoint_Define.ContextIconTexture{ type = "ATLAS", path = poiInfo.atlasName }
-            elseif MapPin.IsUserNavigationTracked() or MapPin.IsUserNavigationFlagged("RareScanner_Waypoint") then
-                if MapPin.IsUserNavigationFlagged("RareScanner_Waypoint") then
+            elseif MapPin.IsUserNavigationTracked() or MapPin.IsUserNavigationFlagged("RareScanner_Waypoint") or MapPin.IsUserNavigationFlagged("SilverDragon_Waypoint") then
+                if MapPin.IsUserNavigationFlagged("RareScanner_Waypoint") or MapPin.IsUserNavigationFlagged("SilverDragon_Waypoint") then
                     return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "VignetteElite.png", requestRecolor = true }
                 elseif MapPin.IsUserNavigationFlagged("TomTom_Waypoint") then
                     return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "TomTomArrow.png", requestRecolor = true }
@@ -178,7 +178,7 @@ function Waypoint_DataProvider.CacheSuperTrackingInfo()
     local redirectContextIcon = Waypoint_DataProvider.GetContextIconTextureForRedirect()
     local vignetteID = C_SuperTrack.GetSuperTrackedVignette()
 
-    if MapPin.IsUserNavigationTracked() or MapPin.IsUserNavigationFlagged("RareScanner_Waypoint") then
+    if MapPin.IsUserNavigationTracked() or MapPin.IsUserNavigationFlagged("RareScanner_Waypoint") or MapPin.IsUserNavigationFlagged("SilverDragon_Waypoint") then
         local info = MapPin.GetUserNavigation()
         pinName = info.name
         pinDescription = string.format("X: %0.1f, Y: %0.1f", info.x * 100, info.y * 100)

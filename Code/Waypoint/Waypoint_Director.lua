@@ -16,30 +16,39 @@ local ipairs = ipairs
 Waypoint_Director.isActive = false
 Waypoint_Director.navigationMode = Waypoint_Enum.NavigationMode.Hidden
 
-local lastName, lastDescription, lastType, lastQuestID, lastTrackableType, lastTrackableID, lastUserWaypoint
+local lastName, lastDescription, lastType, lastQuestID, lastTrackableType, lastTrackableID, lastIsUserWaypoint, lastMapID, lastX, lastY
 
 local function GetSuperTrackedState()
     local name, description = C_SuperTrack.GetSuperTrackedItemName()
     local type = C_SuperTrack.GetHighestPrioritySuperTrackingType()
     local questID = C_SuperTrack.GetSuperTrackedQuestID()
     local contentType, contentID = C_SuperTrack.GetSuperTrackedContent()
-    local userWaypoint = C_SuperTrack.IsSuperTrackingUserWaypoint()
-    return name, description, type, questID, contentType, contentID, userWaypoint
+    local isUserWaypoint = C_SuperTrack.IsSuperTrackingUserWaypoint()
+
+    local userWaypoint = C_Map.GetUserWaypoint()
+    local mapID = userWaypoint and userWaypoint.uiMapID or nil
+    local x, y = userWaypoint and userWaypoint.position.x or nil, userWaypoint and userWaypoint.position.y or nil
+
+    return name, description, type, questID, contentType, contentID, isUserWaypoint, mapID, x, y
 end
 
 local function SaveSuperTrackedState()
-    lastName, lastDescription, lastType, lastQuestID, lastTrackableType, lastTrackableID, lastUserWaypoint = GetSuperTrackedState()
+    lastName, lastDescription, lastType, lastQuestID, lastTrackableType, lastTrackableID, lastIsUserWaypoint, lastMapID, lastX, lastY = GetSuperTrackedState()
 end
 
 local function IsNewSuperTrackedTarget()
-    local newName, newDescription, newType, newQuestID, newContentType, newContentID, newUserWaypoint = GetSuperTrackedState()
+    local newName, newDescription, newType, newQuestID, newContentType, newContentID, newIsUserWaypoint, newMapID, newX, newY = GetSuperTrackedState()
     local different = (newName ~= lastName)
         or (newDescription ~= lastDescription)
         or (newType ~= lastType)
         or (newQuestID ~= lastQuestID)
         or (newContentType ~= lastTrackableType)
         or (newContentID ~= lastTrackableID)
-        or (newUserWaypoint ~= lastUserWaypoint)
+        or (newIsUserWaypoint ~= lastIsUserWaypoint)
+        or (newMapID ~= lastMapID)
+        or (newX ~= lastX)
+        or (newY ~= lastY)
+
     return different
 end
 
@@ -66,6 +75,7 @@ do
         "QUEST_COMPLETE",
         "QUEST_DETAIL",
         "QUEST_FINISHED",
+        "USER_WAYPOINT_UPDATED",
         "SUPER_TRACKING_CHANGED",
         "PLAYER_STARTED_MOVING",
         "PLAYER_STOPPED_MOVING",
@@ -233,7 +243,7 @@ do
             end
 
             -- Super Tracking
-            if event == "SUPER_TRACKING_CHANGED" then
+            if event == "SUPER_TRACKING_CHANGED" or event == "USER_WAYPOINT_UPDATED" then
                 OnSuperTrackingChange()
             end
         end
