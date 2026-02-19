@@ -16,8 +16,8 @@ local IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 env.NAME = "Waypoint UI"
 env.ICON = Path.Root .. "\\Art\\Icon\\Icon.png"
 env.ICON_ALT = Path.Root .. "\\Art\\Icon\\IconAltLight.png"
-env.VERSION_STRING = "1.3.5"
-env.VERSION_NUMBER = 010305
+env.VERSION_STRING = "1.3.6"
+env.VERSION_NUMBER = 010306
 env.DEBUG_MODE = false
 
 

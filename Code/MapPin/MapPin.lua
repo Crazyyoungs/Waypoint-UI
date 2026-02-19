@@ -176,13 +176,7 @@ function MapPin.IsUserNavigationFlagged(flag)
     return false
 end
 
-local worldMapLoaded = false
-
 function MapPin.ToggleSuperTrackedPinDisplay(shown)
-    if not worldMapLoaded then
-        MapPin.ForceWorldMapRefresh()
-        worldMapLoaded = true
-    end
     for pin in WorldMapFrame:EnumeratePinsByTemplate("WaypointLocationPinTemplate") do
         pin:SetAlpha(shown and 1 or 0)
         pin:EnableMouse(shown)
