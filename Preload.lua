@@ -16,8 +16,8 @@ local IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 env.NAME = "Waypoint UI"
 env.ICON = Path.Root .. "\\Art\\Icon\\Icon.png"
 env.ICON_ALT = Path.Root .. "\\Art\\Icon\\IconAltLight.png"
-env.VERSION_STRING = "1.3.4"
-env.VERSION_NUMBER = 010304
+env.VERSION_STRING = "1.3.5"
+env.VERSION_NUMBER = 010305
 env.DEBUG_MODE = false
 
 
@@ -116,10 +116,7 @@ do
         TomTomAutoReplaceWaypoint              = true,
         DugisSupportEnabled                    = true,
         DugisAutoReplaceWaypoint               = true,
-        RSSupportEnabled                       = true,
-        RSAutoReplaceWaypoint                  = true,
-        SilverDragonSupportEnabled             = true,
-        SilverDragonAutoReplaceWaypoint        = true
+        SilverDragonSupportEnabled             = false,
     }
     local DB_GLOBAL_PERSISTENT_DEFAULTS = {}
     local DB_LOCAL_DEFAULTS = {
@@ -403,77 +400,47 @@ do
             PrintPosition()
         end
 
-        -- locale-aware decimal separator normalization (e.g. "50,5" -> "50.5" or vice versa)
         local localeUsesDecimalPoint = tonumber("1.1") ~= nil
         local invalidDecimalPattern = "(%d)" .. (localeUsesDecimalPoint and "," or ".") .. "(%d)"
         local validDecimalReplacement = "%1" .. (localeUsesDecimalPoint and "." or ",") .. "%2"
         local tokens = {}
 
         function Handlers.HandleSlashCmd_Way(inputMessage)
-            if IsAddOnLoaded("TomTom") then
-                Support_TomTom.PlaceWaypointAtSession()
-                return
-            end
+            if IsAddOnLoaded("TomTom") then return Support_TomTom.PlaceWaypointAtSession() end
             if not inputMessage or inputMessage == "" then return ThrowSlashWayError() end
 
-            -- normalize input: separate comma-joined coords and fix decimal separators
-            local normalizedInput = inputMessage:gsub("(%d)[%.,] (%d)", "%1 %2"):gsub(invalidDecimalPattern,
-                validDecimalReplacement)
-
             wipe(tokens)
-            for word in normalizedInput:gmatch("%S+") do tokens[#tokens + 1] = word end
+            inputMessage:gsub("(%d)[%.,] (%d)", "%1 %2"):gsub(invalidDecimalPattern, validDecimalReplacement):gsub("%S+", function(w) tokens[#tokens + 1] = w end)
             if #tokens == 0 then return ThrowSlashWayError() end
 
-            -- handle reset/clear commands
-            local commandLower = tokens[1]:lower()
-            if commandLower == "reset" or commandLower == "clear" then
-                return WaypointUIAPI.Navigation.ClearUserNavigation()
-            end
+            local cmd = tokens[1]:lower()
+            if cmd == "reset" or cmd == "clear" then return WaypointUIAPI.Navigation.ClearUserNavigation() end
 
-            -- helper: safely convert token at index to number
-            local function ParseTokenAsNumber(index)
-                return tokens[index] and tonumber(tokens[index])
-            end
+            local function num(i) return tokens[i] and tonumber(tokens[i]) end
+            local first, count = tokens[1], #tokens
 
-            local zoneMapId, coordX, coordY, labelName = nil, nil, nil, nil
-            local firstToken = tokens[1]
-            local tokenCount = #tokens
-
-            -- format: #<mapID> <x> <y> [name]
-            if firstToken:sub(1, 1) == "#" then
-                zoneMapId = tonumber(firstToken:sub(2))
-                coordX, coordY = ParseTokenAsNumber(2), ParseTokenAsNumber(3)
-                if not (zoneMapId and coordX and coordY) then return ThrowSlashWayError() end
-                if tokenCount > 3 then labelName = table.concat(tokens, " ", 4) end
-
-                -- format: <x> <y> [name] OR <mapID> <x> <y> [name]
-            elseif tonumber(firstToken) then
-                local num1, num2, num3 = tonumber(firstToken), ParseTokenAsNumber(2), ParseTokenAsNumber(3)
-                if not (num1 and num2) then return ThrowSlashWayError() end
-
-                if num3 then
-                    zoneMapId, coordX, coordY = num1, num2, num3
-                    if tokenCount > 3 then labelName = table.concat(tokens, " ", 4) end
+            local zoneMapId, coordX, coordY, labelName
+            if first:sub(1, 1) == "#" then
+                zoneMapId, coordX, coordY = tonumber(first:sub(2)), num(2), num(3)
+                if count > 3 then labelName = table.concat(tokens, " ", 4) end
+            elseif tonumber(first) then
+                coordX, coordY = num(2), num(3)
+                if coordY then
+                    zoneMapId, coordX, coordY = num(1), coordX, coordY
+                    if count > 3 then labelName = table.concat(tokens, " ", 4) end
                 else
-                    zoneMapId, coordX, coordY = GetBestMapForUnit("player"), num1, num2
-                    if tokenCount > 2 then labelName = table.concat(tokens, " ", 3) end
+                    zoneMapId, coordX, coordY = GetBestMapForUnit("player"), num(1), coordX
+                    if count > 2 then labelName = table.concat(tokens, " ", 3) end
                 end
-
-                -- format: <name> <x> <y> (name prefix before coordinates)
             else
-                local coordStartIndex = nil
-                for i = 1, tokenCount do
-                    if tonumber(tokens[i]) then
-                        coordStartIndex = i; break
+                for i = 1, count do
+                    if num(i) then
+                        coordX, coordY = num(i), num(i + 1)
+                        zoneMapId = GetBestMapForUnit("player")
+                        if i > 1 then labelName = table.concat(tokens, " ", 1, i - 1) end
+                        break
                     end
                 end
-                if not coordStartIndex then return ThrowSlashWayError() end
-
-                coordX, coordY = ParseTokenAsNumber(coordStartIndex), ParseTokenAsNumber(coordStartIndex + 1)
-                if not (coordX and coordY) then return ThrowSlashWayError() end
-
-                zoneMapId = GetBestMapForUnit("player")
-                labelName = coordStartIndex > 1 and table.concat(tokens, " ", 1, coordStartIndex - 1) or nil
             end
 
             if not (zoneMapId and coordX and coordY) then return ThrowSlashWayError() end
@@ -481,7 +448,7 @@ do
         end
     end
     do -- /waypoint /wp
-        function Handlers.HandleSlashCmd_Waypoint(msg, tokens)
+        function Handlers.HandleSlashCmd_Waypoint(_, tokens)
             if #tokens >= 1 then
                 local firstToken = tokens[1]:lower()
 

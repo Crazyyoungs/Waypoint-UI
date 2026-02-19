@@ -10,6 +10,16 @@ local tostring = tostring
 
 local SessionWaypointInfo = { id = nil, name = nil, mapID = nil, x = nil, y = nil }
 
+function IsBuiltInWaypointEnabled()
+    local SilverDragon = LibStub("AceAddon-3.0"):GetAddon("SilverDragon", true)
+    if SilverDragon then
+        local TomTom = SilverDragon:GetModule("TomTom", true)
+        if TomTom and TomTom.db and TomTom.db.profile then
+            return TomTom.db.profile.blizzard == true
+        end
+    end
+    return false
+end
 
 local function NormalizeCoordinate(coord)
     coord = tonumber(coord)
@@ -60,13 +70,12 @@ function Support_SilverDragon.PlaceWaypointAtSession()
 end
 
 local function OnPointTo(_, sourceID, mapID, x, y)
-    if not IsModuleEnabled() then return end
+    if not IsModuleEnabled() or not IsBuiltInWaypointEnabled() then return end
     if not CaptureWaypointInfo(sourceID, mapID, x, y) then return end
     Support_SilverDragon.PlaceWaypointAtSession()
 end
 
 local function OnHide(_, sourceID)
-    if not IsModuleEnabled() then return end
     if not MapPin.IsUserNavigationFlagged("SilverDragon_Waypoint") then return end
     if tostring(SessionWaypointInfo.id) ~= tostring(sourceID) then return end
     MapPin.ClearUserNavigation()

@@ -37,6 +37,7 @@ local REPLACE_PROMPT_INFO = {
 
 
 function Support_TomTom.PlaceWaypointAtSession()
+    if not TomTomWaypointInfo or not TomTomWaypointInfo.mapID or not TomTomWaypointInfo.x or not TomTomWaypointInfo.y then return end
     if not Support_TomTom.IsWaypointIgnored(TomTomWaypointInfo.mapID, TomTomWaypointInfo.x, TomTomWaypointInfo.y) then
         MapPin.NewUserNavigation(TomTomWaypointInfo.name, TomTomWaypointInfo.mapID, TomTomWaypointInfo.x, TomTomWaypointInfo.y, "TomTom_Waypoint")
     end

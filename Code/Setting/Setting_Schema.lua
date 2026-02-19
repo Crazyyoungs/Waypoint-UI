@@ -805,28 +805,6 @@ do -- Schema
                     }
                 },
                 {
-                    widgetName = L["Config - ExtraFeature - RareScannerSupport"],
-                    widgetType = Setting_Enum.WidgetType.Container,
-                    showWhen   = function() return IsAddOnLoaded("RareScanner") end,
-
-                    children   = {
-                        {
-                            widgetName        = L["Config - ExtraFeature - RareScannerSupport - Enable"],
-                            widgetDescription = Setting_Define.Descriptor{ description = L["Config - ExtraFeature - RareScannerSupport - Enable - Description"] },
-                            widgetType        = Setting_Enum.WidgetType.CheckButton,
-                            key               = "RSSupportEnabled"
-                        },
-                        {
-                            widgetName        = L["Config - ExtraFeature - RareScannerSupport - AutoReplaceWaypoint"],
-                            widgetDescription = Setting_Define.Descriptor{ description = L["Config - ExtraFeature - RareScannerSupport - AutoReplaceWaypoint - Description"] },
-                            widgetType        = Setting_Enum.WidgetType.CheckButton,
-                            key               = "RSAutoReplaceWaypoint",
-                            showWhen          = function() return Config.DBGlobal:GetVariable("RSSupportEnabled") == true end,
-                            indent            = 1
-                        }
-                    }
-                },
-                {
                     widgetName = L["Config - ExtraFeature - SilverDragonSupport"],
                     widgetType = Setting_Enum.WidgetType.Container,
                     showWhen   = function() return IsAddOnLoaded("SilverDragon") end,
@@ -834,6 +812,7 @@ do -- Schema
                     children   = {
                         {
                             widgetName        = L["Config - ExtraFeature - SilverDragonSupport - Enable"],
+                            widgetDescription = Setting_Define.Descriptor{ description = L["Config - ExtraFeature - SilverDragonSupport - Enable - Description"] },
                             widgetType        = Setting_Enum.WidgetType.CheckButton,
                             key               = "SilverDragonSupportEnabled"
                         },
