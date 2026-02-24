@@ -4,10 +4,10 @@ local UIKit_Primitives_LayoutGrid = env.WPM:Import("wpm_modules\\ui-kit\\primiti
 local UIKit_Primitives_LayoutHorizontal = env.WPM:Import("wpm_modules\\ui-kit\\primitives\\layout-horizontal")
 local UIKit_Primitives_LayoutVertical = env.WPM:Import("wpm_modules\\ui-kit\\primitives\\layout-vertical")
 local UIKit_Primitives_Text = env.WPM:Import("wpm_modules\\ui-kit\\primitives\\text")
-local UIKit_Primitives_ScrollView = env.WPM:Import("wpm_modules\\ui-kit\\primitives\\scroll-view")
-local UIKit_Primitives_LazyScrollView = env.WPM:Import("wpm_modules\\ui-kit\\primitives\\lazy-scroll-view")
+local UIKit_Primitives_ScrollContainer = env.WPM:Import("wpm_modules\\ui-kit\\primitives\\scroll-container")
+local UIKit_Primitives_LazyScrollContainer = env.WPM:Import("wpm_modules\\ui-kit\\primitives\\lazy-scroll-container")
 local UIKit_Primitives_ScrollBar = env.WPM:Import("wpm_modules\\ui-kit\\primitives\\scroll-bar")
-local UIKit_Primitives_ScrollViewEdge = env.WPM:Import("wpm_modules\\ui-kit\\primitives\\scroll-view-edge")
+local UIKit_Primitives_ScrollContainerEdge = env.WPM:Import("wpm_modules\\ui-kit\\primitives\\scroll-container-edge")
 local UIKit_Primitives_Input = env.WPM:Import("wpm_modules\\ui-kit\\primitives\\input")
 local UIKit_Primitives_LinearSlider = env.WPM:Import("wpm_modules\\ui-kit\\primitives\\linear-slider")
 local UIKit_Primitives_HitRect = env.WPM:Import("wpm_modules\\ui-kit\\primitives\\hit-rect")
@@ -21,23 +21,23 @@ local Utils_LazyTable_New = Utils_LazyTable.New
 local UIKit_FrameCache_Add = UIKit_FrameCache.Add
 
 local FRAME_CONSTRUCTORS = {
-    Frame            = function(name) return UIKit_Primitives_Frame.New("Frame", name, nil) end,
-    LayoutGrid       = UIKit_Primitives_LayoutGrid.New,
-    LayoutHorizontal = UIKit_Primitives_LayoutHorizontal.New,
-    LayoutVertical   = UIKit_Primitives_LayoutVertical.New,
-    Text             = UIKit_Primitives_Text.New,
-    ScrollView       = UIKit_Primitives_ScrollView.New,
-    LazyScrollView   = UIKit_Primitives_LazyScrollView.New,
-    ScrollBar        = UIKit_Primitives_ScrollBar.New,
-    ScrollViewEdge   = UIKit_Primitives_ScrollViewEdge.New,
-    Input            = UIKit_Primitives_Input.New,
-    LinearSlider     = UIKit_Primitives_LinearSlider.New,
-    HitRect          = UIKit_Primitives_HitRect.New,
-    List             = UIKit_Primitives_List.New
+    Frame               = function(name) return UIKit_Primitives_Frame.New("Frame", name, nil) end,
+    LayoutGrid          = UIKit_Primitives_LayoutGrid.New,
+    LayoutHorizontal    = UIKit_Primitives_LayoutHorizontal.New,
+    LayoutVertical      = UIKit_Primitives_LayoutVertical.New,
+    Text                = UIKit_Primitives_Text.New,
+    ScrollContainer     = UIKit_Primitives_ScrollContainer.New,
+    LazyScrollContainer = UIKit_Primitives_LazyScrollContainer.New,
+    ScrollBar           = UIKit_Primitives_ScrollBar.New,
+    ScrollContainerEdge = UIKit_Primitives_ScrollContainerEdge.New,
+    Input               = UIKit_Primitives_Input.New,
+    LinearSlider        = UIKit_Primitives_LinearSlider.New,
+    HitRect             = UIKit_Primitives_HitRect.New,
+    List                = UIKit_Primitives_List.New
 }
 
 local function GetActualParentFrame(parentFrame, parentFrameType)
-    if (parentFrameType == "ScrollView" or parentFrameType == "LazyScrollView") and parentFrame.GetContentFrame then
+    if (parentFrameType == "ScrollContainer" or parentFrameType == "LazyScrollContainer") and parentFrame.GetContentFrame then
         return parentFrame:GetContentFrame()
     end
 

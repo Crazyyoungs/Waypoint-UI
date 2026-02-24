@@ -1,7 +1,7 @@
 local env = select(2, ...)
 local Path = env.WPM:Import("wpm_modules\\path")
 local UIKit = env.WPM:Import("wpm_modules\\ui-kit")
-local Frame, LayoutGrid, LayoutHorizontal, LayoutVertical, Text, ScrollView, LazyScrollView, ScrollBar, ScrollViewEdge, Input, LinearSlider, HitRect, List = unpack(UIKit.UI.Frames)
+local Frame, LayoutGrid, LayoutHorizontal, LayoutVertical, Text, ScrollContainer, LazyScrollContainer, ScrollBar, ScrollContainerEdge, Input, LinearSlider, HitRect, List = unpack(UIKit.UI.Frames)
 local UIAnim = env.WPM:Import("wpm_modules\\ui-anim")
 local UICCommon = env.WPM:Import("wpm_modules\\uic-common")
 local Setting_Preload = env.WPM:Import("@\\Setting\\Preload")

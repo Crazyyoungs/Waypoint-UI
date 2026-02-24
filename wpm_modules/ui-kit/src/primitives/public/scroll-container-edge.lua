@@ -1,7 +1,7 @@
 local env = select(2, ...)
 local UIKit_Enum = env.WPM:Import("wpm_modules\\ui-kit\\enum")
 local UIKit_Primitives_Frame = env.WPM:Import("wpm_modules\\ui-kit\\primitives\\frame")
-local UIKit_Primitives_ScrollViewEdge = env.WPM:New("wpm_modules\\ui-kit\\primitives\\scroll-view-edge")
+local UIKit_Primitives_ScrollContainerEdge = env.WPM:New("wpm_modules\\ui-kit\\primitives\\scroll-container-edge")
 
 local Mixin = Mixin
 local max = math.max
@@ -11,53 +11,53 @@ local min = math.min
 local LEADING = UIKit_Enum.ScrollEdgeDirection.Leading
 local TRAILING = UIKit_Enum.ScrollEdgeDirection.Trailing
 
-local ScrollViewEdgeMixin = {}
+local ScrollContainerEdgeMixin = {}
 
-function ScrollViewEdgeMixin:SetScrollEdgeMin(value)
+function ScrollContainerEdgeMixin:SetScrollEdgeMin(value)
     self.__scrollEdgeMin = value or 0
 end
 
-function ScrollViewEdgeMixin:SetScrollEdgeMax(value)
+function ScrollContainerEdgeMixin:SetScrollEdgeMax(value)
     self.__scrollEdgeMax = value or 0
 end
 
-function ScrollViewEdgeMixin:SetScrollEdgeDirection(direction)
+function ScrollContainerEdgeMixin:SetScrollEdgeDirection(direction)
     self.__scrollEdgeDirection = direction or LEADING
 end
 
-function ScrollViewEdgeMixin:SetLinkedScrollView(scrollView)
-    local prevScrollView = self.__linkedScrollView
-    if prevScrollView and self.__scrollHandler then
-        prevScrollView:UnhookEvent("OnVerticalScroll", self.__scrollHandler)
-        prevScrollView:UnhookEvent("OnHorizontalScroll", self.__scrollHandler)
+function ScrollContainerEdgeMixin:SetLinkedScrollContainer(scrollContainer)
+    local prevScrollContainer = self.__linkedScrollContainer
+    if prevScrollContainer and self.__scrollHandler then
+        prevScrollContainer:UnhookEvent("OnVerticalScroll", self.__scrollHandler)
+        prevScrollContainer:UnhookEvent("OnHorizontalScroll", self.__scrollHandler)
     end
 
-    self.__linkedScrollView = scrollView
-    if not scrollView then return end
+    self.__linkedScrollContainer = scrollContainer
+    if not scrollContainer then return end
 
     if not self.__scrollHandler then
         self.__scrollHandler = function() self:UpdateAlpha() end
     end
 
-    scrollView:HookEvent("OnVerticalScroll", self.__scrollHandler)
-    scrollView:HookEvent("OnHorizontalScroll", self.__scrollHandler)
+    scrollContainer:HookEvent("OnVerticalScroll", self.__scrollHandler)
+    scrollContainer:HookEvent("OnHorizontalScroll", self.__scrollHandler)
 
     self:UpdateAlpha()
 end
 
-function ScrollViewEdgeMixin:UpdateAlpha()
-    local scrollView = self.__linkedScrollView
-    if not scrollView then return end
+function ScrollContainerEdgeMixin:UpdateAlpha()
+    local scrollContainer = self.__linkedScrollContainer
+    if not scrollContainer then return end
 
-    local scrollFrame = scrollView.__ScrollFrame
-    local contentFrame = scrollView.__ContentFrame
+    local scrollFrame = scrollContainer.__ScrollFrame
+    local contentFrame = scrollContainer.__ContentFrame
     if not scrollFrame or not contentFrame then return end
 
     local edgeMin = self.__scrollEdgeMin or 0
     local edgeMax = self.__scrollEdgeMax or 0
     local direction = self.__scrollEdgeDirection or LEADING
-    local isVertical = scrollView.__isVertical
-    local isHorizontal = scrollView.__isHorizontal
+    local isVertical = scrollContainer.__isVertical
+    local isHorizontal = scrollContainer.__isHorizontal
 
     local scroll, contentSize, frameSize
     if isVertical then
@@ -100,11 +100,11 @@ function ScrollViewEdgeMixin:UpdateAlpha()
     self:SetAlpha(min(1, max(0, alpha)))
 end
 
-function UIKit_Primitives_ScrollViewEdge.New(name, parent)
+function UIKit_Primitives_ScrollContainerEdge.New(name, parent)
     name = name or "undefined"
 
     local frame = UIKit_Primitives_Frame.New("Frame", name, parent)
-    Mixin(frame, ScrollViewEdgeMixin)
+    Mixin(frame, ScrollContainerEdgeMixin)
 
     frame.__scrollEdgeMin = 0
     frame.__scrollEdgeMax = 50

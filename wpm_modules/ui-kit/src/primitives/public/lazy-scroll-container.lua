@@ -1,25 +1,26 @@
 local env = select(2, ...)
 local UIKit_Primitives_Frame = env.WPM:Import("wpm_modules\\ui-kit\\primitives\\frame")
-local UIKit_Primitives_ScrollBase = env.WPM:Import("wpm_modules\\ui-kit\\primitives\\scroll-view-base")
-local UIKit_Primitives_LazyScrollView = env.WPM:New("wpm_modules\\ui-kit\\primitives\\lazy-scroll-view")
+local UIKit_Primitives_ScrollBase = env.WPM:Import("wpm_modules\\ui-kit\\primitives\\scroll-container-base")
+local UIKit_Primitives_LazyScrollContainer = env.WPM:New("wpm_modules\\ui-kit\\primitives\\lazy-scroll-container")
 
 local Mixin = Mixin
 local huge = math.huge
 local tinsert = table.insert
 local assert = assert
 local ipairs = ipairs
-local ScrollViewBaseMixin = UIKit_Primitives_ScrollBase.Mixin
+local ScrollContainerBaseMixin = UIKit_Primitives_ScrollBase.Mixin
 local MouseWheelHandler = UIKit_Primitives_ScrollBase.MouseWheelHandler
 local UpdateContentExtentEvents = UIKit_Primitives_ScrollBase.UpdateContentExtentEvents
 
 
-local LazyScrollViewPoolingMixin = {}
+local LazyScrollContainerPoolingMixin = {}
 
-function LazyScrollViewPoolingMixin:InitLazyScrollViewPooling()
+function LazyScrollContainerPoolingMixin:InitLazyScrollContainerPooling()
+    self.__onElementUpdateFunc = nil
+
     self.__elementPool = {}
     self.__data = nil
     self.__templateConstructorFunc = nil
-    self.__onElementUpdateFunc = nil
     self.__elementHeight = 25
     self.__elementWidth = 25
     self.__numVisibleElements = 0
@@ -27,38 +28,15 @@ function LazyScrollViewPoolingMixin:InitLazyScrollViewPooling()
     self.__lastUpdateStartingIndex = nil
 end
 
-function LazyScrollViewPoolingMixin:UpdateAllVisibleElements()
-    if not self.__data or not self.__visibleStartingIndex then return end
-
-    local startingIndex = self.__visibleStartingIndex
-
-    for i = 1, self.__numVisibleElements do
-        local dataIndex = startingIndex + i - 1
-        local dataValue = self.__data[dataIndex]
-
-        local element = self:GetElement(i)
-
-        if dataIndex > #self.__data then
-            element:Hide()
-        else
-            element:Show()
-
-            if self.__onElementUpdateFunc then
-                self.__onElementUpdateFunc(element, dataIndex, dataValue)
-            end
-        end
-    end
-end
-
-function LazyScrollViewPoolingMixin:SetTemplate(templateConstructorFunc)
-    self.__templateConstructorFunc = templateConstructorFunc
-end
-
-function LazyScrollViewPoolingMixin:SetOnElementUpdate(func)
+function LazyScrollContainerPoolingMixin:SetOnElementUpdate(func)
     self.__onElementUpdateFunc = func
 end
 
-function LazyScrollViewPoolingMixin:SetData(data)
+function LazyScrollContainerPoolingMixin:SetTemplate(templateConstructorFunc)
+    self.__templateConstructorFunc = templateConstructorFunc
+end
+
+function LazyScrollContainerPoolingMixin:SetData(data)
     self.__data = data
     self:ResetScrolling()
     self:UpdateContentExtent()
@@ -69,32 +47,25 @@ function LazyScrollViewPoolingMixin:SetData(data)
     end)
 end
 
-function LazyScrollViewPoolingMixin:SetElementHeight(height)
+function LazyScrollContainerPoolingMixin:SetElementHeight(height)
     self.__elementHeight = height
     self:UpdateAfterSizingChange()
 end
 
-function LazyScrollViewPoolingMixin:SetElementWidth(width)
+function LazyScrollContainerPoolingMixin:SetElementWidth(width)
     self.__elementWidth = width
     self:UpdateAfterSizingChange()
 end
 
-function LazyScrollViewPoolingMixin:ScrollToIndex(index)
-    if not self.__data then return end
-
-    local elementPosition = self:GetElementPosition(index + 1) - self:GetScrollFrame():GetHeight() / 2
-    self:SetVerticalScroll(elementPosition)
-end
-
-function LazyScrollViewPoolingMixin:GetElementHeight()
+function LazyScrollContainerPoolingMixin:GetElementHeight()
     return self.__elementHeight
 end
 
-function LazyScrollViewPoolingMixin:GetElementWidth()
+function LazyScrollContainerPoolingMixin:GetElementWidth()
     return self.__elementWidth
 end
 
-function LazyScrollViewPoolingMixin:GetElementPosition(index)
+function LazyScrollContainerPoolingMixin:GetElementPosition(index)
     if not self.__data then return end
 
     local elementSize = self:GetPrimaryElementSize()
@@ -102,15 +73,15 @@ function LazyScrollViewPoolingMixin:GetElementPosition(index)
     return elementPosition
 end
 
-function LazyScrollViewPoolingMixin:IsHorizontalPrimary()
+function LazyScrollContainerPoolingMixin:IsHorizontalPrimary()
     return self.__isHorizontal and not self.__isVertical
 end
 
-function LazyScrollViewPoolingMixin:IsVerticalPrimary()
+function LazyScrollContainerPoolingMixin:IsVerticalPrimary()
     return self.__isVertical and not self.__isHorizontal
 end
 
-function LazyScrollViewPoolingMixin:GetPrimaryElementSize()
+function LazyScrollContainerPoolingMixin:GetPrimaryElementSize()
     local size
     if self:IsHorizontalPrimary() then
         size = self.__elementWidth
@@ -127,7 +98,7 @@ function LazyScrollViewPoolingMixin:GetPrimaryElementSize()
     return size and size > 0 and size or 1
 end
 
-function LazyScrollViewPoolingMixin:GetPoolingContentHeight()
+function LazyScrollContainerPoolingMixin:GetPoolingContentHeight()
     if not self.__data then return 0 end
     local elementHeight = self.__elementHeight
     if (not elementHeight or elementHeight <= 0) and self.__elementPool and self.__elementPool[1] and self.__elementPool[1].GetHeight then
@@ -136,7 +107,7 @@ function LazyScrollViewPoolingMixin:GetPoolingContentHeight()
     return (elementHeight or 1) * #self.__data
 end
 
-function LazyScrollViewPoolingMixin:GetPoolingContentWidth()
+function LazyScrollContainerPoolingMixin:GetPoolingContentWidth()
     if not self.__data then return 0 end
     local elementWidth = self.__elementWidth
     if (not elementWidth or elementWidth <= 0) and self.__elementPool and self.__elementPool[1] and self.__elementPool[1].GetWidth then
@@ -148,11 +119,11 @@ function LazyScrollViewPoolingMixin:GetPoolingContentWidth()
     return (elementWidth or 1) * #self.__data
 end
 
-function LazyScrollViewPoolingMixin:GetData()
+function LazyScrollContainerPoolingMixin:GetData()
     return self.__data
 end
 
-function LazyScrollViewPoolingMixin:GetNumElementsToDisplay()
+function LazyScrollContainerPoolingMixin:GetNumElementsToDisplay()
     local shouldFitWidth, shouldFitHeight = self:GetFitContent()
 
     local scrollFrame = self:GetScrollFrame()
@@ -176,13 +147,43 @@ function LazyScrollViewPoolingMixin:GetNumElementsToDisplay()
     return math.ceil(frameExtent / elementSize) + 1
 end
 
-function LazyScrollViewPoolingMixin:HideElements()
-    for k, v in ipairs(self.__elementPool) do
-        v:Hide()
+function LazyScrollContainerPoolingMixin:UpdateAllVisibleElements()
+    if not self.__data or not self.__visibleStartingIndex then return end
+
+    local startingIndex = self.__visibleStartingIndex
+
+    for i = 1, self.__numVisibleElements do
+        local dataIndex = startingIndex + i - 1
+        local dataValue = self.__data[dataIndex]
+
+        local element = self:GetElement(i)
+
+        if dataIndex > #self.__data then
+            element:Hide()
+        else
+            element:Show()
+
+            if self.__onElementUpdateFunc then
+                self.__onElementUpdateFunc(element, dataIndex, dataValue)
+            end
+        end
     end
 end
 
-function LazyScrollViewPoolingMixin:NewElement()
+function LazyScrollContainerPoolingMixin:ScrollToIndex(index)
+    if not self.__data then return end
+
+    local elementPosition = self:GetElementPosition(index + 1) - self:GetScrollFrame():GetHeight() / 2
+    self:SetVerticalScroll(elementPosition)
+end
+
+function LazyScrollContainerPoolingMixin:HideElements()
+    for _, element in ipairs(self.__elementPool) do
+        element:Hide()
+    end
+end
+
+function LazyScrollContainerPoolingMixin:NewElement()
     assert(self.__templateConstructorFunc, "No template constructor set!")
     local index = #self.__elementPool + 1
     local name = self:GetDebugName() .. ".Element" .. index
@@ -195,7 +196,7 @@ function LazyScrollViewPoolingMixin:NewElement()
     return element
 end
 
-function LazyScrollViewPoolingMixin:GetElement(index)
+function LazyScrollContainerPoolingMixin:GetElement(index)
     local element = nil
 
     if #self.__elementPool < index then
@@ -207,11 +208,11 @@ function LazyScrollViewPoolingMixin:GetElement(index)
     return element
 end
 
-function LazyScrollViewPoolingMixin:GetAllElementsInPool()
+function LazyScrollContainerPoolingMixin:GetAllElementsInPool()
     return self.__elementPool
 end
 
-function LazyScrollViewPoolingMixin:RenderElements()
+function LazyScrollContainerPoolingMixin:RenderElements()
     self:HideElements()
     if not self.__data then
         self.__numVisibleElements = 0
@@ -232,7 +233,7 @@ function LazyScrollViewPoolingMixin:RenderElements()
     self:UpdateScrolling()
 end
 
-function LazyScrollViewPoolingMixin:UpdateContentExtent()
+function LazyScrollContainerPoolingMixin:UpdateContentExtent()
     local contentFrame = self:GetContentFrame()
     if not contentFrame then return end
 
@@ -254,17 +255,17 @@ function LazyScrollViewPoolingMixin:UpdateContentExtent()
     end
 end
 
-function LazyScrollViewPoolingMixin:UpdateAfterSizingChange()
+function LazyScrollContainerPoolingMixin:UpdateAfterSizingChange()
     self:UpdateContentExtent()
     self:UpdateScrolling()
 end
 
-function LazyScrollViewPoolingMixin:ResetScrolling()
+function LazyScrollContainerPoolingMixin:ResetScrolling()
     self.__visibleStartingIndex = nil
     self.__lastUpdateStartingIndex = nil
 end
 
-function LazyScrollViewPoolingMixin:UpdateScrolling()
+function LazyScrollContainerPoolingMixin:UpdateScrolling()
     if not self.__data then return end
 
     local useHorizontal = self:IsHorizontalPrimary()
@@ -302,25 +303,25 @@ function LazyScrollViewPoolingMixin:UpdateScrolling()
 end
 
 
-local LazyScrollViewMixin = {}
+local LazyScrollContainerMixin = {}
 
-function LazyScrollViewMixin:CustomFitContent()
+function LazyScrollContainerMixin:CustomFitContent()
     local shouldFitWidth, shouldFitHeight = self:GetFitContent()
     self:FitContent(shouldFitWidth, shouldFitHeight, { self.__ContentFrame })
 end
 
-function LazyScrollViewMixin:OnSmoothScrollUpdate()
+function LazyScrollContainerMixin:OnSmoothScrollUpdate()
     self:UpdateScrolling()
 end
 
 
-local LazyScrollViewContentMixin = {}
+local LazyScrollContainerContentMixin = {}
 
-function LazyScrollViewContentMixin:GetParent()
+function LazyScrollContainerContentMixin:GetParent()
     return self.__parentRef
 end
 
-function LazyScrollViewContentMixin:CustomFitContent()
+function LazyScrollContainerContentMixin:CustomFitContent()
     local shouldFitWidth, shouldFitHeight = self:GetFitContent()
     local parent = self:GetParent()
 
@@ -334,15 +335,15 @@ function LazyScrollViewContentMixin:CustomFitContent()
 end
 
 
-function UIKit_Primitives_LazyScrollView.New(name, parent)
+function UIKit_Primitives_LazyScrollContainer.New(name, parent)
     name = name or "undefined"
 
     local frame = UIKit_Primitives_Frame.New("Frame", name, parent)
-    Mixin(frame, ScrollViewBaseMixin)
-    Mixin(frame, LazyScrollViewPoolingMixin)
-    Mixin(frame, LazyScrollViewMixin)
-    frame:InitScrollViewBase()
-    frame:InitLazyScrollViewPooling()
+    Mixin(frame, ScrollContainerBaseMixin)
+    Mixin(frame, LazyScrollContainerPoolingMixin)
+    Mixin(frame, LazyScrollContainerMixin)
+    frame:InitScrollContainerBase()
+    frame:InitLazyScrollContainerPooling()
 
     local scrollFrame = UIKit_Primitives_Frame.New("ScrollFrame", "$parent.ScrollFrame", frame)
     scrollFrame:SetAllPoints(frame)
@@ -350,9 +351,9 @@ function UIKit_Primitives_LazyScrollView.New(name, parent)
     scrollFrame:EnableMouseWheel(true)
 
     local contentFrame = UIKit_Primitives_Frame.New("Frame", "$parent.ContentFrame", scrollFrame)
-    contentFrame.uk_type = "LazyScrollViewContent"
+    contentFrame.uk_type = "LazyScrollContainerContent"
     contentFrame.__parentRef = frame
-    Mixin(contentFrame, LazyScrollViewContentMixin)
+    Mixin(contentFrame, LazyScrollContainerContentMixin)
     scrollFrame:SetScrollChild(contentFrame)
 
     frame.__ScrollFrame = scrollFrame

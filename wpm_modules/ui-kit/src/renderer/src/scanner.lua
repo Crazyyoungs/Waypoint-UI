@@ -68,7 +68,7 @@ function UIKit_Renderer_Scanner.ScanFrame(rootFrame)
 
         AnalyzeFrameProperty(frame)
 
-        -- Push ScrollView/LazyScrollView Content onto stack
+        -- Push ScrollContainer/LazyScrollContainer Content onto stack
         local contentFrame = frame.GetContentFrame and frame:GetContentFrame()
         if contentFrame then
             scanStackTop = scanStackTop + 1
@@ -86,5 +86,16 @@ function UIKit_Renderer_Scanner.ScanFrame(rootFrame)
                 end
             end
         end
+    end
+end
+
+function UIKit_Renderer_Scanner.ScanFrameOnly(frame)
+    if not frame then return end
+    AnalyzeFrameProperty(frame)
+
+    -- Scan content frame
+    local contentFrame = frame.GetContentFrame and frame:GetContentFrame()
+    if contentFrame then
+        AnalyzeFrameProperty(contentFrame)
     end
 end

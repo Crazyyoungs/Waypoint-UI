@@ -1,5 +1,5 @@
 local env = select(2, ...)
-local UIKit_Primitives_ScrollBase = env.WPM:New("wpm_modules\\ui-kit\\primitives\\scroll-view-base")
+local UIKit_Primitives_ScrollBase = env.WPM:New("wpm_modules\\ui-kit\\primitives\\scroll-container-base")
 
 local CreateFrame = CreateFrame
 local abs = math.abs
@@ -64,10 +64,10 @@ function UIKit_Primitives_ScrollBase.MouseWheelHandler(scrollFrame, delta)
 end
 
 
-local ScrollViewBaseMixin = {}
-UIKit_Primitives_ScrollBase.Mixin = ScrollViewBaseMixin
+local ScrollContainerBaseMixin = {}
+UIKit_Primitives_ScrollBase.Mixin = ScrollContainerBaseMixin
 
-function ScrollViewBaseMixin:InitScrollViewBase()
+function ScrollContainerBaseMixin:InitScrollContainerBase()
     self.__isVertical = true
     self.__isHorizontal = false
     self.__stepSize = 150
@@ -77,48 +77,48 @@ function ScrollViewBaseMixin:InitScrollViewBase()
     self.__targetHorizontal = 0
 end
 
-function ScrollViewBaseMixin:GetContentFrame()
+function ScrollContainerBaseMixin:GetContentFrame()
     return self.__ContentFrame
 end
 
-function ScrollViewBaseMixin:GetScrollFrame()
+function ScrollContainerBaseMixin:GetScrollFrame()
     return self.__ScrollFrame
 end
 
-function ScrollViewBaseMixin:GetContentHeight()
+function ScrollContainerBaseMixin:GetContentHeight()
     return self.__ContentFrame:GetHeight()
 end
 
-function ScrollViewBaseMixin:GetContentWidth()
+function ScrollContainerBaseMixin:GetContentWidth()
     return self.__ContentFrame:GetWidth()
 end
 
-function ScrollViewBaseMixin:HasContentAbove()
+function ScrollContainerBaseMixin:HasContentAbove()
     return self.__ScrollFrame:GetVerticalScroll() > 1
 end
 
-function ScrollViewBaseMixin:HasContentBelow()
+function ScrollContainerBaseMixin:HasContentBelow()
     local scrollFrame = self.__ScrollFrame
     local contentFrame = self.__ContentFrame
     return scrollFrame:GetVerticalScroll() < contentFrame:GetHeight() - scrollFrame:GetHeight() - 1
 end
 
-function ScrollViewBaseMixin:HasContentLeft()
+function ScrollContainerBaseMixin:HasContentLeft()
     return self.__ScrollFrame:GetHorizontalScroll() > 1
 end
 
-function ScrollViewBaseMixin:HasContentRight()
+function ScrollContainerBaseMixin:HasContentRight()
     local scrollFrame = self.__ScrollFrame
     local contentFrame = self.__ContentFrame
     return scrollFrame:GetHorizontalScroll() < contentFrame:GetWidth() - scrollFrame:GetWidth() - 1
 end
 
-function ScrollViewBaseMixin:SetDirection(vertical, horizontal)
+function ScrollContainerBaseMixin:SetDirection(vertical, horizontal)
     self.__isVertical = vertical ~= false
     self.__isHorizontal = horizontal == true
 end
 
-function ScrollViewBaseMixin:SetStepSize(size)
+function ScrollContainerBaseMixin:SetStepSize(size)
     self.__stepSize = size or 150
 end
 
@@ -179,7 +179,7 @@ local function StopSmoothScrolling(container)
     end
 end
 
-function ScrollViewBaseMixin:SetSmoothScrolling(enabled, ratio)
+function ScrollContainerBaseMixin:SetSmoothScrolling(enabled, ratio)
     self.__interpolate = enabled
     self.__interpolateRatio = ratio or 8
 
@@ -249,29 +249,29 @@ local function SetScrollInternal(container, isVertical, value, instant)
     end
 end
 
-function ScrollViewBaseMixin:SetVerticalScroll(value, instant)
+function ScrollContainerBaseMixin:SetVerticalScroll(value, instant)
     SetScrollInternal(self, true, value, instant)
 end
 
-function ScrollViewBaseMixin:SetHorizontalScroll(value, instant)
+function ScrollContainerBaseMixin:SetHorizontalScroll(value, instant)
     SetScrollInternal(self, false, value, instant)
 end
 
-function ScrollViewBaseMixin:GetVerticalScroll()
+function ScrollContainerBaseMixin:GetVerticalScroll()
     if self.__interpolate then
         return self.__targetVertical
     end
     return self.__ScrollFrame:GetVerticalScroll()
 end
 
-function ScrollViewBaseMixin:GetHorizontalScroll()
+function ScrollContainerBaseMixin:GetHorizontalScroll()
     if self.__interpolate then
         return self.__targetHorizontal
     end
     return self.__ScrollFrame:GetHorizontalScroll()
 end
 
-function ScrollViewBaseMixin:ScrollToPosition(horizontal, vertical, instant)
+function ScrollContainerBaseMixin:ScrollToPosition(horizontal, vertical, instant)
     if horizontal then
         self:SetHorizontalScroll(horizontal, instant)
     end
@@ -280,18 +280,18 @@ function ScrollViewBaseMixin:ScrollToPosition(horizontal, vertical, instant)
     end
 end
 
-function ScrollViewBaseMixin:ScrollToTop()
+function ScrollContainerBaseMixin:ScrollToTop()
     self:SetVerticalScroll(0)
 end
 
-function ScrollViewBaseMixin:ScrollToBottom()
+function ScrollContainerBaseMixin:ScrollToBottom()
     self:SetVerticalScroll(self.__ContentFrame:GetHeight())
 end
 
-function ScrollViewBaseMixin:ScrollToLeft()
+function ScrollContainerBaseMixin:ScrollToLeft()
     self:SetHorizontalScroll(0)
 end
 
-function ScrollViewBaseMixin:ScrollToRight()
+function ScrollContainerBaseMixin:ScrollToRight()
     self:SetHorizontalScroll(self.__ContentFrame:GetWidth())
 end

@@ -97,9 +97,11 @@ local function FastApply(inst, value)
     if kind == APPLY_METHOD then
         method(inst.target, value)
     elseif kind == APPLY_POS_X then
-        method(inst.target, inst.applyPoint, inst.applyRelativeTo, inst.applyRelativePoint, value, inst.applyOffsetY)
+        inst.target:ClearAllPoints()
+        inst.target:SetPoint(inst.applyPoint, inst.applyRelativeTo, inst.applyRelativePoint, value, inst.applyOffsetY)
     elseif kind == APPLY_POS_Y then
-        method(inst.target, inst.applyPoint, inst.applyRelativeTo, inst.applyRelativePoint, inst.applyOffsetX, value)
+        inst.target:ClearAllPoints()
+        inst.target:SetPoint(inst.applyPoint, inst.applyRelativeTo, inst.applyRelativePoint, inst.applyOffsetX, value)
     elseif kind == APPLY_ROTATION then
         method(inst.target, value * math_pi / 180)
     end

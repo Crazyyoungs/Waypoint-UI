@@ -1,8 +1,8 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
 	<Script file="public\frame.lua"/>
-	<Script file="public\scroll-view-base.lua"/>
-	<Script file="public\lazy-scroll-view.lua"/>
+	<Script file="public\scroll-container-base.lua"/>
+	<Script file="public\lazy-scroll-container.lua"/>
 	<Script file="public\linear-slider.lua"/>
 	<Script file="public\list.lua"/>
 	<Script file="public\layout-vertical.lua"/>
@@ -11,8 +11,8 @@
 	<Script file="public\input.lua"/>
 	<Script file="public\hit-rect.lua"/>
 	<Script file="public\scroll-bar.lua"/>
-	<Script file="public\scroll-view.lua"/>
-	<Script file="public\scroll-view-edge.lua"/>
+	<Script file="public\scroll-container.lua"/>
+	<Script file="public\scroll-container-edge.lua"/>
 	<Script file="public\text.lua"/>
 	<Script file="utils\texture.lua"/>
 </Ui>

@@ -11,21 +11,21 @@ local DEFAULT_TYPE_KEY = "Default"
 local ListMixin = {}
 
 function ListMixin:Init()
+    self.__onElementUpdateFunc = nil
+    self.__onElementVisibilityChangedFunc = nil
+
     self.__elementPool = {}
     self.__elementPoolTypeIndex = {}
     self.__data = nil
     self.__templateConstructorFunc = {}
-    self.__onElementUpdateFunc = nil
 end
 
-function ListMixin:UpdateAllVisibleElements()
-    if not self.__data then return end
+function ListMixin:SetOnElementUpdate(func)
+    self.__onElementUpdateFunc = func
+end
 
-    for index, value in ipairs(self.__data) do
-        local typeKey = value.uk_poolElementType or DEFAULT_TYPE_KEY
-        local element = self:GetElement(index, typeKey)
-        self.__onElementUpdateFunc(element, index, value)
-    end
+function ListMixin:SetOnElementVisibilityChanged(func)
+    self.__onElementVisibilityChangedFunc = func
 end
 
 function ListMixin:SetTemplate(templateConstructorFunc)
@@ -38,10 +38,6 @@ function ListMixin:SetTemplate(templateConstructorFunc)
     end
 end
 
-function ListMixin:SetOnElementUpdate(func)
-    self.__onElementUpdateFunc = func
-end
-
 function ListMixin:SetData(data)
     self.__data = data
     self:RenderElements()
@@ -51,15 +47,25 @@ function ListMixin:GetData()
     return self.__data
 end
 
-function ListMixin:HideElements()
+function ListMixin:UpdateAllVisibleElements()
+    if not self.__data then return end
+
+    for index, value in ipairs(self.__data) do
+        local typeKey = value.uk_poolElementType or DEFAULT_TYPE_KEY
+        local element = self:GetElement(index, typeKey)
+        self.__onElementUpdateFunc(element, index, value)
+    end
+end
+
+function ListMixin:ClearElementFlags()
     for _, typeFramePool in pairs(self.__elementPool) do
-        for typeKey, element in pairs(typeFramePool) do
-            element:Hide()
+        for _, element in pairs(typeFramePool) do
+            element.__shouldShow = false
         end
     end
 end
 
-function ListMixin:WipeElementTypeIndex()
+function ListMixin:ClearElementTypeIndex()
     wipe(self.__elementPoolTypeIndex)
 end
 
@@ -106,8 +112,8 @@ function ListMixin:GetAllElementsInPoolByType(typeKey)
 end
 
 function ListMixin:RenderElements()
-    self:HideElements()
-    self:WipeElementTypeIndex()
+    self:ClearElementFlags()
+    self:ClearElementTypeIndex()
     if not self.__data then return end
 
     for index, value in ipairs(self.__data) do
@@ -117,10 +123,23 @@ function ListMixin:RenderElements()
         self.__elementPoolTypeIndex[typeKey] = self.__elementPoolTypeIndex[typeKey] + 1
 
         local element = self:GetElement(self.__elementPoolTypeIndex[typeKey], typeKey)
-        element:Show()
+        element.__shouldShow = true
+        element.__uk_poolElementType = typeKey
 
         if self.__onElementUpdateFunc then
             self.__onElementUpdateFunc(element, index, value)
+        end
+    end
+
+    for _, typeFramePool in pairs(self.__elementPool) do
+        for _, element in pairs(typeFramePool) do
+            if element:IsShown() ~= element.__shouldShow then
+                if self.__onElementVisibilityChangedFunc then
+                    self.__onElementVisibilityChangedFunc(element, element.__shouldShow, element.__uk_poolElementType)
+                else
+                    element:SetShown(element.__shouldShow)
+                end
+            end
         end
     end
 end

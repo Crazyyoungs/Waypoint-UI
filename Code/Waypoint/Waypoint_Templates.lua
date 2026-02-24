@@ -2,7 +2,7 @@ local env = select(2, ...)
 local Path = env.WPM:Import("wpm_modules\\path")
 local GenericEnum = env.WPM:Import("wpm_modules\\generic-enum")
 local UIKit = env.WPM:Import("wpm_modules\\ui-kit")
-local Frame, LayoutGrid, LayoutHorizontal, LayoutVertical, Text, ScrollView, LazyScrollView, ScrollBar, ScrollViewEdge, Input, LinearSlider, HitRect, List = unpack(UIKit.UI.Frames)
+local Frame, LayoutGrid, LayoutHorizontal, LayoutVertical, Text, ScrollContainer, LazyScrollContainer, ScrollBar, ScrollContainerEdge, Input, LinearSlider, HitRect, List = unpack(UIKit.UI.Frames)
 local UIAnim = env.WPM:Import("wpm_modules\\ui-anim")
 local Waypoint_Preload = env.WPM:Import("@\\Waypoint\\Preload")
 local Waypoint_Templates = env.WPM:New("@\\Waypoint\\Templates")
@@ -190,7 +190,7 @@ end
 
 do -- Context Icon
     local FOREGROUND_SIZE = UIKit.Define.Percentage{ value = 100, operator = "-", delta = 14 }
-    local CONTENT_SIZE = UIKit.Define.Percentage{ value = 32 }
+    local CONTENT_SIZE = UIKit.Define.Percentage{ value = 28 }
 
     local ContextIconMixin = {}
 

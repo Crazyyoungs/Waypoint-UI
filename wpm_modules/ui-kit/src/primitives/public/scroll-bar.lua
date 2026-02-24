@@ -25,7 +25,7 @@ function ScrollBarMixin:SetThumbVisible(isVisible)
 end
 
 function ScrollBarMixin:SetThumbSize()
-    local target = self.__linkedScrollView
+    local target = self.__linkedScrollContainer
     local isVertical = self.__isVertical
     if not target or isVertical == nil then return end
 
@@ -55,7 +55,7 @@ function ScrollBarMixin:SetThumbSize()
 end
 
 function ScrollBarMixin:SyncValue()
-    local target = self.__linkedScrollView
+    local target = self.__linkedScrollContainer
     local isVertical = self.__isVertical
     if not target or isVertical == nil then return end
 
@@ -81,8 +81,8 @@ function ScrollBarMixin:SyncValue()
     self:SetThumbSize()
 end
 
-function ScrollBarMixin:SetLinkedScrollViewScroll(isInstant)
-    local target = self.__linkedScrollView
+function ScrollBarMixin:SetLinkedScrollContainerScroll(isInstant)
+    local target = self.__linkedScrollContainer
     local isVertical = self.__isVertical
     if not target or isVertical == nil then return end
 
@@ -122,7 +122,7 @@ function ScrollBarMixin.OnTrackMouseDown(self, button)
     end
 
     self:SetValue(Clamp(relativePosition))
-    self:SetLinkedScrollViewScroll()
+    self:SetLinkedScrollContainerScroll()
 end
 
 function ScrollBarMixin:GetVertical()
@@ -130,7 +130,7 @@ function ScrollBarMixin:GetVertical()
 end
 
 function ScrollBarMixin:GetTarget()
-    return self.__linkedScrollView
+    return self.__linkedScrollContainer
 end
 
 function ScrollBarMixin:SetVertical(value)
@@ -138,8 +138,8 @@ function ScrollBarMixin:SetVertical(value)
     self.__isVertical = value
 end
 
-function ScrollBarMixin:SetLinkedScrollView(scrollView)
-    local previousTarget = self.__linkedScrollView
+function ScrollBarMixin:SetLinkedScrollContainer(ScrollContainer)
+    local previousTarget = self.__linkedScrollContainer
     if previousTarget then
         previousTarget:UnhookEvent("OnVerticalScroll", self)
         previousTarget:UnhookEvent("OnHorizontalScroll", self)
@@ -151,9 +151,9 @@ function ScrollBarMixin:SetLinkedScrollView(scrollView)
         self.__scrollHandler = handler
     end
 
-    scrollView:HookEvent("OnVerticalScroll", handler)
-    scrollView:HookEvent("OnHorizontalScroll", handler)
-    self.__linkedScrollView = scrollView
+    ScrollContainer:HookEvent("OnVerticalScroll", handler)
+    ScrollContainer:HookEvent("OnHorizontalScroll", handler)
+    self.__linkedScrollContainer = ScrollContainer
 end
 
 local function OnThumbDragUpdate(self)
@@ -168,7 +168,7 @@ local function OnThumbDragUpdate(self)
 
     if newValue ~= self:GetValue() then
         self:SetValue(newValue)
-        self:SetLinkedScrollViewScroll(true)
+        self:SetLinkedScrollContainerScroll(true)
     end
 end
 
@@ -223,7 +223,7 @@ function UIKit_Primitives_ScrollBar.New(name, parent)
     frame:SetEnabled(false)
 
     frame.__isVertical = true
-    frame.__linkedScrollView = nil
+    frame.__linkedScrollContainer = nil
 
     frame:HookEvent("OnTrackMouseDown", frame.OnTrackMouseDown)
     frame:HookEvent("OnThumbMouseDown", frame.OnThumbMouseDown)

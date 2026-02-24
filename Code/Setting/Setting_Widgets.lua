@@ -4,7 +4,7 @@ local Sound = env.WPM:Import("wpm_modules\\sound")
 local UIFont = env.WPM:Import("wpm_modules\\ui-font")
 local GenericEnum = env.WPM:Import("wpm_modules\\generic-enum")
 local UIKit = env.WPM:Import("wpm_modules\\ui-kit")
-local Frame, LayoutGrid, LayoutHorizontal, LayoutVertical, Text, ScrollView, LazyScrollView, ScrollBar, ScrollViewEdge, Input, LinearSlider, HitRect, List = unpack(UIKit.UI.Frames)
+local Frame, LayoutGrid, LayoutHorizontal, LayoutVertical, Text, ScrollContainer, LazyScrollContainer, ScrollBar, ScrollContainerEdge, Input, LinearSlider, HitRect, List = unpack(UIKit.UI.Frames)
 local UIAnim = env.WPM:Import("wpm_modules\\ui-anim")
 local UICSharedMixin = env.WPM:Import("wpm_modules\\uic-sharedmixin")
 local UICCommon = env.WPM:Import("wpm_modules\\uic-common")
@@ -51,7 +51,7 @@ do -- Tab
     Setting_Widgets.Tab = UIKit.Template(function(id, name, children, ...)
         local frame =
             Frame(name, {
-                ScrollView(name .. ".Content", {
+                ScrollContainer(name .. ".Content", {
                     LayoutVertical(name .. ".Layout", {
                         unpack(children)
                     })
@@ -66,8 +66,8 @@ do -- Tab
                     :id("Content", id)
                     :point(UIKit.Enum.Point.Left)
                     :size(CONTENT_WIDTH, CONTENT_HEIGHT)
-                    :scrollViewContentWidth(CONTENT_SCROLL_WIDTH)
-                    :scrollViewContentHeight(CONTENT_SCROLL_HEIGHT)
+                    :scrollContainerContentWidth(CONTENT_SCROLL_WIDTH)
+                    :scrollContainerContentHeight(CONTENT_SCROLL_HEIGHT)
                     :layoutDirection(UIKit.Enum.Direction.Vertical)
                     :scrollInterpolation(10),
 
@@ -75,7 +75,7 @@ do -- Tab
                     :id("ScrollBar", id)
                     :point(UIKit.Enum.Point.Right)
                     :size(SCROLLBAR_WIDTH, SCROLLBAR_HEIGHT)
-                    :linkedScrollView(UIKit.NewGroupCaptureString("Content", id))
+                    :linkedScrollContainer(UIKit.NewGroupCaptureString("Content", id))
             })
             :point(UIKit.Enum.Point.Center)
             :size(UIKit.UI.P_FILL, UIKit.UI.P_FILL)

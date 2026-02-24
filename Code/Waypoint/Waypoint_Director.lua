@@ -224,31 +224,27 @@ do
     local function HandleEvent(event)
         if not Waypoint_Director.isActive then return end
 
-        if IsNewSuperTrackedTarget() then
-            -- Context
-            if event == "QUEST_POI_UPDATE" or
-                event == "QUEST_LOG_UPDATE" or
-                event == "ZONE_CHANGED_NEW_AREA" or
-                event == "ZONE_CHANGED" or
-                event == "QUEST_ACCEPTED" or
-                event == "QUEST_COMPLETE" or
-                event == "QUEST_DETAIL" or
-                event == "QUEST_FINISHED" then
-                Waypoint_Director.AwaitDistance()
-            end
-
-            -- Movement
-            if event == "PLAYER_STARTED_MOVING" or event == "PLAYER_STOPPED_MOVING" or event == "PLAYER_IS_GLIDING_CHANGED" then
-                OnPlayerMove(IsPlayerMoving())
-            end
-
-            -- Super Tracking
-            if event == "SUPER_TRACKING_CHANGED" or event == "USER_WAYPOINT_UPDATED" then
-                OnSuperTrackingChange()
-            end
+        -- Context
+        if event == "QUEST_POI_UPDATE" or
+            event == "QUEST_LOG_UPDATE" or
+            event == "ZONE_CHANGED_NEW_AREA" or
+            event == "ZONE_CHANGED" or
+            event == "QUEST_ACCEPTED" or
+            event == "QUEST_COMPLETE" or
+            event == "QUEST_DETAIL" or
+            event == "QUEST_FINISHED" then
+            Waypoint_Director.AwaitDistance()
         end
 
-        SaveSuperTrackedState()
+        -- Super Tracking
+        if event == "SUPER_TRACKING_CHANGED" or event == "USER_WAYPOINT_UPDATED" then
+            OnSuperTrackingChange()
+        end
+
+        -- Movement
+        if event == "PLAYER_STARTED_MOVING" or event == "PLAYER_STOPPED_MOVING" or event == "PLAYER_IS_GLIDING_CHANGED" then
+            OnPlayerMove(IsPlayerMoving())
+        end
     end
 
     for i = 1, #EVENTS_TO_REGISTER do
@@ -346,11 +342,13 @@ do
             CallbackRegistry.Trigger("WaypointAnimation.WaypointToPinpoint")
         elseif lastNavigationMode == Waypoint_Enum.NavigationMode.Pinpoint and mode == Waypoint_Enum.NavigationMode.Waypoint then
             -- Transition: Pinpoint to Waypoint
-
             CallbackRegistry.Trigger("WaypointAnimation.PinpointToWaypoint")
         elseif lastNavigationMode == Waypoint_Enum.NavigationMode.Hidden and mode ~= Waypoint_Enum.NavigationMode.Hidden then
-            -- Transition: Hidden to visible
-            CallbackRegistry.Trigger("WaypointAnimation.New")
+            if IsNewSuperTrackedTarget() then
+                -- Transition: Hidden to visible
+                CallbackRegistry.Trigger("WaypointAnimation.New")
+                SaveSuperTrackedState()
+            end
         end
     end
 

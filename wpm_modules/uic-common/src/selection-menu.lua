@@ -3,7 +3,7 @@ local GenericEnum = env.WPM:Import("wpm_modules\\generic-enum")
 local Path = env.WPM:Import("wpm_modules\\path")
 local UIFont = env.WPM:Import("wpm_modules\\ui-font")
 local UIKit = env.WPM:Import("wpm_modules\\ui-kit")
-local Frame, LayoutGrid, LayoutHorizontal, LayoutVertical, Text, ScrollView, LazyScrollView, ScrollBar, ScrollViewEdge, Input, LinearSlider, HitRect, List = unpack(UIKit.UI.Frames)
+local Frame, LayoutGrid, LayoutHorizontal, LayoutVertical, Text, ScrollContainer, LazyScrollContainer, ScrollBar, ScrollContainerEdge, Input, LinearSlider, HitRect, List = unpack(UIKit.UI.Frames)
 local UIAnim = env.WPM:Import("wpm_modules\\ui-anim")
 local UICSharedMixin = env.WPM:Import("wpm_modules\\uic-sharedmixin")
 local Utils_Texture = env.WPM:Import("wpm_modules\\utils\\texture")
@@ -147,11 +147,11 @@ do -- Content Arrow
 
     local ContentArrowMixin = CreateFromMixins(UICSharedMixin.ButtonMixin)
 
-    function ContentArrowMixin:OnLoad(parent, scrollView, isTop)
+    function ContentArrowMixin:OnLoad(parent, scrollContainer, isTop)
         self:InitButton()
 
         self.parent = parent
-        self.scrollView = scrollView
+        self.scrollContainer = scrollContainer
         self.isTop = isTop
 
         self:RegisterMouseEvents()
@@ -181,12 +181,12 @@ do -- Content Arrow
     end
 
     function ContentArrowMixin:ContextArrow_OnClick()
-        if not self.scrollView then return end
+        if not self.scrollContainer then return end
 
         if self.isTop then
-            self.scrollView:ScrollToTop()
+            self.scrollContainer:ScrollToTop()
         else
-            self.scrollView:ScrollToBottom()
+            self.scrollContainer:ScrollToBottom()
         end
     end
 
@@ -423,18 +423,18 @@ do -- Selection Menu
                         :_excludeFromCalculations()
                         :_updateMode(UIKit.Enum.UpdateMode.ExcludeVisibilityChanged),
 
-                    LazyScrollView(name .. ".List")
+                    LazyScrollContainer(name .. ".List")
                         :id("List", id)
                         :frameLevel(3)
                         :point(UIKit.Enum.Point.Center)
                         :size(LIST_WIDTH, LIST_HEIGHT)
                         :maxHeight(275)
-                        :scrollViewContentWidth(CONTENT_SCROLL_WIDTH)
-                        :scrollViewContentHeight(CONTENT_SCROLL_HEIGHT)
+                        :scrollContainerContentWidth(CONTENT_SCROLL_WIDTH)
+                        :scrollContainerContentHeight(CONTENT_SCROLL_HEIGHT)
                         :scrollInterpolation(10)
                         :scrollDirection(UIKit.Enum.Direction.Vertical)
                         :poolTemplate(UICCommonSelectionMenu.Row)
-                        :lazyScrollViewElementHeight(28)
+                        :lazyScrollContainerElementHeight(28)
                         :_updateMode(UIKit.Enum.UpdateMode.ExcludeVisibilityChanged),
 
                     UICCommonSelectionMenu.ContentArrow(name .. ".ArrowUp")

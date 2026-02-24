@@ -43,10 +43,12 @@ function UIAnim_Processor.Apply(target, property, value)
         if target.SetPoint and target.GetPoint then
             local point, relativeTo, relativePoint, offsetX, offsetY = target:GetPoint()
             point = point or "CENTER"
-            relativeTo = relativeTo or UIParent
+            relativeTo = relativeTo or target:GetParent()
             relativePoint = relativePoint or point
             offsetX = offsetX or 0
             offsetY = offsetY or 0
+            
+            target:ClearAllPoints()
             if property == PROP_POSX then
                 target:SetPoint(point, relativeTo, relativePoint, value, offsetY)
             else
@@ -109,7 +111,7 @@ function UIAnim_Processor.PrepareApply(target, property)
             local point, relativeTo, relativePoint, offsetX, offsetY = target:GetPoint()
             point = point or "CENTER"
             relativePoint = relativePoint or point
-            return property == PROP_POSX and APPLY_POS_X or APPLY_POS_Y, target.SetPoint, point, relativeTo or UIParent, relativePoint, offsetX or 0, offsetY or 0
+            return property == PROP_POSX and APPLY_POS_X or APPLY_POS_Y, target.SetPoint, point, relativeTo or target:GetParent(), relativePoint, offsetX or 0, offsetY or 0
         end
     elseif property == PROP_ROTATION then
         local setter = target.SetRotation

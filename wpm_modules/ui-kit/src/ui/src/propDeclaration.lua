@@ -87,12 +87,12 @@ local function IsTextOrInput(frameType)
     return frameType == "Text" or frameType == "Input"
 end
 
-local function IsScrollView(frameType)
-    return frameType == "ScrollView" or frameType == "LazyScrollView"
+local function IsScrollContainer(frameType)
+    return frameType == "ScrollContainer" or frameType == "LazyScrollContainer"
 end
 
-local function IsScrollViewExtension(frameType)
-    return frameType == "ScrollBar" or frameType == "ScrollViewEdge"
+local function IsScrollContainerExtension(frameType)
+    return frameType == "ScrollBar" or frameType == "ScrollContainerEdge"
 end
 
 do -- General
@@ -500,8 +500,8 @@ do -- General
         frame.uk_flag_renderBreakpoint = true
     end
 
-    FrameProps["_excludeFromCalculations"] = function(frame)
-        frame.uk_flag_excludeFromCalculations = true
+    FrameProps["_excludeFromCalculations"] = function(frame, exclude)
+        frame.uk_flag_excludeFromCalculations = (exclude == nil and true) or exclude
     end
 
     FrameProps["_Render"] = function(frame)
@@ -511,6 +511,14 @@ do -- General
             UIKit_UI_Scanner.SetupFrameRecursive(frame)
         end
         UIKit_Renderer.Scanner.ScanFrame(frame)
+    end
+
+    FrameProps["_Rerender"] = function(frame)
+        if not frame.uk_prop_rendered then
+            frame.uk_prop_rendered = true
+            UIKit_UI_Scanner.SetupFrame(frame)
+        end
+        UIKit_Renderer.Scanner.ScanFrameOnly(frame)
     end
 end
 
@@ -561,7 +569,7 @@ end
 do -- Scrolling
     FrameProps["scrollDirection"] = function(frame, scrollDir)
         local frameType = frame.uk_type
-        assert(IsScrollViewExtension(frameType) or IsScrollView(frameType), "Invalid variable `scrollDirection`: Must be called on `ScrollBar` or `ScrollViewEdge` or `ScrollView` or `LazyScrollView`")
+        assert(IsScrollContainerExtension(frameType) or IsScrollContainer(frameType), "Invalid variable `scrollDirection`: Must be called on `ScrollBar` or `ScrollContainerEdge` or `ScrollContainer` or `LazyScrollContainer`")
 
         local isVertical = scrollDir == "VERTICAL" or scrollDir == "BOTH"
         local isHorizontal = scrollDir == "HORIZONTAL" or scrollDir == "BOTH"
@@ -573,28 +581,28 @@ do -- Scrolling
         end
     end
 
-    FrameProps["linkedScrollView"] = function(frame, targetFrame)
+    FrameProps["linkedScrollContainer"] = function(frame, targetFrame)
         targetFrame = ResolveFrameReference(targetFrame)
-        assert(IsScrollViewExtension(frame.uk_type) and targetFrame and IsScrollView(targetFrame.uk_type), "Invalid variable `linkedScrollView`: Must be called on `ScrollBar` or `ScrollViewEdge` with a `ScrollView` or `LazyScrollView` target")
-        frame.uk_prop_linkedScrollView = targetFrame
-        frame:SetLinkedScrollView(targetFrame)
+        assert(IsScrollContainerExtension(frame.uk_type) and targetFrame and IsScrollContainer(targetFrame.uk_type), "Invalid variable `linkedScrollContainer`: Must be called on `ScrollBar` or `ScrollContainerEdge` with a `ScrollContainer` or `LazyScrollContainer` target")
+        frame.uk_prop_linkedScrollContainer = targetFrame
+        frame:SetLinkedScrollContainer(targetFrame)
     end
 
     -- React
-    FrameProps["scrollViewContentWidth"] = function(frame, contentWidth)
-        contentWidth = HandleReact(frame, contentWidth, "scrollViewContentWidth")
-        assert(IsScrollView(frame.uk_type), "Invalid variable `scrollViewContentWidth`: Must be called on `ScrollView` or `LazyScrollView`")
-        assert(type(contentWidth) == "number" or contentWidth == UIKit_Define.Percentage or contentWidth == UIKit_Define.Fit, "Invalid variable `scrollViewContentWidth`: Must be of type `number`, `UIKit.Define.Percentage` or `UIKit.Define.Fit`")
+    FrameProps["scrollContainerContentWidth"] = function(frame, contentWidth)
+        contentWidth = HandleReact(frame, contentWidth, "scrollContainerContentWidth")
+        assert(IsScrollContainer(frame.uk_type), "Invalid variable `scrollContainerContentWidth`: Must be called on `ScrollContainer` or `LazyScrollContainer`")
+        assert(type(contentWidth) == "number" or contentWidth == UIKit_Define.Percentage or contentWidth == UIKit_Define.Fit, "Invalid variable `scrollContainerContentWidth`: Must be of type `number`, `UIKit.Define.Percentage` or `UIKit.Define.Fit`")
         local contentFrame = frame:GetContentFrame()
         contentFrame.uk_prop_width = contentWidth
         if type(contentWidth) == "number" then contentFrame:SetWidth(contentWidth) end
     end
 
     -- React
-    FrameProps["scrollViewContentHeight"] = function(frame, contentHeight)
-        contentHeight = HandleReact(frame, contentHeight, "scrollViewContentHeight")
-        assert(IsScrollView(frame.uk_type), "Invalid variable `scrollViewContentHeight`: Must be called on `ScrollView` or `LazyScrollView`")
-        assert(type(contentHeight) == "number" or contentHeight == UIKit_Define.Percentage or contentHeight == UIKit_Define.Fit, "Invalid variable `scrollViewContentHeight`: Must be of type `number`, `UIKit.Define.Percentage` or `UIKit.Define.Fit`")
+    FrameProps["scrollContainerContentHeight"] = function(frame, contentHeight)
+        contentHeight = HandleReact(frame, contentHeight, "scrollContainerContentHeight")
+        assert(IsScrollContainer(frame.uk_type), "Invalid variable `scrollContainerContentHeight`: Must be called on `ScrollContainer` or `LazyScrollContainer`")
+        assert(type(contentHeight) == "number" or contentHeight == UIKit_Define.Percentage or contentHeight == UIKit_Define.Fit, "Invalid variable `scrollContainerContentHeight`: Must be of type `number`, `UIKit.Define.Percentage` or `UIKit.Define.Fit`")
         local contentFrame = frame:GetContentFrame()
         contentFrame.uk_prop_height = contentHeight
         if type(contentHeight) == "number" then contentFrame:SetHeight(contentHeight) end
@@ -603,7 +611,7 @@ do -- Scrolling
     -- React
     FrameProps["scrollInterpolation"] = function(frame, interpolationValue)
         interpolationValue = HandleReact(frame, interpolationValue, "scrollInterpolation")
-        assert(IsScrollView(frame.uk_type), "Invalid variable `scrollInterpolation`: Must be called on `ScrollView` or `LazyScrollView`")
+        assert(IsScrollContainer(frame.uk_type), "Invalid variable `scrollInterpolation`: Must be called on `ScrollContainer` or `LazyScrollContainer`")
         assert(type(interpolationValue) == "number", "Invalid variable `scrollInterpolation`: Must be a number")
         frame.uk_prop_scrollInterpolation = interpolationValue
         frame:SetSmoothScrolling((interpolationValue ~= nil), interpolationValue)
@@ -612,35 +620,35 @@ do -- Scrolling
     -- React
     FrameProps["scrollStepSize"] = function(frame, stepSizeValue)
         stepSizeValue = HandleReact(frame, stepSizeValue, "scrollStepSize")
-        assert(IsScrollView(frame.uk_type), "Invalid variable `scrollStepSize`: Must be called on `ScrollView` or `LazyScrollView`")
+        assert(IsScrollContainer(frame.uk_type), "Invalid variable `scrollStepSize`: Must be called on `ScrollContainer` or `LazyScrollContainer`")
         assert(type(stepSizeValue) == "number", "Invalid variable `scrollStepSize`: Must be a number")
         frame.uk_prop_scrollStepSize = stepSizeValue
         frame:SetStepSize(stepSizeValue)
     end
 
     FrameProps["scrollEdgeMin"] = function(frame, value)
-        assert(frame.uk_type == "ScrollViewEdge", "Invalid variable `scrollEdgeMin`: Must be called on `ScrollViewEdge`")
+        assert(frame.uk_type == "ScrollContainerEdge", "Invalid variable `scrollEdgeMin`: Must be called on `ScrollContainerEdge`")
         assert(type(value) == "number", "Invalid variable `scrollEdgeMin`: Must be a number")
         frame:SetScrollEdgeMin(value)
     end
 
     FrameProps["scrollEdgeMax"] = function(frame, value)
-        assert(frame.uk_type == "ScrollViewEdge", "Invalid variable `scrollEdgeMax`: Must be called on `ScrollViewEdge`")
+        assert(frame.uk_type == "ScrollContainerEdge", "Invalid variable `scrollEdgeMax`: Must be called on `ScrollContainerEdge`")
         assert(type(value) == "number", "Invalid variable `scrollEdgeMax`: Must be a number")
         frame:SetScrollEdgeMax(value)
     end
 
     FrameProps["scrollEdgeDirection"] = function(frame, direction)
-        assert(frame.uk_type == "ScrollViewEdge", "Invalid variable `scrollEdgeDirection`: Must be called on `ScrollViewEdge`")
+        assert(frame.uk_type == "ScrollContainerEdge", "Invalid variable `scrollEdgeDirection`: Must be called on `ScrollContainerEdge`")
         assert(direction == UIKit_Enum.ScrollEdgeDirection.Leading or direction == UIKit_Enum.ScrollEdgeDirection.Trailing, "Invalid variable `scrollEdgeDirection`: Must be `Leading` or `Trailing`")
         frame:SetScrollEdgeDirection(direction)
     end
 
-    FrameProps["scrollEdgeLinkedScrollView"] = function(frame, targetFrame)
+    FrameProps["scrollEdgeLinkedScrollContainer"] = function(frame, targetFrame)
         targetFrame = ResolveFrameReference(targetFrame)
-        assert(frame.uk_type == "ScrollViewEdge", "Invalid variable `scrollEdgeLinkedScrollView`: Must be called on `ScrollViewEdge`")
-        assert(targetFrame and IsScrollView(targetFrame.uk_type), "Invalid variable `scrollEdgeLinkedScrollView`: Target must be `ScrollView` or `LazyScrollView`")
-        frame:SetLinkedScrollView(targetFrame)
+        assert(frame.uk_type == "ScrollContainerEdge", "Invalid variable `scrollEdgeLinkedScrollContainer`: Must be called on `ScrollContainerEdge`")
+        assert(targetFrame and IsScrollContainer(targetFrame.uk_type), "Invalid variable `scrollEdgeLinkedScrollContainer`: Target must be `ScrollContainer` or `LazyScrollContainer`")
+        frame:SetLinkedScrollContainer(targetFrame)
     end
 end
 
@@ -933,24 +941,30 @@ end
 
 do -- Pooling
     local function IsPoolableView(frameType)
-        return frameType == "List" or frameType == "LazyScrollView"
+        return frameType == "List" or frameType == "LazyScrollContainer"
     end
 
-    FrameProps["poolElementUpdate"] = function(frame, updateFunc)
-        assert(IsPoolableView(frame.uk_type), "Invalid variable `poolElementUpdate`: Must be called on `List` or `LazyScrollView`")
-        assert(type(updateFunc) == "function", "Invalid variable `updateFunc`: Must be a function")
-        frame:SetOnElementUpdate(updateFunc)
+    FrameProps["poolElementUpdate"] = function(frame, func)
+        assert(IsPoolableView(frame.uk_type), "Invalid variable `poolElementUpdate`: Must be called on `List` or `LazyScrollContainer`")
+        assert(type(func) == "function", "Invalid variable `func`: Must be a function")
+        frame:SetOnElementUpdate(func)
+    end
+
+    FrameProps["poolElementVisibilityChanged"] = function(frame, func)
+        assert(IsPoolableView(frame.uk_type), "Invalid variable `poolElementVisibilityChanged`: Must be called on `List` or `LazyScrollContainer`")
+        assert(type(func) == "function", "Invalid variable `func`: Must be a function")
+        frame:SetOnElementVisibilityChanged(func)
     end
 
     FrameProps["poolTemplate"] = function(frame, templateFunc)
-        assert(IsPoolableView(frame.uk_type), "Invalid variable `poolTemplate`: Must be called on `List` or `LazyScrollView`")
+        assert(IsPoolableView(frame.uk_type), "Invalid variable `poolTemplate`: Must be called on `List` or `LazyScrollContainer`")
         assert(type(templateFunc) == "function" or type(templateFunc) == "table", "Invalid variable `templateFunc`: Must be a function or a table")
         frame:SetTemplate(templateFunc)
     end
 
-    FrameProps["lazyScrollViewElementHeight"] = function(frame, elementHeight)
-        assert(frame.uk_type == "LazyScrollView", "Invalid variable `lazyScrollViewElementHeight`: Must be called on `LazyScrollView`")
-        assert(type(elementHeight) == "number", "Invalid variable `lazyScrollViewElementHeight`: Must be a number")
+    FrameProps["lazyScrollContainerElementHeight"] = function(frame, elementHeight)
+        assert(frame.uk_type == "LazyScrollContainer", "Invalid variable `lazyScrollContainerElementHeight`: Must be called on `LazyScrollContainer`")
+        assert(type(elementHeight) == "number", "Invalid variable `lazyScrollContainerElementHeight`: Must be a number")
         frame:SetElementHeight(elementHeight)
     end
 end

@@ -17,6 +17,7 @@ local GetDistance = C_Navigation.GetDistance
 local GetQuestClassification = C_QuestInfoSystem.GetQuestClassification
 local IsComplete = C_QuestLog.IsComplete
 local IsInsideQuestBlob = C_Minimap.IsInsideQuestBlob
+local GetNeighborhoodMapData = C_HousingNeighborhood.GetNeighborhoodMapData
 
 local DataProviderUtil = {}
 do
@@ -95,6 +96,28 @@ do
     end
 
     do -- Context Icon
+        local HOUSING_ATLAS_MAP = {
+            [Enum.HousingPlotOwnerType.None]     = "housing-map-plot-unoccupied",
+            [Enum.HousingPlotOwnerType.Self]     = "housing-map-plot-player-house",
+            [Enum.HousingPlotOwnerType.Friend]   = "housing-map-plot-occupied-friend",
+            [Enum.HousingPlotOwnerType.Stranger] = "housing-map-plot-occupied"
+        }
+
+        local function GetSuperTrackedHousingPlotInfo()
+            local pinType, plotDataID = C_SuperTrack.GetSuperTrackedMapPin()
+            if pinType ~= Enum.SuperTrackingMapPinType.HousingPlot or not plotDataID then return nil end
+
+            local mapData = GetNeighborhoodMapData()
+            for _, plotInfo in ipairs(mapData) do
+                if plotInfo.plotDataID == plotDataID then
+                    return HOUSING_ATLAS_MAP[plotInfo.ownerType]
+                end
+            end
+
+            return nil
+        end
+
+
         local PATH_CONTEXT_ICON = Path.Root .. "\\Art\\Icon\\"
         local RedirectContextIcon = Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "Redirect.png", requestRecolor = true }
 
@@ -133,6 +156,11 @@ do
                 return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "QuestAvailable.png" }
             elseif isVignette then
                 return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "VignetteElite.png", requestRecolor = true }
+            elseif poiType == Enum.SuperTrackingMapPinType.HousingPlot then
+                local atlas = GetSuperTrackedHousingPlotInfo()
+                if atlas then
+                    return Waypoint_Define.ContextIconTexture{ type = "ATLAS", path = atlas }
+                end
             end
             return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "MapPin.png", requestRecolor = true }
         end

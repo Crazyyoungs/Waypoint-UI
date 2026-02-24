@@ -1,40 +1,40 @@
 local env = select(2, ...)
 local UIKit_Primitives_Frame = env.WPM:Import("wpm_modules\\ui-kit\\primitives\\frame")
-local UIKit_Primitives_ScrollBase = env.WPM:Import("wpm_modules\\ui-kit\\primitives\\scroll-view-base")
-local UIKit_Primitives_ScrollView = env.WPM:New("wpm_modules\\ui-kit\\primitives\\scroll-view")
+local UIKit_Primitives_ScrollBase = env.WPM:Import("wpm_modules\\ui-kit\\primitives\\scroll-container-base")
+local UIKit_Primitives_ScrollContainer = env.WPM:New("wpm_modules\\ui-kit\\primitives\\scroll-container")
 
 local Mixin = Mixin
-local ScrollViewBaseMixin = UIKit_Primitives_ScrollBase.Mixin
+local ScrollContainerBaseMixin = UIKit_Primitives_ScrollBase.Mixin
 local MouseWheelHandler = UIKit_Primitives_ScrollBase.MouseWheelHandler
 
 
-local ScrollViewMixin = {}
+local ScrollContainerMixin = {}
 
-function ScrollViewMixin:CustomFitContent()
+function ScrollContainerMixin:CustomFitContent()
     local shouldFitWidth, shouldFitHeight = self:GetFitContent()
     self:FitContent(shouldFitWidth, shouldFitHeight, { self.__ContentFrame })
 end
 
 
-local ScrollViewContentMixin = {}
+local ScrollContainerContentMixin = {}
 
-function ScrollViewContentMixin:GetParent()
+function ScrollContainerContentMixin:GetParent()
     return self.__parentRef
 end
 
-function ScrollViewContentMixin:CustomFitContent()
+function ScrollContainerContentMixin:CustomFitContent()
     local shouldFitWidth, shouldFitHeight = self:GetFitContent()
     self:FitContent(shouldFitWidth, shouldFitHeight, self.__parentRef:GetFrameChildren())
 end
 
 
-function UIKit_Primitives_ScrollView.New(name, parent)
+function UIKit_Primitives_ScrollContainer.New(name, parent)
     name = name or "undefined"
 
     local frame = UIKit_Primitives_Frame.New("Frame", name, parent)
-    Mixin(frame, ScrollViewBaseMixin)
-    Mixin(frame, ScrollViewMixin)
-    frame:InitScrollViewBase()
+    Mixin(frame, ScrollContainerBaseMixin)
+    Mixin(frame, ScrollContainerMixin)
+    frame:InitScrollContainerBase()
 
     local scrollFrame = UIKit_Primitives_Frame.New("ScrollFrame", "$parent.ScrollFrame", frame)
     scrollFrame:SetAllPoints(frame)
@@ -42,9 +42,9 @@ function UIKit_Primitives_ScrollView.New(name, parent)
     scrollFrame:EnableMouseWheel(true)
 
     local contentFrame = UIKit_Primitives_Frame.New("Frame", "$parent.ContentFrame", scrollFrame)
-    contentFrame.uk_type = "ScrollViewContent"
+    contentFrame.uk_type = "ScrollContainerContent"
     contentFrame.__parentRef = frame
-    Mixin(contentFrame, ScrollViewContentMixin)
+    Mixin(contentFrame, ScrollContainerContentMixin)
     scrollFrame:SetScrollChild(contentFrame)
 
     frame.__ScrollFrame = scrollFrame
