@@ -49,6 +49,7 @@ function WaypointMixin:OnLoad()
     SavedVariables.OnChange("WaypointDB_Global", "WaypointDistanceText", function() self:SetFooterTextAppearance() end)
     SavedVariables.OnChange("WaypointDB_Global", "WaypointDistanceTextType", function() self:SetFooterTextAppearance() end)
     SavedVariables.OnChange("WaypointDB_Global", "WaypointDistanceTextAlpha", function() self:SetFooterTextAppearance() end)
+    SavedVariables.OnChange("WaypointDB_Global", "WaypointDistanceSubtextAlpha", function() self:SetFooterTextAppearance() end)
     SavedVariables.OnChange("WaypointDB_Global", "WaypointDistanceTextScale", function() self:SetFooterTextAppearance() end)
     SavedVariables.OnChange("WaypointDB_Global", "WaypointBeam", function() self:UpdateBeam() end)
     SavedVariables.OnChange("WaypointDB_Global", "WaypointBeamAlpha", function() self:UpdateBeam() end)
@@ -140,16 +141,12 @@ function WaypointMixin:UpdateFooter()
     self.Footer:SetShown(distanceTextEnabled)
     if not distanceTextEnabled then return end
 
-    local alpha = Config.DBGlobal:GetVariable("WaypointDistanceTextAlpha")
-    local scale = Config.DBGlobal:GetVariable("WaypointDistanceTextScale")
-    self.Footer:SetAlpha(alpha)
-    self.Footer:SetScale(scale)
-
     local distanceTextType = Config.DBGlobal:GetVariable("WaypointDistanceTextType")
     local showInfoText = (distanceTextType == Waypoint_Enum.WaypointDistanceTextType.DestinationName) or (distanceTextType == Waypoint_Enum.WaypointDistanceTextType.All)
     local showDistanceText = (distanceTextType == Waypoint_Enum.WaypointDistanceTextType.Distance) or (distanceTextType == Waypoint_Enum.WaypointDistanceTextType.All)
     local showArrivalTime = (distanceTextType == Waypoint_Enum.WaypointDistanceTextType.ArrivalTime) or (distanceTextType == Waypoint_Enum.WaypointDistanceTextType.All)
 
+    self:SetFooterTextAppearance()
     self.Footer.InfoText:SetShown(showInfoText)
     self.Footer.DistanceText:SetShown(showDistanceText)
     self.Footer.ArrivalTimeText:SetShown(showArrivalTime)
@@ -193,8 +190,11 @@ end
 function WaypointMixin:SetFooterTextAppearance()
     local alpha = Config.DBGlobal:GetVariable("WaypointDistanceTextAlpha")
     local scale = Config.DBGlobal:GetVariable("WaypointDistanceTextScale")
+    local subtextAlpha = Config.DBGlobal:GetVariable("WaypointDistanceSubtextAlpha")
     self.Footer:SetAlpha(alpha)
     self.Footer:SetScale(scale)
+    self.Footer.ArrivalTimeText:SetAlpha(subtextAlpha)
+    self.Footer.DistanceText:SetAlpha(subtextAlpha)
 end
 
 WaypointMixin.AnimGroup = UIAnim.New()
@@ -1130,7 +1130,7 @@ do -- Re-render on font change
         for _, f in ipairs(frames) do if f:IsVisible() then f:_Render() end end
     end
 
-    SavedVariables.OnChange("WaypointDB_Global", "PrefFont", OnFontChanged, 10)
+    SavedVariables.OnChange("WaypointDB_Global", "fontPath", OnFontChanged, 10)
 end
 
 Waypoint.HideAllFrames()

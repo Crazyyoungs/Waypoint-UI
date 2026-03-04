@@ -14,7 +14,6 @@ local GetUserWaypoint = C_Map.GetUserWaypoint
 local SetUserWaypoint = C_Map.SetUserWaypoint
 local ClearUserWaypoint = C_Map.ClearUserWaypoint
 local HasUserWaypoint = C_Map.HasUserWaypoint
-local GetBestMapForUnit = C_Map.GetBestMapForUnit
 local GetMapInfo = C_Map.GetMapInfo
 local GetWorldPosFromMapPos = C_Map.GetWorldPosFromMapPos
 local CreateFrame = CreateFrame
@@ -23,14 +22,6 @@ local tostring = tostring
 local format = string.format
 local pairs = pairs
 local WorldMapFrame = WorldMapFrame
-
-
-do --World Map Util
-    function MapPin.ForceWorldMapRefresh()
-        WorldMapFrame:SetMapID(GetBestMapForUnit("player"))
-        WorldMapFrame:RefreshAll()
-    end
-end
 
 local SessionData = {
     name  = nil,
@@ -43,7 +34,6 @@ local SessionData = {
 local MUTED_FLAG_MAP = {
     ["TomTom_Waypoint"]       = true,
     ["Dugis_Waypoint"]        = true,
-    ["RareScanner_Waypoint"]  = true,
     ["SilverDragon_Waypoint"] = true
 }
 
@@ -177,10 +167,10 @@ function MapPin.ToggleSuperTrackedPinDisplay(shown)
 end
 
 function MapPin.ValidateSuperTrackedPinDisplay(_, event)
-    if event == "USER_WAYPOINT_UPDATED" then
-        if (C_SuperTrack.GetHighestPrioritySuperTrackingType() == Enum.SuperTrackingType.UserWaypoint) and not MapPin.IsUserNavigationTracked() then -- Clear stale navigation only when the super-tracked target is a UserWaypoint
-            MapPin.ClearUserNavigation(true)
-        end
+    if event == "USER_WAYPOINT_UPDATED" and (C_SuperTrack.GetHighestPrioritySuperTrackingType() == Enum.SuperTrackingType.UserWaypoint) and not MapPin.IsUserNavigationTracked() then
+        MapPin.ClearUserNavigation(true)
+    elseif event == "SUPER_TRACKING_CHANGED" and C_SuperTrack.GetHighestPrioritySuperTrackingType() ~= Enum.SuperTrackingType.UserWaypoint then
+        MapPin.ClearUserNavigation(true)
     end
 
     for flag, _ in pairs(MUTED_FLAG_MAP) do

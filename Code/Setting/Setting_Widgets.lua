@@ -349,7 +349,7 @@ do -- Widgets
                             :point(UIKit.Enum.Point.Left)
                             :fontObject(UIFont.UIFontObjectNormal14)
                             :textAlignment("LEFT", "MIDDLE")
-                            :textColor(GenericEnum.UIColorRGB.NormalText)
+                            :textColor(GenericEnum.UIColorRGB.Normal)
                             :size(TEXT_WIDTH, TEXT_HEIGHT)
                             :x(TEXT_X)
                             :y(TEXT_Y)
