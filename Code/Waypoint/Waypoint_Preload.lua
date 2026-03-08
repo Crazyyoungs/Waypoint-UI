@@ -1,9 +1,11 @@
 local env = select(2, ...)
 local Path = env.WPM:Import("wpm_modules\\path")
 local UIKit = env.WPM:Import("wpm_modules\\ui-kit")
+local Utils_Texture = env.WPM:Import("wpm_modules\\utils\\texture")
 local Waypoint_Preload = env.WPM:New("@\\Waypoint\\Preload")
 
 local ATLAS = UIKit.Define.Texture_Atlas{ path = Path.Root .. "\\Art\\Waypoint\\Waypoint.png" }
+Utils_Texture.Preload(Path.Root .. "\\Art\\Waypoint\\Waypoint.png")
 Waypoint_Preload.UIDef = {
     ContextIcon          = ATLAS{ left = 0 / 1792, right = 256 / 1792, top = 256 / 2560, bottom = 512 / 2560 },
 

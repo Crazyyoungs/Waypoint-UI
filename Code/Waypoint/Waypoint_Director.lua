@@ -7,10 +7,12 @@ local Waypoint_DataProvider = env.WPM:Import("@\\Waypoint\\DataProvider")
 local Waypoint_Enum = env.WPM:Import("@\\Waypoint\\Enum")
 local Waypoint_Director = env.WPM:New("@\\Waypoint\\Director")
 
-local IsSuperTrackingAnything = C_SuperTrack.IsSuperTrackingAnything
-local IsInInstance = IsInInstance
 local CreateFrame = CreateFrame
+local GetTime = GetTime
+local IsInInstance = IsInInstance
 local IsPlayerMoving = IsPlayerMoving
+local IsSuperTrackingAnything = C_SuperTrack.IsSuperTrackingAnything
+local IsSuperTrackingUserWaypoint = C_SuperTrack.IsSuperTrackingUserWaypoint
 local ipairs = ipairs
 
 Waypoint_Director.isActive = false
@@ -237,8 +239,11 @@ do
         end
 
         -- Super Tracking
-        if event == "SUPER_TRACKING_CHANGED" or event == "USER_WAYPOINT_UPDATED" then
-            OnSuperTrackingChange()
+        if event == "SUPER_TRACKING_CHANGED" or (event == "USER_WAYPOINT_UPDATED" and IsSuperTrackingUserWaypoint()) then
+            if IsNewSuperTrackedTarget() then
+                OnSuperTrackingChange()
+                SaveSuperTrackedState()
+            end
         end
 
         -- Movement
@@ -338,17 +343,12 @@ do
 
     local function TriggerAppropriateTransitionCallback(mode)
         if lastNavigationMode == Waypoint_Enum.NavigationMode.Waypoint and mode == Waypoint_Enum.NavigationMode.Pinpoint then
-            -- Transition: Waypoint to Pinpoint
             CallbackRegistry.Trigger("WaypointAnimation.WaypointToPinpoint")
         elseif lastNavigationMode == Waypoint_Enum.NavigationMode.Pinpoint and mode == Waypoint_Enum.NavigationMode.Waypoint then
-            -- Transition: Pinpoint to Waypoint
             CallbackRegistry.Trigger("WaypointAnimation.PinpointToWaypoint")
         elseif lastNavigationMode == Waypoint_Enum.NavigationMode.Hidden and mode ~= Waypoint_Enum.NavigationMode.Hidden then
-            if IsNewSuperTrackedTarget() then
-                -- Transition: Hidden to visible
-                CallbackRegistry.Trigger("WaypointAnimation.New")
-                SaveSuperTrackedState()
-            end
+            CallbackRegistry.Trigger("WaypointAnimation.New")
+            SaveSuperTrackedState()
         end
     end
 

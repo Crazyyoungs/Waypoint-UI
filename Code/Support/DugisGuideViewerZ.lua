@@ -14,14 +14,14 @@ local function HandleAccept()
 end
 
 local REPLACE_PROMPT_INFO = {
-    text         = L["DugisGuideViewerZ - ReplacePrompt"],
+    text         = L["DUGISGUIDEVIEWERZ_REPLACEPROMPT"],
     options      = {
         {
-            text     = L["DugisGuideViewerZ - ReplacePrompt - Yes"],
+            text     = L["DUGISGUIDEVIEWERZ_REPLACEPROMPT_YES"],
             callback = HandleAccept
         },
         {
-            text     = L["DugisGuideViewerZ - ReplacePrompt - No"],
+            text     = L["DUGISGUIDEVIEWERZ_REPLACEPROMPT_NO"],
             callback = nil
         }
     },

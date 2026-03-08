@@ -8,7 +8,7 @@ local SetSuperTrackedUserWaypoint = C_SuperTrack.SetSuperTrackedUserWaypoint
 local IsSuperTrackingAnything = C_SuperTrack.IsSuperTrackingAnything
 local ClearAllSuperTracked = C_SuperTrack.ClearAllSuperTracked
 local GetHighestPrioritySuperTrackingType = C_SuperTrack.GetHighestPrioritySuperTrackingType
-local IsSuperTrackingMapPin = C_SuperTrack.IsSuperTrackingMapPin
+local IsSuperTrackingUserWaypoint = C_SuperTrack.IsSuperTrackingUserWaypoint
 local CanSetUserWaypointOnMap = C_Map.CanSetUserWaypointOnMap
 local GetUserWaypoint = C_Map.GetUserWaypoint
 local SetUserWaypoint = C_Map.SetUserWaypoint
@@ -167,7 +167,7 @@ function MapPin.ToggleSuperTrackedPinDisplay(shown)
 end
 
 function MapPin.ValidateSuperTrackedPinDisplay(_, event)
-    if event == "USER_WAYPOINT_UPDATED" and (C_SuperTrack.GetHighestPrioritySuperTrackingType() == Enum.SuperTrackingType.UserWaypoint) and not MapPin.IsUserNavigationTracked() then
+    if event == "USER_WAYPOINT_UPDATED" and IsSuperTrackingUserWaypoint() and not MapPin.IsUserNavigationTracked() then
         MapPin.ClearUserNavigation(true)
     elseif event == "SUPER_TRACKING_CHANGED" and C_SuperTrack.GetHighestPrioritySuperTrackingType() ~= Enum.SuperTrackingType.UserWaypoint then
         MapPin.ClearUserNavigation(true)
@@ -186,7 +186,7 @@ do --Automatically clear supertracking when the user waypoint is removed
     local f = CreateFrame("Frame")
     f:RegisterEvent("USER_WAYPOINT_UPDATED")
     f:SetScript("OnEvent", function()
-        if not HasUserWaypoint() and IsSuperTrackingMapPin() then
+        if not HasUserWaypoint() and IsSuperTrackingUserWaypoint() then
             ClearAllSuperTracked()
         end
     end)

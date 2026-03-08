@@ -122,6 +122,10 @@ function InputMixin:SetPlaceholderFontFlags(flags)
     self.__Placeholder:SetFont(path, size, flags)
 end
 
+function InputMixin:ClearText()
+    self:SetText("")
+end
+
 local function OnCursorChanged(inputFrame, x, y, w, h)
     local caretAnchor = inputFrame.__CaretAnchor
     if not caretAnchor then return end

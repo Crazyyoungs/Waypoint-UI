@@ -200,13 +200,13 @@ end
 WaypointMixin.AnimGroup = UIAnim.New()
 do
     local function ApplyDefaultState(WUIWaypointFrame)
-        WUIWaypointFrame:SetAlpha(1)
         WUIWaypointFrame.ContextIcon:SetScale(1)
         WUIWaypointFrame.Beam.Mask:SetScale(50)
         WUIWaypointFrame.AnimGroup_Beam:Play("NORMAL", WUIWaypointFrame.Beam.FXMask)
     end
 
     WaypointMixin.AnimGroup:State("INSTANT", function(frame)
+        frame:SetAlpha(1)
         ApplyDefaultState(frame)
     end)
 
@@ -313,7 +313,7 @@ function PinpointMixin:UpdateText()
             local questName = Waypoint_Cache.Get("questName")
 
             if questComplete then
-                local questCompletionText = Waypoint_Cache.Get("questCompletionText") or L["WaypointSystem - Pinpoint - Quest - Complete"]
+                local questCompletionText = Waypoint_Cache.Get("questCompletionText") or L["WAYPOINTSYSTEM_PINPOINT_QUEST_COMPLETE"]
 
                 if pinpointExtendedInfo then
                     newText = questName .. "\n" .. GenericEnum.ColorHEX.Gray .. questCompletionText .. "|r"
@@ -883,15 +883,9 @@ local function PlayPinpointShowAudio()
 end
 
 do --Animation
-    local Frames = {
-        Waypoint  = WUIWaypointFrame,
-        Pinpoint  = WUIPinpointFrame,
-        Navigator = WUINavigatorFrame
-    }
-
-    local function HideWaypoint() Frames.Waypoint:Hide() end
-    local function HidePinpoint() Frames.Pinpoint:Hide() end
-    local function HideNavigator() Frames.Navigator:Hide() end
+    local function HideWaypoint() WUIWaypointFrame:Hide() end
+    local function HidePinpoint() WUIPinpointFrame:Hide() end
+    local function HideNavigator() WUINavigatorFrame:Hide() end
 
     local function Play(frameObj, state, onFinish)
         local handle = frameObj.AnimGroup:Play(frameObj, state)
@@ -913,13 +907,13 @@ do --Animation
     end
 
     function Waypoint.ShowWaypoint()
-        Frames.Waypoint:Show()
+        WUIWaypointFrame:Show()
         if waypointAwaitIntro then
             waypointAwaitIntro = false
             PlayWaypointShowAudio()
-            Play(Frames.Waypoint, "INTRO")
+            Play(WUIWaypointFrame, "INTRO")
         else
-            Play(Frames.Waypoint, "FADE_IN")
+            Play(WUIWaypointFrame, "FADE_IN")
         end
     end
     CallbackRegistry.Add("WaypointAnimation.WaypointShow", Waypoint.ShowWaypoint)
@@ -927,21 +921,21 @@ do --Animation
     function Waypoint.HideWaypoint()
         if waypointAwaitOutro then
             waypointAwaitOutro = false
-            Play(Frames.Waypoint, "OUTRO", HideWaypoint)
+            Play(WUIWaypointFrame, "OUTRO", HideWaypoint)
         else
-            Play(Frames.Waypoint, "FADE_OUT", HideWaypoint)
+            Play(WUIWaypointFrame, "FADE_OUT", HideWaypoint)
         end
     end
     CallbackRegistry.Add("WaypointAnimation.WaypointHide", Waypoint.HideWaypoint)
 
     function Waypoint.ShowPinpoint()
-        Frames.Pinpoint:Show()
+        WUIPinpointFrame:Show()
         if pinpointAwaitIntro then
             pinpointAwaitIntro = false
             PlayPinpointShowAudio()
-            Play(Frames.Pinpoint, "INTRO")
+            Play(WUIPinpointFrame, "INTRO")
         else
-            Play(Frames.Pinpoint, "FADE_IN")
+            Play(WUIPinpointFrame, "FADE_IN")
         end
     end
     CallbackRegistry.Add("WaypointAnimation.PinpointShow", Waypoint.ShowPinpoint)
@@ -949,21 +943,21 @@ do --Animation
     function Waypoint.HidePinpoint()
         if pinpointAwaitOutro then
             pinpointAwaitOutro = false
-            Play(Frames.Pinpoint, "OUTRO", HidePinpoint)
+            Play(WUIPinpointFrame, "OUTRO", HidePinpoint)
         else
-            Play(Frames.Pinpoint, "FADE_OUT", HidePinpoint)
+            Play(WUIPinpointFrame, "FADE_OUT", HidePinpoint)
         end
     end
     CallbackRegistry.Add("WaypointAnimation.PinpointHide", Waypoint.HidePinpoint)
 
     function Waypoint.ShowNavigator()
-        Frames.Navigator:Show()
-        Play(Frames.Navigator, "FADE_IN")
+        WUINavigatorFrame:Show()
+        Play(WUINavigatorFrame, "FADE_IN")
     end
     CallbackRegistry.Add("WaypointAnimation.NavigatorShow", Waypoint.ShowNavigator)
 
     function Waypoint.HideNavigator()
-        Play(Frames.Navigator, "FADE_OUT", HideNavigator)
+        Play(WUINavigatorFrame, "FADE_OUT", HideNavigator)
     end
     CallbackRegistry.Add("WaypointAnimation.NavigatorHide", Waypoint.HideNavigator)
 

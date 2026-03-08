@@ -61,14 +61,14 @@ local function LocateGuidePin()
 end
 
 local REPLACE_PROMPT_INFO = {
-    text         = L["Guide Pin Assistant - ReplacePrompt"],
+    text         = L["GUIDE_PIN_ASSISTANT_REPLACEPROMPT"],
     options      = {
         {
-            text     = L["Guide Pin Assistant - ReplacePrompt - Yes"],
+            text     = L["GUIDE_PIN_ASSISTANT_REPLACEPROMPT_YES"],
             callback = PlaceUserNavigationAtGuidePin
         },
         {
-            text     = L["Guide Pin Assistant - ReplacePrompt - No"],
+            text     = L["GUIDE_PIN_ASSISTANT_REPLACEPROMPT_NO"],
         }
     },
     hideOnEscape = true,

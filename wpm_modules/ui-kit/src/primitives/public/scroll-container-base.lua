@@ -280,18 +280,18 @@ function ScrollContainerBaseMixin:ScrollToPosition(horizontal, vertical, instant
     end
 end
 
-function ScrollContainerBaseMixin:ScrollToTop()
-    self:SetVerticalScroll(0)
+function ScrollContainerBaseMixin:ScrollToTop(instant)
+    self:SetVerticalScroll(0, instant)
 end
 
-function ScrollContainerBaseMixin:ScrollToBottom()
-    self:SetVerticalScroll(self.__ContentFrame:GetHeight())
+function ScrollContainerBaseMixin:ScrollToBottom(instant)
+    self:SetVerticalScroll(self.__ContentFrame:GetHeight(), instant)
 end
 
-function ScrollContainerBaseMixin:ScrollToLeft()
-    self:SetHorizontalScroll(0)
+function ScrollContainerBaseMixin:ScrollToLeft(instant)
+    self:SetHorizontalScroll(0, instant)
 end
 
-function ScrollContainerBaseMixin:ScrollToRight()
-    self:SetHorizontalScroll(self.__ContentFrame:GetWidth())
+function ScrollContainerBaseMixin:ScrollToRight(instant)
+    self:SetHorizontalScroll(self.__ContentFrame:GetWidth(), instant)
 end

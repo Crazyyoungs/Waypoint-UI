@@ -20,14 +20,14 @@ local function HandleAccept()
 end
 
 local REPLACE_PROMPT_INFO = {
-    text         = L["TomTom - ReplacePrompt"],
+    text         = L["TOMTOM_REPLACEPROMPT"],
     options      = {
         {
-            text     = L["TomTom - ReplacePrompt - Yes"],
+            text     = L["TOMTOM_REPLACEPROMPT_YES"],
             callback = HandleAccept
         },
         {
-            text     = L["TomTom - ReplacePrompt - No"],
+            text     = L["TOMTOM_REPLACEPROMPT_NO"],
             callback = nil
         }
     },

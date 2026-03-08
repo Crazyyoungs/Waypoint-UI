@@ -19,6 +19,20 @@ local IsComplete = C_QuestLog.IsComplete
 local IsInsideQuestBlob = C_Minimap.IsInsideQuestBlob
 local GetNeighborhoodMapData = C_HousingNeighborhood.GetNeighborhoodMapData
 
+local CachedNextWaypointInfo = {}
+local EL = CreateFrame("Frame")
+EL:RegisterEvent("SUPER_TRACKING_PATH_UPDATED")
+EL:RegisterEvent("PLAYER_LOGIN")
+EL:SetScript("OnEvent", function()
+    local mapID = C_Map.GetBestMapForUnit("player")
+    if mapID then
+        local x, y, waypointDescription = C_SuperTrack.GetNextWaypointForMap(mapID)
+        CachedNextWaypointInfo.x, CachedNextWaypointInfo.y, CachedNextWaypointInfo.waypointDescription = x, y, waypointDescription
+    else
+        CachedNextWaypointInfo.x, CachedNextWaypointInfo.y, CachedNextWaypointInfo.waypointDescription = nil, nil, nil
+    end
+end)
+
 local DataProviderUtil = {}
 do
     local CLAMP_THRESHOLD = 0.125
@@ -57,9 +71,8 @@ do
     end
 
     function DataProviderUtil.GetRedirectInfo()
-        local mapID = GetBestMapForUnit("player")
-        if mapID then
-            local x, y, text = C_SuperTrack.GetNextWaypointForMap(mapID)
+        if CachedNextWaypointInfo.x then
+            local x, y, text = CachedNextWaypointInfo.x, CachedNextWaypointInfo.y, CachedNextWaypointInfo.waypointDescription
             return Waypoint_Define.RedirectInfo{ valid = text ~= nil, x = x, y = y, text = text }
         end
         return Waypoint_Define.RedirectInfo{ valid = false }
