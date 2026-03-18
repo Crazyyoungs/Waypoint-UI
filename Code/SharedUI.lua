@@ -1,7 +1,7 @@
 local env                                                                                                                                                 = select(2, ...)
-local UIKit                                                                                                                                               = env.WPM:Import("wpm_modules\\ui-kit")
+local UIKit                                                                                                                                               = env.modules:Import("packages\\ui-kit")
 local Frame, LayoutGrid, LayoutHorizontal, LayoutVertical, Text, ScrollContainer, LazyScrollContainer, ScrollBar, ScrollContainerEdge, Input, LinearSlider, HitRect, List = unpack(UIKit.UI.Frames)
-local UICCommon                                                                                                                                           = env.WPM:Import("wpm_modules\\uic-common")
+local UICCommon                                                                                                                                           = env.modules:Import("packages\\uic-common")
 
 UICCommon.Prompt("WUISharedPrompt")
     :id("WUISharedPrompt")

@@ -1,11 +1,11 @@
 local env = select(2, ...)
-local Path = env.WPM:Import("wpm_modules\\path")
-local GenericEnum = env.WPM:Import("wpm_modules\\generic-enum")
-local UIKit = env.WPM:Import("wpm_modules\\ui-kit")
+local Path = env.modules:Import("packages\\path")
+local GenericEnum = env.modules:Import("packages\\generic-enum")
+local UIKit = env.modules:Import("packages\\ui-kit")
 local Frame, LayoutGrid, LayoutHorizontal, LayoutVertical, Text, ScrollContainer, LazyScrollContainer, ScrollBar, ScrollContainerEdge, Input, LinearSlider, HitRect, List = unpack(UIKit.UI.Frames)
-local UIAnim = env.WPM:Import("wpm_modules\\ui-anim")
-local Waypoint_Preload = env.WPM:Import("@\\Waypoint\\Preload")
-local Waypoint_Templates = env.WPM:New("@\\Waypoint\\Templates")
+local UIAnim = env.modules:Import("packages\\ui-anim")
+local Waypoint_Preload = env.modules:Import("@\\Waypoint\\Preload")
+local Waypoint_Templates = env.modules:New("@\\Waypoint\\Templates")
 
 local Mixin = Mixin
 

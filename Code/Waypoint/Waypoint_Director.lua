@@ -1,11 +1,11 @@
 local env = select(2, ...)
 local Config = env.Config
-local SavedVariables = env.WPM:Import("wpm_modules\\saved-variables")
-local CallbackRegistry = env.WPM:Import("wpm_modules\\callback-registry")
-local Waypoint_Cache = env.WPM:Import("@\\Waypoint\\Cache")
-local Waypoint_DataProvider = env.WPM:Import("@\\Waypoint\\DataProvider")
-local Waypoint_Enum = env.WPM:Import("@\\Waypoint\\Enum")
-local Waypoint_Director = env.WPM:New("@\\Waypoint\\Director")
+local SavedVariables = env.modules:Import("packages\\saved-variables")
+local CallbackRegistry = env.modules:Import("packages\\callback-registry")
+local Waypoint_Cache = env.modules:Import("@\\Waypoint\\Cache")
+local Waypoint_DataProvider = env.modules:Import("@\\Waypoint\\DataProvider")
+local Waypoint_Enum = env.modules:Import("@\\Waypoint\\Enum")
+local Waypoint_Director = env.modules:New("@\\Waypoint\\Director")
 
 local CreateFrame = CreateFrame
 local GetTime = GetTime
@@ -310,7 +310,7 @@ do
     end
 
     local function ResolveNavigationMode()
-        local Setting_WaypointType = Config.DBGlobal:GetVariable("WaypointSystemType")
+        local Settings_WaypointType = Config.DBGlobal:GetVariable("WaypointSystemType")
 
         local state = Waypoint_Cache.Get("state")
         local isClamped = Waypoint_Cache.Get("clamped")
@@ -320,13 +320,13 @@ do
         elseif isClamped then
             return Waypoint_Enum.NavigationMode.Navigator
         elseif state == Waypoint_Enum.State.Proximity or state == Waypoint_Enum.State.QuestProximity then
-            if Setting_WaypointType == Waypoint_Enum.WaypointSystemType.Pinpoint or Setting_WaypointType == Waypoint_Enum.WaypointSystemType.All then
+            if Settings_WaypointType == Waypoint_Enum.WaypointSystemType.Pinpoint or Settings_WaypointType == Waypoint_Enum.WaypointSystemType.All then
                 return Waypoint_Enum.NavigationMode.Pinpoint
             else
                 return Waypoint_Enum.NavigationMode.Waypoint
             end
         else
-            if Setting_WaypointType == Waypoint_Enum.WaypointSystemType.Waypoint or Setting_WaypointType == Waypoint_Enum.WaypointSystemType.All then
+            if Settings_WaypointType == Waypoint_Enum.WaypointSystemType.Waypoint or Settings_WaypointType == Waypoint_Enum.WaypointSystemType.All then
                 return Waypoint_Enum.NavigationMode.Waypoint
             else
                 return Waypoint_Enum.NavigationMode.Pinpoint
@@ -445,6 +445,7 @@ local function OnAddonLoad()
     f:RegisterEvent("ZONE_CHANGED")
     f:RegisterEvent("PLAYER_ENTERING_BATTLEGROUND")
     f:RegisterEvent("PLAYER_ENTERING_WORLD")
+    f:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 end
 
 CallbackRegistry.Add("Preload.AddonReady", OnAddonLoad)

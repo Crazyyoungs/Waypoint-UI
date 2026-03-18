@@ -1,17 +1,16 @@
 local env = select(2, ...)
 local Config = env.Config
-local Path = env.WPM:Import("wpm_modules\\path")
-local MapPin = env.WPM:Import("@\\MapPin")
-local SharedUtil = env.WPM:Import("@\\SharedUtil")
-local CallbackRegistry = env.WPM:Import("wpm_modules\\callback-registry")
-local Waypoint_ContextIcon = env.WPM:Import("@\\Waypoint\\ContextIcon")
-local Waypoint_Define = env.WPM:Import("@\\Waypoint\\Define")
-local Waypoint_Enum = env.WPM:Import("@\\Waypoint\\Enum")
-local Waypoint_Cache = env.WPM:Import("@\\Waypoint\\Cache")
-local Waypoint_DataProvider = env.WPM:New("@\\Waypoint\\DataProvider")
+local Path = env.modules:Import("packages\\path")
+local MapPin = env.modules:Import("@\\MapPin")
+local SharedUtil = env.modules:Import("@\\SharedUtil")
+local CallbackRegistry = env.modules:Import("packages\\callback-registry")
+local Waypoint_ContextIcon = env.modules:Import("@\\Waypoint\\ContextIcon")
+local Waypoint_Define = env.modules:Import("@\\Waypoint\\Define")
+local Waypoint_Enum = env.modules:Import("@\\Waypoint\\Enum")
+local Waypoint_Cache = env.modules:Import("@\\Waypoint\\Cache")
+local Waypoint_DataProvider = env.modules:New("@\\Waypoint\\DataProvider")
 
 local CreateFrame = CreateFrame
-local GetBestMapForUnit = C_Map.GetBestMapForUnit
 local GetNavigationFrame = C_Navigation.GetFrame
 local GetDistance = C_Navigation.GetDistance
 local GetQuestClassification = C_QuestInfoSystem.GetQuestClassification
@@ -131,8 +130,8 @@ do
         end
 
 
-        local PATH_CONTEXT_ICON = Path.Root .. "\\Art\\Icon\\"
-        local RedirectContextIcon = Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "Redirect.png", requestRecolor = true }
+        local PATH_CONTEXT_ICON = Path.Root .. "\\Art\\Icons\\"
+        local RedirectContextIcon = Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "Redirect", requestRecolor = true }
 
         function Waypoint_DataProvider.GetContextIconTextureForQuest(questID)
             local texturePath = Waypoint_ContextIcon.GetContextIcon(questID)
@@ -155,27 +154,27 @@ do
                 return Waypoint_Define.ContextIconTexture{ type = "ATLAS", path = poiInfo.atlasName }
             elseif MapPin.IsUserNavigationTracked() or MapPin.IsUserNavigationFlagged("RareScanner_Waypoint") or MapPin.IsUserNavigationFlagged("SilverDragon_Waypoint") then
                 if MapPin.IsUserNavigationFlagged("RareScanner_Waypoint") or MapPin.IsUserNavigationFlagged("SilverDragon_Waypoint") then
-                    return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "VignetteElite.png", requestRecolor = true }
+                    return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "VignetteElite", requestRecolor = true }
                 elseif MapPin.IsUserNavigationFlagged("TomTom_Waypoint") then
-                    return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "TomTomArrow.png", requestRecolor = true }
+                    return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "TomTomArrow", requestRecolor = true }
                 else
-                    return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "Navigation.png", requestRecolor = true }
+                    return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "Navigation", requestRecolor = true }
                 end
             elseif pinType == Enum.SuperTrackingType.UserWaypoint then
-                return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "MapPin.png", requestRecolor = true }
+                return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "MapPin", requestRecolor = true }
             elseif poiType == Enum.SuperTrackingMapPinType.DigSite then
                 return Waypoint_Define.ContextIconTexture{ type = "ATLAS", path = "ArchBlob" }
             elseif poiType == Enum.SuperTrackingMapPinType.QuestOffer then
-                return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "QuestAvailable.png" }
+                return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "AvailableQuest" }
             elseif isVignette then
-                return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "VignetteElite.png", requestRecolor = true }
+                return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "VignetteElite", requestRecolor = true }
             elseif poiType == Enum.SuperTrackingMapPinType.HousingPlot then
                 local atlas = GetSuperTrackedHousingPlotInfo()
                 if atlas then
                     return Waypoint_Define.ContextIconTexture{ type = "ATLAS", path = atlas }
                 end
             end
-            return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "MapPin.png", requestRecolor = true }
+            return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "MapPin", requestRecolor = true }
         end
 
         function Waypoint_DataProvider.GetContextIconTextureForRedirect()

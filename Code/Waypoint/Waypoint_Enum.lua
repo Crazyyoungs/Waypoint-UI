@@ -1,5 +1,5 @@
 local env = select(2, ...)
-local Waypoint_Enum = env.WPM:New("@\\Waypoint\\Enum")
+local Waypoint_Enum = env.modules:New("@\\Waypoint\\Enum")
 
 Waypoint_Enum.NavigationMode = {
     Hidden    = -1,

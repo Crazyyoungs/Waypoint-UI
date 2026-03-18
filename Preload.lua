@@ -1,23 +1,23 @@
 local env = select(2, ...)
-local Sound = env.WPM:Import("wpm_modules\\sound")
-local CallbackRegistry = env.WPM:Import("wpm_modules\\callback-registry")
-local UIFont = env.WPM:Import("wpm_modules\\ui-font")
-local CVarUtil = env.WPM:Import("wpm_modules\\cvar-util")
-local SavedVariables = env.WPM:Import("wpm_modules\\saved-variables")
-local SlashCommand = env.WPM:Import("wpm_modules\\slash-command")
-local Path = env.WPM:Import("wpm_modules\\path")
-local Utils_InlineIcon = env.WPM:Import("wpm_modules\\utils\\inline-icon")
-local GenericEnum = env.WPM:Import("wpm_modules\\generic-enum")
-local Support_TomTom = env.WPM:Await("@\\Support\\TomTom")
+local Sound = env.modules:Import("packages\\sound")
+local CallbackRegistry = env.modules:Import("packages\\callback-registry")
+local UIFont = env.modules:Import("packages\\ui-font")
+local CVarUtil = env.modules:Import("packages\\cvar-util")
+local SavedVariables = env.modules:Import("packages\\saved-variables")
+local SlashCommand = env.modules:Import("packages\\slash-command")
+local Path = env.modules:Import("packages\\path")
+local Utils_InlineIcon = env.modules:Import("packages\\utils\\inline-icon")
+local GenericEnum = env.modules:Import("packages\\generic-enum")
+local Support_TomTom = env.modules:Await("@\\SupportedAddons\\TomTom")
 
 local IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 
 
 env.NAME = "Waypoint UI"
-env.ICON = Path.Root .. "\\Art\\Icon\\Icon.png"
-env.ICON_ALT = Path.Root .. "\\Art\\Icon\\IconAltLight.png"
-env.VERSION_STRING = "1.3.10"
-env.VERSION_NUMBER = 010310
+env.LOGO = Path.Root .. "\\Art\\Icons\\Logo"
+env.LOGO_ALT = Path.Root .. "\\Art\\Icons\\Logo-White"
+env.VERSION_STRING = "1.4.0"
+env.VERSION_NUMBER = 010400
 env.DEBUG_MODE = false
 
 
@@ -77,6 +77,7 @@ do
         WaypointScale                          = 1,
         WaypointScaleMin                       = 0.25,
         WaypointScaleMax                       = 1.5,
+        WaypointAlpha                          = 1,
         WaypointBeam                           = true,
         WaypointBeamAlpha                      = 1,
         WaypointDistanceText                   = true,
@@ -86,6 +87,7 @@ do
         WaypointDistanceSubtextAlpha           = 0.7,
         PinpointAllowInQuestArea               = false,
         PinpointScale                          = 1,
+        PinpointAlpha                          = 1,
         PinpointInfo                           = true,
         PinpointInfoExtended                   = true,
         NavigatorShow                          = true,
@@ -377,42 +379,18 @@ do
     local Handlers = {}
     do -- /way
         local GetBestMapForUnit = C_Map.GetBestMapForUnit
-        local GetPlayerMapPosition = C_Map.GetPlayerMapPosition
 
-        local INLINE_ADDON_ICON = Utils_InlineIcon.New(env.ICON_ALT, 16, 16)
-        local PATH_CHAT_DIVIDER = Utils_InlineIcon.New(Path.Root .. "\\Art\\Chat\\Subdivider.png", 16, 16)
+        local INLINE_ADDON_ICON = Utils_InlineIcon.New(env.LOGO_ALT, 16, 16)
+        local PIPE = Utils_InlineIcon.New(Path.Root .. "\\Art\\Icons\\Pipe", 16, 16)
 
-        local INVALID_WAY_MSG_1 = INLINE_ADDON_ICON .. " /way " .. GenericEnum.ColorHEX.Yellow .. "#<mapID> <x> <y> <name>" .. "|r"
-        local INVALID_WAY_MSG_2 = PATH_CHAT_DIVIDER .. " /way " .. GenericEnum.ColorHEX.Yellow .. "<x> <y> <name>" .. "|r"
-        local INVALID_WAY_MSG_3 = PATH_CHAT_DIVIDER .. " /way " .. GenericEnum.ColorHEX.Yellow .. "reset" .. "|r"
-
-
-        local function PrintPosition()
-            local playerMapID = GetBestMapForUnit("player")
-            local playerPosition = playerMapID and GetPlayerMapPosition(playerMapID, "player") or nil
-
-            local message1 =
-                (playerMapID and
-                    PATH_CHAT_DIVIDER .. " " ..
-                    L["SlashCommand - /way - Map ID - Prefix"] .. playerMapID .. L["SlashCommand - /way - Map ID - Suffix"])
-                or ""
-            local message2 =
-                (playerPosition and
-                    PATH_CHAT_DIVIDER .. " " ..
-                    L["SlashCommand - /way - Position - Axis (X) - Prefix"] .. math.ceil(playerPosition.x * 100) .. L["SlashCommand - /way - Position - Axis (X) - Suffix"] ..
-                    L["SlashCommand - /way - Position - Axis (Y) - Prefix"] .. math.ceil(playerPosition.y * 100) .. L["SlashCommand - /way - Position - Axis (Y) - Suffix"])
-                or ""
-
-            DEFAULT_CHAT_FRAME:AddMessage(message1)
-            DEFAULT_CHAT_FRAME:AddMessage(message2)
-        end
+        local INVALID_WAY_LINE_1 = INLINE_ADDON_ICON .. " /way " .. GenericEnum.ColorHEX.Normal .. "#<mapID> <x> <y> <name>" .. "|r"
+        local INVALID_WAY_LINE_2 = PIPE .. " /way " .. GenericEnum.ColorHEX.Normal .. "<x> <y> <name>" .. "|r"
+        local INVALID_WAY_LINE_3 = PIPE .. " /way " .. GenericEnum.ColorHEX.Normal .. "reset" .. "|r"
 
         local function ThrowSlashWayError()
-            DEFAULT_CHAT_FRAME:AddMessage(INVALID_WAY_MSG_1)
-            DEFAULT_CHAT_FRAME:AddMessage(INVALID_WAY_MSG_2)
-            DEFAULT_CHAT_FRAME:AddMessage(INVALID_WAY_MSG_3)
-
-            PrintPosition()
+            DEFAULT_CHAT_FRAME:AddMessage(INVALID_WAY_LINE_1)
+            DEFAULT_CHAT_FRAME:AddMessage(INVALID_WAY_LINE_2)
+            DEFAULT_CHAT_FRAME:AddMessage(INVALID_WAY_LINE_3)
         end
 
         local localeUsesDecimalPoint = tonumber("1.1") ~= nil
@@ -500,11 +478,11 @@ end
 local SoundHandler = {}
 do
     local function UpdateMainSoundLayer()
-        local Setting_AudioGlobal = Config.DBGlobal:GetVariable("AudioGlobal")
+        local Settings_AudioGlobal = Config.DBGlobal:GetVariable("AudioGlobal")
 
-        if Setting_AudioGlobal == true then
+        if Settings_AudioGlobal == true then
             Sound.SetEnabled("Main", true)
-        elseif Setting_AudioGlobal == false then
+        elseif Settings_AudioGlobal == false then
             Sound.SetEnabled("Main", false)
         end
     end

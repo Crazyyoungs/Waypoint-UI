@@ -1,11 +1,10 @@
 local env = select(2, ...)
-local Path = env.WPM:Import("wpm_modules\\path")
-local UIFont = env.WPM:Import("wpm_modules\\ui-font")
-local UIKit = env.WPM:Import("wpm_modules\\ui-kit")
+local Path = env.modules:Import("packages\\path")
+local UIFont = env.modules:Import("packages\\ui-font")
+local UIKit = env.modules:Import("packages\\ui-kit")
 local Frame, LayoutGrid, LayoutHorizontal, LayoutVertical, Text, ScrollContainer, LazyScrollContainer, ScrollBar, ScrollContainerEdge, Input, LinearSlider, HitRect, List = unpack(UIKit.UI.Frames)
-local UIAnim = env.WPM:Import("wpm_modules\\ui-anim")
-local Waypoint_Preload = env.WPM:Import("@\\Waypoint\\Preload")
-local Waypoint_Templates = env.WPM:Import("@\\Waypoint\\Templates")
+local Waypoint_Preload = env.modules:Import("@\\Waypoint\\Preload")
+local Waypoint_Templates = env.modules:Import("@\\Waypoint\\Templates")
 local PinpointArrow, ContextIcon = Waypoint_Templates.PinpointArrow, Waypoint_Templates.ContextIcon
 
 WUIFrame = Frame("WUIFrame"):_Render()
@@ -34,14 +33,14 @@ do -- Waypoint
                         :id("Beam.Mask", id)
                         :point(UIKit.Enum.Point.Center, UIKit.Enum.Point.Bottom)
                         :size(100, 100)
-                        :maskBackground(Waypoint_Preload.UIDef.UIBeamMask)
+                        :maskBackground(Waypoint_Preload.UIDef.UIWaypointBeamMask)
                         :frameLevel(2),
 
                     Frame(name .. ".Beam.Background")
                         :id("Beam.Background", id)
                         :size(UIKit.UI.FILL)
                         :frameLevel(1)
-                        :background(Waypoint_Preload.UIDef.UIBeam)
+                        :background(Waypoint_Preload.UIDef.UIWaypointBeam)
                         :backgroundBlendMode(UIKit.Enum.BlendMode.Add)
                         :mask(UIKit.NewGroupCaptureString("Beam.Mask", id)),
 
@@ -49,7 +48,7 @@ do -- Waypoint
                         :id("Beam.FX.Mask", id)
                         :point(UIKit.Enum.Point.Bottom)
                         :size(UIKit.Define.Percentage{ value = 100 }, 250)
-                        :maskBackground(Waypoint_Preload.UIDef.UIBeamMask)
+                        :maskBackground(Waypoint_Preload.UIDef.UIWaypointBeamMask)
                         :frameLevel(2),
 
                     Frame(name .. ".Beam.FX")
@@ -57,7 +56,7 @@ do -- Waypoint
                         :size(UIKit.UI.FILL)
                         :frameLevel(2)
                         :backgroundBlendMode(UIKit.Enum.BlendMode.Add)
-                        :background(Waypoint_Preload.UIDef.UIBeamFX)
+                        :background(Waypoint_Preload.UIDef.UIWaypointBeamFX)
                         :mask(UIKit.NewGroupCaptureString("Beam.FX.Mask", id))
                 })
                     :id("Beam", id)
@@ -157,7 +156,7 @@ do -- Pinpoint
             Frame(name .. ".Foreground", {
                 Frame(name .. ".Foreground.Background")
                     :id("Foreground.Background", id)
-                    :background(Waypoint_Preload.UIDef.UIPinpointBackground)
+                    :background(Waypoint_Preload.UIDef.UIPinpoint)
                     :size(UIKit.UI.FILL)
                     :frameLevel(6)
                     :_excludeFromCalculations(),

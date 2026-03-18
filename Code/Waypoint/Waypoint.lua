@@ -1,19 +1,19 @@
 local env = select(2, ...)
 local L = env.L
 local Config = env.Config
-local Sound = env.WPM:Import("wpm_modules\\sound")
-local CallbackRegistry = env.WPM:Import("wpm_modules\\callback-registry")
-local GenericEnum = env.WPM:Import("wpm_modules\\generic-enum")
-local SavedVariables = env.WPM:Import("wpm_modules\\saved-variables")
-local Utils_Formatting = env.WPM:Import("wpm_modules\\utils\\formatting")
-local UIAnim = env.WPM:Import("wpm_modules\\ui-anim")
-local SharedUtil = env.WPM:Import("@\\SharedUtil")
-local MapPin = env.WPM:Import("@\\MapPin")
-local Waypoint_Director = env.WPM:Import("@\\Waypoint\\Director")
-local Waypoint_ArrivalTime = env.WPM:Import("@\\Waypoint\\ArrivalTime")
-local Waypoint_Enum = env.WPM:Import("@\\Waypoint\\Enum")
-local Waypoint_Cache = env.WPM:Import("@\\Waypoint\\Cache")
-local Waypoint = env.WPM:New("@\\Waypoint")
+local Sound = env.modules:Import("packages\\sound")
+local CallbackRegistry = env.modules:Import("packages\\callback-registry")
+local GenericEnum = env.modules:Import("packages\\generic-enum")
+local SavedVariables = env.modules:Import("packages\\saved-variables")
+local Utils_Formatting = env.modules:Import("packages\\utils\\formatting")
+local UIAnim = env.modules:Import("packages\\ui-anim")
+local SharedUtil = env.modules:Import("@\\SharedUtil")
+local MapPin = env.modules:Import("@\\MapPin")
+local Waypoint_Director = env.modules:Import("@\\Waypoint\\Director")
+local Waypoint_ArrivalTime = env.modules:Import("@\\Waypoint\\ArrivalTime")
+local Waypoint_Enum = env.modules:Import("@\\Waypoint\\Enum")
+local Waypoint_Cache = env.modules:Import("@\\Waypoint\\Cache")
+local Waypoint = env.modules:New("@\\Waypoint")
 
 local CreateVector2D = CreateVector2D
 local Vector2D_CalculateAngleBetween = Vector2D_CalculateAngleBetween
@@ -53,8 +53,9 @@ function WaypointMixin:OnLoad()
     SavedVariables.OnChange("WaypointDB_Global", "WaypointDistanceTextScale", function() self:SetFooterTextAppearance() end)
     SavedVariables.OnChange("WaypointDB_Global", "WaypointBeam", function() self:UpdateBeam() end)
     SavedVariables.OnChange("WaypointDB_Global", "WaypointBeamAlpha", function() self:UpdateBeam() end)
+    SavedVariables.OnChange("WaypointDB_Global", "WaypointAlpha", function() self:UpdateOpacity() end)
     CallbackRegistry.Add("Preload.DatabaseReady", function()
-        self:UpdateFooter(); self:UpdateBeam()
+        self:UpdateFooter(); self:UpdateBeam(); self:UpdateOpacity()
     end)
 end
 
@@ -156,6 +157,10 @@ end
 function WaypointMixin:UpdateBeam()
     self.Beam:SetShown(Config.DBGlobal:GetVariable("WaypointBeam"))
     self.Beam:SetAlpha(Config.DBGlobal:GetVariable("WaypointBeamAlpha"))
+end
+
+function WaypointMixin:UpdateOpacity()
+    self:SetAlpha(Config.DBGlobal:GetVariable("WaypointAlpha") or 1)
 end
 
 function WaypointMixin:SetIcon(UIContextIconTexture)
@@ -288,7 +293,8 @@ local PinpointMixin = {}
 
 function PinpointMixin:OnLoad()
     SavedVariables.OnChange("WaypointDB_Global", "PinpointScale", function() self:UpdateSize() end)
-    CallbackRegistry.Add("Preload.DatabaseReady", function() self:UpdateSize() end)
+    SavedVariables.OnChange("WaypointDB_Global", "PinpointAlpha", function() self:UpdateOpacity() end)
+    CallbackRegistry.Add("Preload.DatabaseReady", function() self:UpdateSize(); self:UpdateOpacity() end)
 end
 
 function PinpointMixin:UpdateText()
@@ -366,6 +372,10 @@ function PinpointMixin:UpdateSize()
     self:_Render()
 end
 
+function PinpointMixin:UpdateOpacity()
+    self:SetAlpha(Config.DBGlobal:GetVariable("PinpointAlpha") or 1)
+end
+
 function PinpointMixin:SetIcon(UIContextIconTexture)
     self.Background.ContextIcon:SetData(UIContextIconTexture)
 end
@@ -416,6 +426,7 @@ do
     local Intro = UIAnim.Animate():property(UIAnim.Enum.Property.Alpha):easing(UIAnim.Enum.Easing.Linear):duration(0.5):to(1)
     local IntroTranslate = UIAnim.Animate():property(UIAnim.Enum.Property.PosY):easing(UIAnim.Enum.Easing.ExpoInOut):duration(1):from(-57.5):to(0)
     PinpointMixin.AnimGroup:State("INTRO", function(frame)
+        frame:SetAlpha(0)
         Intro:Play(frame)
         IntroTranslate:Play(frame.Container)
         frame.Background.Arrow:Play()
@@ -565,19 +576,19 @@ function NavigatorMixin:UpdateArrow()
 end
 
 function NavigatorMixin:UpdateInfo()
-    local Setting_NavigatorDistance = Config.DBGlobal:GetVariable("NavigatorDistance")
-    local Setting_NavigatorDynamicDistance = Config.DBGlobal:GetVariable("NavigatorDynamicDistance")
+    local Settings_NavigatorDistance = Config.DBGlobal:GetVariable("NavigatorDistance")
+    local Settings_NavigatorDynamicDistance = Config.DBGlobal:GetVariable("NavigatorDynamicDistance")
 
-    local zoom = Setting_NavigatorDynamicDistance and math.max(MIN_ZOOM, GetCameraZoom()) or 39
-    if zoom ~= self.savedZoom or Setting_NavigatorDistance ~= self.savedDistance then
+    local zoom = Settings_NavigatorDynamicDistance and math.max(MIN_ZOOM, GetCameraZoom()) or 39
+    if zoom ~= self.savedZoom or Settings_NavigatorDistance ~= self.savedDistance then
         local baseZoom = 35
         local baseMajor, baseMinor = 200, 100
         local major, minor = math.min(baseMajor * (baseZoom / zoom), 500), math.min(baseMinor * (baseZoom / zoom), 500)
-        major = major * (Setting_NavigatorDistance or 1)
-        minor = minor * (Setting_NavigatorDistance or 1)
+        major = major * (Settings_NavigatorDistance or 1)
+        minor = minor * (Settings_NavigatorDistance or 1)
 
         self.savedZoom = zoom
-        self.savedDistance = Setting_NavigatorDistance
+        self.savedDistance = Settings_NavigatorDistance
         self:SetEllipticalRadii(major, minor)
     end
 
@@ -857,10 +868,10 @@ SavedVariables.OnChange("WaypointDB_Global", "PinpointInfoExtended", Waypoint.Up
 SavedVariables.OnChange("WaypointDB_Global", "WaypointDistanceTextType", Waypoint.UpdateContext)
 
 local function PlayWaypointShowAudio()
-    local Setting_CustomAudio = Config.DBGlobal:GetVariable("AudioCustom")
+    local Settings_CustomAudio = Config.DBGlobal:GetVariable("AudioCustom")
     local soundID = env.Enum.Sound.WaypointShow
 
-    if Setting_CustomAudio then
+    if Settings_CustomAudio then
         if tonumber(soundID) then
             soundID = Config.DBGlobal:GetVariable("AudioCustomShowWaypoint")
         end
@@ -870,10 +881,10 @@ local function PlayWaypointShowAudio()
 end
 
 local function PlayPinpointShowAudio()
-    local Setting_CustomAudio = Config.DBGlobal:GetVariable("AudioCustom")
+    local Settings_CustomAudio = Config.DBGlobal:GetVariable("AudioCustom")
     local soundID = env.Enum.Sound.PinpointShow
 
-    if Setting_CustomAudio then
+    if Settings_CustomAudio then
         if tonumber(soundID) then
             soundID = Config.DBGlobal:GetVariable("AudioCustomShowPinpoint")
         end

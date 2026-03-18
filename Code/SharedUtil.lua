@@ -1,7 +1,7 @@
 local env = select(2, ...)
 local Config = env.Config
-local Utils_General = env.WPM:Import("wpm_modules\\utils\\general")
-local SharedUtil = env.WPM:New("@\\SharedUtil")
+local Utils_General = env.modules:Import("packages\\utils\\general")
+local SharedUtil = env.modules:New("@\\SharedUtil")
 
 local GetScreenWidth, GetScreenHeight = GetScreenWidth, GetScreenHeight
 local BreakUpLargeNumbers = BreakUpLargeNumbers

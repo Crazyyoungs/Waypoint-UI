@@ -1,8 +1,8 @@
 local env = select(2, ...)
 local Config = env.Config
-local Sound = env.WPM:Import("wpm_modules\\sound")
-local CallbackRegistry = env.WPM:Import("wpm_modules\\callback-registry")
-local MapPin = env.WPM:New("@\\MapPin")
+local Sound = env.modules:Import("packages\\sound")
+local CallbackRegistry = env.modules:Import("packages\\callback-registry")
+local MapPin = env.modules:New("@\\MapPin")
 
 local SetSuperTrackedUserWaypoint = C_SuperTrack.SetSuperTrackedUserWaypoint
 local IsSuperTrackingAnything = C_SuperTrack.IsSuperTrackingAnything
@@ -38,10 +38,10 @@ local MUTED_FLAG_MAP = {
 }
 
 local function PlayUserNavigationAudio()
-    local Setting_CustomAudio = Config.DBGlobal:GetVariable("AudioCustom")
+    local Settings_CustomAudio = Config.DBGlobal:GetVariable("AudioCustom")
     local soundID = env.Enum.Sound.NewUserNavigation
 
-    if Setting_CustomAudio then
+    if Settings_CustomAudio then
         if tonumber(soundID) then
             soundID = Config.DBGlobal:GetVariable("AudioCustomNewUserNavigation")
         end
@@ -159,12 +159,12 @@ function MapPin.IsUserNavigationFlagged(flag)
     return false
 end
 
-function MapPin.ToggleSuperTrackedPinDisplay(shown)
-    for pin in WorldMapFrame:EnumeratePinsByTemplate("WaypointLocationPinTemplate") do
-        pin:SetAlpha(shown and 1 or 0)
-        pin:EnableMouse(shown)
-    end
-end
+-- function MapPin.ToggleSuperTrackedPinDisplay(shown)
+--     for pin in WorldMapFrame:EnumeratePinsByTemplate("WaypointLocationPinTemplate") do
+--         pin:SetAlpha(shown and 1 or 0)
+--         pin:EnableMouse(shown)
+--     end
+-- end
 
 function MapPin.ValidateSuperTrackedPinDisplay(_, event)
     if event == "USER_WAYPOINT_UPDATED" and IsSuperTrackingUserWaypoint() and not MapPin.IsUserNavigationTracked() then
@@ -173,13 +173,13 @@ function MapPin.ValidateSuperTrackedPinDisplay(_, event)
         MapPin.ClearUserNavigation(true)
     end
 
-    for flag, _ in pairs(MUTED_FLAG_MAP) do
-        if MapPin.IsUserNavigationTracked() and MapPin.IsUserNavigationFlagged(flag) then
-            MapPin.ToggleSuperTrackedPinDisplay(false)
-            return
-        end
-    end
-    MapPin.ToggleSuperTrackedPinDisplay(true)
+    -- for flag, _ in pairs(MUTED_FLAG_MAP) do
+    --     if MapPin.IsUserNavigationTracked() and MapPin.IsUserNavigationFlagged(flag) then
+    --         MapPin.ToggleSuperTrackedPinDisplay(false)
+    --         return
+    --     end
+    -- end
+    -- MapPin.ToggleSuperTrackedPinDisplay(true)
 end
 
 do --Automatically clear supertracking when the user waypoint is removed
