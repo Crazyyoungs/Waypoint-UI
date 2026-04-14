@@ -46,11 +46,11 @@ function WaypointMixin:OnLoad()
     self.lastScale = nil
 
     self:SetScript("OnUpdate", self.OnUpdate)
-    SavedVariables.OnChange("WaypointDB_Global", "WaypointDistanceText", function() self:SetFooterTextAppearance() end)
-    SavedVariables.OnChange("WaypointDB_Global", "WaypointDistanceTextType", function() self:SetFooterTextAppearance() end)
-    SavedVariables.OnChange("WaypointDB_Global", "WaypointDistanceTextAlpha", function() self:SetFooterTextAppearance() end)
-    SavedVariables.OnChange("WaypointDB_Global", "WaypointDistanceSubtextAlpha", function() self:SetFooterTextAppearance() end)
-    SavedVariables.OnChange("WaypointDB_Global", "WaypointDistanceTextScale", function() self:SetFooterTextAppearance() end)
+    local footerTextCallbackKeys = { "WaypointDistanceTextFontFlags", "WaypointDistanceTextType", "WaypointDistanceTextAlpha", "WaypointDistanceSubtextAlpha", "WaypointDistanceTextScale" }
+    for _, event in ipairs(footerTextCallbackKeys) do
+        SavedVariables.OnChange("WaypointDB_Global", event, function() self:SetFooterTextAppearance() end)
+    end
+    SavedVariables.OnChange("WaypointDB_Global", "WaypointDistanceText", function() self:UpdateFooter() end)
     SavedVariables.OnChange("WaypointDB_Global", "WaypointBeam", function() self:UpdateBeam() end)
     SavedVariables.OnChange("WaypointDB_Global", "WaypointBeamAlpha", function() self:UpdateBeam() end)
     SavedVariables.OnChange("WaypointDB_Global", "WaypointAlpha", function() self:UpdateOpacity() end)
@@ -133,8 +133,12 @@ function WaypointMixin:UpdateDistanceText()
     if isArrivalTime and isValidArrivalTime then
         local _, _, _, h, m, s = Utils_Formatting.FormatTime(Waypoint_ArrivalTime:GetSeconds())
         self.Footer.ArrivalTimeText:SetText(h .. m .. s)
+        if not self.Footer.ArrivalTimeText:IsShown() then
+            self.Footer.ArrivalTimeText:Show()
+            self.Footer:_Render()
+        end
     else
-        self.Footer.ArrivalTimeText:SetText("")
+        self.Footer.ArrivalTimeText:Hide()
     end
 end
 
@@ -332,16 +336,18 @@ function PinpointMixin:UpdateText()
                     newText = questCompletionText
                 end
             else
-                local allObjectives = Waypoint_Cache.Get("questObjectiveInfo").objectives
+                local questObjectiveInfo = Waypoint_Cache.Get("questObjectiveInfo")
+                if questObjectiveInfo then
+                    local allObjectives = questObjectiveInfo.objectives
 
-                -- Display incomplete objectives
-                local numObjectives = #allObjectives
-                local objectivesAdded = 1
-                for i = 1, numObjectives do
-                    if allObjectives[i].text and not allObjectives[i].finished then
-                        local newLine = objectivesAdded > 1 and "\n" or ""
-                        newText = newText .. newLine .. allObjectives[i].text
-                        objectivesAdded = objectivesAdded + 1
+                    local numObjectives = #allObjectives
+                    local objectivesAdded = 1
+                    for i = 1, numObjectives do
+                        if allObjectives[i].text and not allObjectives[i].finished then
+                            local newLine = objectivesAdded > 1 and "\n" or ""
+                            newText = newText .. newLine .. allObjectives[i].text
+                            objectivesAdded = objectivesAdded + 1
+                        end
                     end
                 end
             end
@@ -905,7 +911,7 @@ do --Animation
 
     local function Play(frameObj, state, onFinish)
         local handle = frameObj.AnimGroup:Play(frameObj, state)
-        if handle and onFinish then handle.onFinish(onFinish) end
+        if handle and onFinish then handle:onFinish(onFinish) end
     end
 
     local blockTransitionChange = false

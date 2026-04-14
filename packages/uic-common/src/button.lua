@@ -213,7 +213,7 @@ do --Button (Text)
         local buttonState = self:GetButtonState()
 
         if not isEnabled then
-            self.Text:textColor(isRed and RED_TEXT_COLOR or GRAY_TEXT_COLOR)
+            self.Text:textColor(GRAY_TEXT_COLOR)
         elseif buttonState == "NORMAL" then
             self.Text:textColor(isRed and RED_TEXT_COLOR or GRAY_TEXT_COLOR)
         elseif buttonState == "HIGHLIGHTED" then

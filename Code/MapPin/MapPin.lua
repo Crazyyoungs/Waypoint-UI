@@ -19,9 +19,8 @@ local GetWorldPosFromMapPos = C_Map.GetWorldPosFromMapPos
 local CreateFrame = CreateFrame
 local CreateVector2D = CreateVector2D
 local tostring = tostring
+local tonumber = tonumber
 local format = string.format
-local pairs = pairs
-local WorldMapFrame = WorldMapFrame
 
 local SessionData = {
     name  = nil,
@@ -156,17 +155,25 @@ end
 function MapPin.ValidateSuperTrackedPinDisplay(_, event)
     if event == "USER_WAYPOINT_UPDATED" and IsSuperTrackingUserWaypoint() and not MapPin.IsUserNavigationTracked() then
         MapPin.ClearUserNavigation(true)
-    elseif event == "SUPER_TRACKING_CHANGED" and C_SuperTrack.GetHighestPrioritySuperTrackingType() ~= Enum.SuperTrackingType.UserWaypoint then
-        MapPin.ClearUserNavigation(true)
+    elseif event == "SUPER_TRACKING_CHANGED" then
+        local trackType = C_SuperTrack.GetHighestPrioritySuperTrackingType()
+        if trackType == Enum.SuperTrackingType.UserWaypoint and not MapPin.IsUserNavigationTracked() then
+            MapPin.ClearUserNavigation(true)
+        elseif trackType ~= Enum.SuperTrackingType.UserWaypoint and not HasUserWaypoint() then
+            MapPin.ClearUserNavigation(true)
+        end
     end
 end
 
-do --Automatically clear supertracking when the user waypoint is removed
+do --Automatically clear supertracking and navigation data when the user waypoint is removed
     local f = CreateFrame("Frame")
     f:RegisterEvent("USER_WAYPOINT_UPDATED")
     f:SetScript("OnEvent", function()
-        if not HasUserWaypoint() and IsSuperTrackingUserWaypoint() then
-            ClearAllSuperTracked()
+        if not HasUserWaypoint() then
+            if IsSuperTrackingUserWaypoint() then
+                ClearAllSuperTracked()
+            end
+            MapPin.ClearUserNavigation(true)
         end
     end)
 end

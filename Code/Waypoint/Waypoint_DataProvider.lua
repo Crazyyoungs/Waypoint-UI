@@ -37,9 +37,9 @@ do
     local CLAMP_THRESHOLD = 0.125
 
     function DataProviderUtil.GetCompletionText(questID)
-        if not C_QuestLog.GetLogIndexForQuestID(questID) then return nil end
-        C_QuestLog.SetSelectedQuest(questID)
-        return GetQuestLogCompletionText()
+        local questLogIndex = C_QuestLog.GetLogIndexForQuestID(questID)
+        if not questLogIndex then return nil end
+        return GetQuestLogCompletionText(questLogIndex)
     end
 
     function DataProviderUtil.GetObjectiveInfo(objectives)
@@ -155,7 +155,7 @@ do
             elseif MapPin.IsUserNavigationTracked() or MapPin.IsUserNavigationFlagged("RareScanner_Waypoint") or MapPin.IsUserNavigationFlagged("SilverDragon_Waypoint") then
                 if MapPin.IsUserNavigationFlagged("RareScanner_Waypoint") or MapPin.IsUserNavigationFlagged("SilverDragon_Waypoint") then
                     return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "VignetteElite", requestRecolor = true }
-                elseif MapPin.IsUserNavigationFlagged("TomTom_Waypoint") then
+                elseif MapPin.IsUserNavigationFlagged("TomTom_Waypoint") or MapPin.IsUserNavigationFlagged("APR_Waypoint") then
                     return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "TomTomArrow", requestRecolor = true }
                 else
                     return Waypoint_Define.ContextIconTexture{ type = "TEXTURE", path = PATH_CONTEXT_ICON .. "Navigation", requestRecolor = true }

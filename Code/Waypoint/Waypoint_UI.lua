@@ -14,7 +14,6 @@ do -- Waypoint
     local FOOTER_WIDTH = 100
     local FOOTER_HEIGHT = 38
     local FOOTER_TEXT_WIDTH = 100
-    local FOOTER_TEXT_HEIGHT = 11
 
     local name = "WUIWaypointFrame"
     local id = "WUIWaypointFrame"
@@ -68,29 +67,29 @@ do -- Waypoint
                 LayoutVertical(name .. ".Footer", {
                     Text(name .. ".Footer.InfoText")
                         :id("Footer.InfoText", id)
-                        :fontObject(UIFont.UIFontObjectNormal8)
+                        :fontObject(UIFont.WUIFooterFont)
                         :textAlignment("CENTER", "MIDDLE")
-                        :size(FOOTER_TEXT_WIDTH, FOOTER_TEXT_HEIGHT),
+                        :size(FOOTER_TEXT_WIDTH, UIKit.UI.FIT),
 
                     Text(name .. ".Footer.DistanceText")
                         :id("Footer.DistanceText", id)
-                        :fontObject(UIFont.UIFontObjectNormal8)
+                        :fontObject(UIFont.WUIFooterFont)
                         :textAlignment("CENTER", "MIDDLE")
-                        :size(FOOTER_TEXT_WIDTH, FOOTER_TEXT_HEIGHT),
+                        :size(FOOTER_TEXT_WIDTH, UIKit.UI.FIT),
 
                     Text(name .. ".Footer.ArrivalTimeText")
                         :id("Footer.ArrivalTimeText", id)
                         :point(UIKit.Enum.Point.Center)
-                        :fontObject(UIFont.UIFontObjectNormal8)
+                        :fontObject(UIFont.WUIFooterFont)
                         :textAlignment("CENTER", "MIDDLE")
-                        :size(FOOTER_TEXT_WIDTH, FOOTER_TEXT_HEIGHT)
+                        :size(FOOTER_TEXT_WIDTH, UIKit.UI.FIT)
                 })
                     :id("Footer", id)
                     :anchor(UIKit.NewGroupCaptureString("ContextIcon", id))
                     :point(UIKit.Enum.Point.Top, UIKit.Enum.Point.Bottom)
                     :y(0)
                     :size(FOOTER_WIDTH, FOOTER_HEIGHT)
-                    :layoutSpacing(0)
+                    :layoutSpacing(3)
                     :frameLevel(4)
                     :ignoreParentScale(true)
                     :alpha(0.5)

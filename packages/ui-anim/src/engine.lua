@@ -454,32 +454,38 @@ function WrapperProto:IsPlaying(target, name)
     return false
 end
 
-function WrapperProto.onFinish(cb)
-    local wrapper = lastPlayedWrapper
-    if not wrapper then return WrapperProto end
+function WrapperProto:onFinish(cb)
+    if lastPlayedWrapper ~= self then return self end
+
     local info = lastPlayedWrapperInfo
     if not info then
-        lastPlayedWrapper = nil; return WrapperProto
+        lastPlayedWrapper = nil
+        return self
     end
+
     if cb then
         if (info.pendingCount or 0) == 0 then cb() else info.finishCallback = cb end
     end
+
     lastPlayedWrapper = nil
     lastPlayedWrapperInfo = nil
-    return wrapper
+    return self
 end
 
-function WrapperProto.onStart(cb)
-    local wrapper = lastPlayedWrapper
-    if not wrapper then return WrapperProto end
+function WrapperProto:onStart(cb)
+    if lastPlayedWrapper ~= self then return self end
+
     local info = lastPlayedWrapperInfo
     if not info then
-        lastPlayedWrapper = nil; return WrapperProto
+        lastPlayedWrapper = nil
+        return self
     end
+
     if cb then
         if info.startNotified then cb() else info.startCallback = cb end
     end
-    return wrapper
+
+    return self
 end
 
 function WrapperProto:Stop(target, cancelAnims)

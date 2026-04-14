@@ -16,8 +16,8 @@ local IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 env.NAME = "Waypoint UI"
 env.LOGO = Path.Root .. "\\Art\\Icons\\Logo"
 env.LOGO_ALT = Path.Root .. "\\Art\\Icons\\Logo-White"
-env.VERSION_STRING = "1.4.2"
-env.VERSION_NUMBER = 010402
+env.VERSION_STRING = "1.4.3"
+env.VERSION_NUMBER = 010403
 env.DEBUG_MODE = false
 
 
@@ -80,6 +80,7 @@ do
         WaypointAlpha                          = 1,
         WaypointBeam                           = true,
         WaypointBeamAlpha                      = 1,
+        WaypointDistanceTextFontFlags          = 1, --UIFont.Enum.FontFlags
         WaypointDistanceText                   = true,
         WaypointDistanceTextType               = 1,
         WaypointDistanceTextScale              = 1,
@@ -119,6 +120,8 @@ do
         TomTomAutoReplaceWaypoint              = true,
         DugisSupportEnabled                    = true,
         DugisAutoReplaceWaypoint               = true,
+        APRSupportEnabled                      = false,
+        APRAutoReplaceWaypoint                 = true,
         SilverDragonSupportEnabled             = false
     }
     local DB_GLOBAL_PERSISTENT_DEFAULTS = {}
@@ -505,11 +508,15 @@ do
             fontPath = UIFont.CustomFont.GetFontPathForIndex(1)
         end
 
+        UIFont.WUIFooterFont:SetFontFile(fontPath)
+        UIFont.WUIFooterFont:SetFontFlags(UIFont.Enum.FontFlags[Config.DBGlobal:GetVariable("WaypointDistanceTextFontFlags") or 1])
+        
         UIFont.SetNormalFont(fontPath)
         Config.DBGlobal:SetVariable("fontPath", fontPath)
     end
 
     SavedVariables.OnChange("WaypointDB_Global", "fontPath", UpdateFonts)
+    SavedVariables.OnChange("WaypointDB_Global", "WaypointDistanceTextFontFlags", UpdateFonts)
 
     function FontHandler.Load()
         UpdateFonts()

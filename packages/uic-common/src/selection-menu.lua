@@ -340,7 +340,7 @@ do -- Selection Menu
 
     function SelectionMenuMixin:Close()
         if self.AnimGroup:IsPlaying(self, "OUTRO") then return end
-        self.AnimGroup:Play(self, "OUTRO").onFinish(function()
+        self.AnimGroup:Play(self, "OUTRO"):onFinish(function()
             self:Hide()
         end)
         self.isOpen = false

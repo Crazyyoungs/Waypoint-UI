@@ -23,11 +23,11 @@ local REPLACE_PROMPT_INFO = {
     text         = L["TOMTOM_REPLACEPROMPT"],
     options      = {
         {
-            text     = L["TOMTOM_REPLACEPROMPT_YES"],
+            text     = L["REPLACE"],
             callback = HandleAccept
         },
         {
-            text     = L["TOMTOM_REPLACEPROMPT_NO"],
+            text     = L["CANCEL"],
             callback = nil
         }
     },
