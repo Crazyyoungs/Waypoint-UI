@@ -1,6 +1,7 @@
 local env = select(2, ...)
 local L = env.L
 local Config = env.Config
+local Path = env.modules:Import("packages\\path")
 local CallbackRegistry = env.modules:Import("packages\\callback-registry")
 local MapPin = env.modules:Import("@\\MapPin")
 local SupportedAddons = env.modules:Import("@\\SupportedAddons")
@@ -84,7 +85,7 @@ local function UpdateCurrentAPRWaypointName(name, mapID, x, y)
 	if not currentWaypoint then return end
 	if currentWaypoint.name == name then return end
 
-	MapPin.SetUserNavigation(name, mapID, x / 100, y / 100, "APR_Waypoint")
+	MapPin.SetUserNavigation(name, mapID, x / 100, y / 100, "APR_Waypoint", Path.Root .. "\\Art\\Icons\\TomTomArrow", nil, nil, nil, true)
 	CallbackRegistry.Trigger("MapPin.NewUserNavigation")
 end
 
@@ -331,7 +332,7 @@ end
 function SupportedAddons_APR.PlaceWaypointAtSession()
 	if not APRWaypointInfo.mapID or not APRWaypointInfo.x or not APRWaypointInfo.y then return end
 
-	MapPin.NewUserNavigation(APRWaypointInfo.name, APRWaypointInfo.mapID, APRWaypointInfo.x, APRWaypointInfo.y, "APR_Waypoint")
+	MapPin.NewUserNavigation(APRWaypointInfo.name, APRWaypointInfo.mapID, APRWaypointInfo.x, APRWaypointInfo.y, "APR_Waypoint", APR_ARROW_ICON, nil, nil, nil, true)
 end
 
 local function OnAddonLoad()

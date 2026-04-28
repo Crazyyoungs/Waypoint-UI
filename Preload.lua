@@ -16,8 +16,8 @@ local IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 env.NAME = "Waypoint UI"
 env.LOGO = Path.Root .. "\\Art\\Icons\\Logo"
 env.LOGO_ALT = Path.Root .. "\\Art\\Icons\\Logo-White"
-env.VERSION_STRING = "1.4.3"
-env.VERSION_NUMBER = 010403
+env.VERSION_STRING = "1.4.4"
+env.VERSION_NUMBER = 010404
 env.DEBUG_MODE = false
 
 
@@ -386,9 +386,9 @@ do
         local INLINE_ADDON_ICON = Utils_InlineIcon.New(env.LOGO_ALT, 16, 16)
         local PIPE = Utils_InlineIcon.New(Path.Root .. "\\Art\\Icons\\Pipe", 16, 16)
 
-        local INVALID_WAY_LINE_1 = INLINE_ADDON_ICON .. " /way " .. GenericEnum.ColorHEX.Normal .. "#<mapID> <x> <y> <name>" .. "|r"
-        local INVALID_WAY_LINE_2 = PIPE .. " /way " .. GenericEnum.ColorHEX.Normal .. "<x> <y> <name>" .. "|r"
-        local INVALID_WAY_LINE_3 = PIPE .. " /way " .. GenericEnum.ColorHEX.Normal .. "reset" .. "|r"
+        local INVALID_WAY_LINE_1 = INLINE_ADDON_ICON .. " /way " .. GenericEnum.ColorHEX.NORMAL_FONT_COLOR .. "#<mapID> <x> <y> <name>" .. "|r"
+        local INVALID_WAY_LINE_2 = PIPE .. " /way " .. GenericEnum.ColorHEX.NORMAL_FONT_COLOR .. "<x> <y> <name>" .. "|r"
+        local INVALID_WAY_LINE_3 = PIPE .. " /way " .. GenericEnum.ColorHEX.NORMAL_FONT_COLOR .. "reset" .. "|r"
 
         local function ThrowSlashWayError()
             DEFAULT_CHAT_FRAME:AddMessage(INVALID_WAY_LINE_1)

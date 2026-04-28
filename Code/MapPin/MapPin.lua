@@ -23,11 +23,16 @@ local tonumber = tonumber
 local format = string.format
 
 local SessionData = {
-    name  = nil,
-    mapID = nil,
-    x     = nil,
-    y     = nil,
-    flags = nil
+    name           = nil,
+    mapID          = nil,
+    x              = nil,
+    y              = nil,
+    flags          = nil,
+    iconTexture    = nil,
+    r              = nil,
+    g              = nil,
+    b              = nil,
+    requestRecolor = nil
 }
 
 local function PlayUserNavigationAudio()
@@ -60,12 +65,15 @@ function MapPin.ClearDestination()
     end
 end
 
-function MapPin.SetUserNavigation(name, mapID, x, y, flags)
+function MapPin.SetUserNavigation(name, mapID, x, y, flags, iconTexture, r, g, b, requestRecolor)
     SessionData.name = name
     SessionData.mapID = mapID
     SessionData.x = x
     SessionData.y = y
     SessionData.flags = flags
+    SessionData.iconTexture = iconTexture
+    SessionData.r, SessionData.g, SessionData.b = r, g, b
+    SessionData.requestRecolor = requestRecolor
     Config.DBLocal:SetVariable("slashWayCache", SessionData)
 end
 
@@ -78,12 +86,15 @@ function MapPin.GetUserNavigation()
         SessionData.x = savedWay.x
         SessionData.y = savedWay.y
         SessionData.flags = savedWay.flags
+        SessionData.iconTexture = savedWay.iconTexture
+        SessionData.r, SessionData.g, SessionData.b = savedWay.r, savedWay.g, savedWay.b
+        SessionData.requestRecolor = savedWay.requestRecolor
     end
 
     return SessionData
 end
 
-function MapPin.NewUserNavigation(name, mapID, x, y, flags)
+function MapPin.NewUserNavigation(name, mapID, x, y, flags, iconTexture, r, g, b, requestRecolor)
     if not mapID or not x or not y then return end
 
     if x > 100 or y > 100 or x < 0 or y < 0 then
@@ -108,7 +119,7 @@ function MapPin.NewUserNavigation(name, mapID, x, y, flags)
                 if determinant ~= 0 then
                     local parentNormalizedX = (offsetX * parentBasisYy - offsetY * parentBasisYx) / determinant * 100
                     local parentNormalizedY = (offsetY * parentBasisXx - offsetX * parentBasisXy) / determinant * 100
-                    return MapPin.NewUserNavigation(name, parentMapID, parentNormalizedX, parentNormalizedY, flags)
+                    return MapPin.NewUserNavigation(name, parentMapID, parentNormalizedX, parentNormalizedY, flags, iconTexture, r, g, b, requestRecolor)
                 end
             end
         end
@@ -120,7 +131,7 @@ function MapPin.NewUserNavigation(name, mapID, x, y, flags)
     local pos = CreateVector2D(x / 100, y / 100)
     local mapPoint = UiMapPoint.CreateFromVector2D(mapID, pos)
 
-    MapPin.SetUserNavigation(name, mapID, pos.x, pos.y, flags)
+    MapPin.SetUserNavigation(name, mapID, pos.x, pos.y, flags, iconTexture, r, g, b, requestRecolor)
     SetUserWaypoint(mapPoint)
     SetSuperTrackedUserWaypoint(true)
 
